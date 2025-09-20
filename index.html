@@ -474,6 +474,20 @@
         .checkbox-item input[type="radio"]:checked {
             accent-color: var(--accent);
         }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -499,7 +513,7 @@
                     <i class="fas fa-sign-out-alt"></i> Sair
                 </button>
             </div>
-            
+        </div>
                     
         <div class="tabs">
             <div class="tab active" data-tab="form">Nova Análise</div>
@@ -667,7 +681,7 @@
                     </div>
                     
                     <div class="checklist-item">
-                        <label for="manager-history">Quem é o gestor e qual o histórico dele no mercado?</label>
+                        <label for="manager-history">Quem é o gestor e qual o histórico dela no mercado?</label>
                         <textarea id="manager-history" placeholder="Descreva o gestor e seu histórico..."></textarea>
                     </div>
                     
@@ -714,7 +728,7 @@
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="radio" id="transparency-high" name="transparency" value="alta">
-                                <label for="transparency-high">Alta (claros и detalhados)</label>
+                                <label for="transparency-high">Alta (claros e detalhados)</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="radio" id="transparency-medium" name="transparency" value="media">
@@ -851,7 +865,7 @@
                             </div>
                             <div class="checkbox-item">
                                 <input type="radio" id="leverage-no" name="leverage" value="nao">
-                                <label for="leverage-no">Não</label>
+                                <label for('leverage-no')>Não</label>
                             </div>
                         </div>
                     </div>
@@ -1094,7 +1108,7 @@
             
             <div class="section">
                 <h3>Como pesquisar relatórios?</h3>
-                <p>Na aba "Relatórios Salvos", digite o nome do fundo или a data no campo de pesquisa e clique no botão "Pesquisar".</p>
+                <p>Na aba "Relatórios Salvos", digite o nome do fundo ou a data no campo de pesquisa e clique no botão "Pesquisar".</p>
                 <p>Você também pode visualizar, carregar ou excluir relatórios individualmente usando os botões ao lado de cada relatório.</p>
             </div>
             
@@ -1173,10 +1187,12 @@
             // Estado da aplicação
             let currentUser = null;
             let isFirebaseConnected = false;
+            let firebaseDb = null;
             
             // Verificar se o Firebase foi inicializado corretamente
             if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
                 isFirebaseConnected = true;
+                firebaseDb = firebase.firestore();
                 
                 // Monitorar estado de autenticação
                 firebase.auth().onAuthStateChanged((user) => {
@@ -1187,6 +1203,11 @@
                         loginBtn.style.display = 'none';
                         logoutBtn.style.display = 'block';
                         console.log("Usuário logado:", user.email);
+                        
+                        // Atualizar lista de relatórios se estiver na aba correta
+                        if (document.querySelector('.tab.active').getAttribute('data-tab') === 'reports') {
+                            updateReportsList();
+                        }
                     } else {
                         currentUser = null;
                         userInfo.style.display = 'none';
@@ -1353,14 +1374,23 @@
                         lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                     };
                     
-                    firebase.firestore().collection('analises').add(firebaseData)
+                    // Mostrar indicador de carregamento
+                    const originalText = saveBtn.innerHTML;
+                    saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
+                    saveBtn.disabled = true;
+                    
+                    firebaseDb.collection('analises').add(firebaseData)
                         .then((docRef) => {
                             console.log("Análise salva no Firebase com ID: ", docRef.id);
+                            saveBtn.innerHTML = originalText;
+                            saveBtn.disabled = false;
                             alert(`Análise de ${fundName} salva com sucesso na nuvem!`);
                         })
                         .catch((error) => {
                             console.error("Erro ao salvar no Firebase: ", error);
-                            alert(`Análise de ${fundName} salva localmente, mas falha ao salvar na nuvem.`);
+                            saveBtn.innerHTML = originalText;
+                            saveBtn.disabled = false;
+                            alert(`Análise de ${fundName} salva localmente, mas falha ao salvar na nuvem: ${error.message}`);
                         });
                 } else {
                     alert(`Análise de ${fundName} salva localmente! ${!currentUser ? 'Faça login para salvar na nuvem.' : ''}`);
@@ -1397,83 +1427,146 @@
             });
             
             // Função para atualizar a lista de relatórios
-            function updateReportsList(searchTerm = '') {
-                reportsList.innerHTML = '';
-                let count = 0;
+            async function updateReportsList(searchTerm = '') {
+                reportsList.innerHTML = '<p><span class="loading"></span> Carregando relatórios...</p>';
                 
-                // Percorrer todos os itens no localStorage
+                let reports = [];
+                
+                // Se o usuário está logado, buscar relatórios do Firebase
+                if (currentUser && isFirebaseConnected) {
+                    try {
+                        let query = firebaseDb.collection('analises')
+                            .where('userId', '==', currentUser.uid)
+                            .orderBy('timestamp', 'desc');
+                        
+                        const querySnapshot = await query.get();
+                        
+                        querySnapshot.forEach((doc) => {
+                            const data = doc.data();
+                            // Adicionar ID do documento para referência futura
+                            reports.push({...data, id: doc.id, source: 'firebase'});
+                        });
+                    } catch (error) {
+                        console.error("Erro ao buscar relatórios do Firebase:", error);
+                        reportsList.innerHTML = '<p>Erro ao carregar relatórios do Firebase.</p>';
+                    }
+                }
+                
+                // Buscar também relatórios do localStorage
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     
                     if (key.startsWith('fi-analysis-')) {
                         try {
                             const report = JSON.parse(localStorage.getItem(key));
-                            
-                            // Verificar se corresponde ao termo de pesquisa
-                            if (!searchTerm || 
-                                report.fundName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                report.analysisDate.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                
-                                const reportElement = document.createElement('div');
-                                reportElement.className = 'report-item';
-                                reportElement.innerHTML = `
-                                    <div class="report-info">
-                                        <h3>${report.fundName}</h3>
-                                        <p>Data: ${report.analysisDate} | Analista: ${report.analystName || 'Não informado'}</p>
-                                        <p>Salvo em: ${new Date(report.timestamp).toLocaleString()}</p>
-                                    </div>
-                                    <div class="report-actions">
-                                        <button class="btn-save report-btn view-btn" data-key="${key}">
-                                            <i class="fas fa-eye"></i> Ver
-                                        </button>
-                                        <button class="btn-print report-btn load-btn" data-key="${key}">
-                                            <i class="fas fa-upload"></i> Carregar
-                                        </button>
-                                        <button class="btn-reset report-btn delete-btn" data-key="${key}">
-                                            <i class="fas fa-trash"></i> Excluir
-                                        </button>
-                                    </div>
-                                `;
-                                
-                                reportsList.appendChild(reportElement);
-                                count++;
-                            }
+                            // Adicionar chave para referência futura
+                            reports.push({...report, key, source: 'localstorage'});
                         } catch (e) {
-                            console.error('Erro ao processar relatório:', e);
+                            console.error('Erro ao processar relatório do localStorage:', e);
                         }
                     }
                 }
                 
-                if (count === 0) {
-                    reportsList.innerHTML = '<p>Nenhum relatório local encontrado.</p>';
+                // Filtrar por termo de pesquisa se fornecido
+                if (searchTerm) {
+                    reports = reports.filter(report => 
+                        report.fundName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        report.analysisDate.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
                 }
+                
+                // Exibir os relatórios
+                reportsList.innerHTML = '';
+                
+                if (reports.length === 0) {
+                    reportsList.innerHTML = '<p>Nenhum relatório encontrado.</p>';
+                    return;
+                }
+                
+                reports.forEach(report => {
+                    const reportElement = document.createElement('div');
+                    reportElement.className = 'report-item';
+                    
+                    // Determinar a origem do relatório
+                    const isFirebaseReport = report.source === 'firebase';
+                    const storageKey = isFirebaseReport ? report.id : report.key;
+                    
+                    reportElement.innerHTML = `
+                        <div class="report-info">
+                            <h3>${report.fundName}</h3>
+                            <p>Data: ${report.analysisDate} | Analista: ${report.analystName || 'Não informado'}</p>
+                            <p>Salvo em: ${new Date(report.timestamp).toLocaleString()}</p>
+                            <small>${isFirebaseReport ? 'Salvo na nuvem' : 'Salvo localmente'}</small>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn-save report-btn view-btn" data-key="${storageKey}" data-source="${report.source}">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                            <button class="btn-print report-btn load-btn" data-key="${storageKey}" data-source="${report.source}">
+                                <i class="fas fa-upload"></i> Carregar
+                            </button>
+                            <button class="btn-reset report-btn delete-btn" data-key="${storageKey}" data-source="${report.source}">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    `;
+                    
+                    reportsList.appendChild(reportElement);
+                });
+                
+                // Atualizar contagem de relatórios
+                reportsCount.textContent = reports.length;
                 
                 // Adicionar event listeners aos botões
                 document.querySelectorAll('.view-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const key = this.getAttribute('data-key');
-                        viewReport(key);
+                        const source = this.getAttribute('data-source');
+                        viewReport(key, source);
                     });
                 });
                 
                 document.querySelectorAll('.load-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const key = this.getAttribute('data-key');
-                        loadReport(key);
+                        const source = this.getAttribute('data-source');
+                        loadReport(key, source);
                     });
                 });
                 
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const key = this.getAttribute('data-key');
-                        deleteReport(key);
+                        const source = this.getAttribute('data-source');
+                        deleteReport(key, source);
                     });
                 });
             }
             
             // Função para visualizar relatório
-            function viewReport(key) {
-                const report = JSON.parse(localStorage.getItem(key));
+            async function viewReport(key, source) {
+                let report;
+                
+                if (source === 'firebase') {
+                    // Buscar relatório do Firebase
+                    try {
+                        const doc = await firebaseDb.collection('analises').doc(key).get();
+                        if (doc.exists) {
+                            report = doc.data();
+                        } else {
+                            alert('Relatório não encontrado no Firebase.');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Erro ao buscar relatório do Firebase:', error);
+                        alert('Erro ao buscar relatório: ' + error.message);
+                        return;
+                    }
+                } else {
+                    // Buscar do localStorage
+                    report = JSON.parse(localStorage.getItem(key));
+                }
+                
                 let content = `
                     <h2>Relatório: ${report.fundName}</h2>
                     <p><strong>Data:</strong> ${report.analysisDate}</p>
@@ -1493,8 +1586,28 @@
             }
             
             // Função para carregar relatório no formulário
-            function loadReport(key) {
-                const report = JSON.parse(localStorage.getItem(key));
+            async function loadReport(key, source) {
+                let report;
+                
+                if (source === 'firebase') {
+                    // Buscar relatório do Firebase
+                    try {
+                        const doc = await firebaseDb.collection('analises').doc(key).get();
+                        if (doc.exists) {
+                            report = doc.data();
+                        } else {
+                            alert('Relatório não encontrado no Firebase.');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Erro ao carregar relatório do Firebase:', error);
+                        alert('Erro ao carregar relatório: ' + error.message);
+                        return;
+                    }
+                } else {
+                    // Buscar do localStorage
+                    report = JSON.parse(localStorage.getItem(key));
+                }
                 
                 // Preencher campos do formulário
                 document.getElementById('fund-name').value = report.fundName || '';
@@ -1539,7 +1652,7 @@
                 document.getElementById('balance-sustainability').value = report.balanceSustainability || '';
                 document.getElementById('discount').value = report.discount || '';
                 
-                // Preencher checkboxes e radios (simplificado para exemplo)
+                // Preencher checkboxes e radios
                 if (report.otherSegment) {
                     document.getElementById('other-segment').checked = true;
                     document.getElementById('other-segment-text').value = report.otherSegment;
@@ -1568,7 +1681,7 @@
                     });
                 }
                 
-                // Mudar para la aba do formulário
+                // Mudar para a aba do formulário
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
                 document.querySelector('.tab[data-tab="form"]').classList.add('active');
@@ -1585,14 +1698,39 @@
             }
             
             // Função para excluir relatório
-            function deleteReport(key) {
-                const report = JSON.parse(localStorage.getItem(key));
+            async function deleteReport(key, source) {
+                let reportName = '';
                 
-                if (confirm(`Tem certeza que deseja excluir o relatório de ${report.fundName}?`)) {
-                    localStorage.removeItem(key);
-                    alert('Relatório excluído com sucesso.');
-                    updateReportsList();
-                    updateStorageInfo();
+                if (source === 'firebase') {
+                    // Buscar relatório do Firebase para obter o nome
+                    try {
+                        const doc = await firebaseDb.collection('analises').doc(key).get();
+                        if (doc.exists) {
+                            reportName = doc.data().fundName;
+                            
+                            if (confirm(`Tem certeza que deseja excluir o relatório de ${reportName} da nuvem?`)) {
+                                await firebaseDb.collection('analises').doc(key).delete();
+                                alert('Relatório excluído com sucesso do Firebase.');
+                                updateReportsList();
+                            }
+                        } else {
+                            alert('Relatório não encontrado no Firebase.');
+                        }
+                    } catch (error) {
+                        console.error('Erro ao excluir relatório do Firebase:', error);
+                        alert('Erro ao excluir relatório: ' + error.message);
+                    }
+                } else {
+                    // Excluir do localStorage
+                    const report = JSON.parse(localStorage.getItem(key));
+                    reportName = report.fundName;
+                    
+                    if (confirm(`Tem certeza que deseja excluir o relatório de ${reportName}?`)) {
+                        localStorage.removeItem(key);
+                        alert('Relatório excluído com sucesso.');
+                        updateReportsList();
+                        updateStorageInfo();
+                    }
                 }
             }
             
@@ -1637,7 +1775,7 @@
                 const savedData = localStorage.getItem(storageKey);
                 
                 if (savedData) {
-                    loadReport(storageKey);
+                    loadReport(storageKey, 'localstorage');
                 }
             }
         });
