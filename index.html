@@ -5,53 +5,53 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Checklist RI - FIIs (mensal)</title>
 <style>
-  :root{
-    --bg:#0f1724; --card:#0b1220; --muted:#9aa7b2; --accent:#60a5fa; --glass: rgba(255,255,255,0.03);
-    --success:#10b981; --danger:#ef4444; --card-border: rgba(255,255,255,0.04);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:linear-gradient(180deg,#071027 0%, #071a2a 100%); color:#e6eef3;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-  }
-  .wrap{max-width:1100px;margin:28px auto;padding:20px;}
-  header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
-  h1{font-size:20px;margin:0}
-  .sub{color:var(--muted);font-size:13px}
-  .topbar{display:flex;gap:8px;margin-left:auto;align-items:center}
-  select,input[type="text"],button{
-    background:var(--glass);border:1px solid var(--card-border);color:inherit;padding:8px 10px;border-radius:8px;font-size:14px;
-  }
-  button{cursor:pointer}
-  .layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
-  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid var(--card-border); padding:12px;border-radius:12px}
-  .months{display:flex;flex-direction:column;gap:8px}
-  .month-btn{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:transparent;border:1px dashed var(--card-border);font-size:14px}
-  .month-btn.active{background:linear-gradient(90deg, rgba(96,165,250,0.12), rgba(96,165,250,0.04));border:1px solid rgba(96,165,250,0.18)}
-  .controls{display:flex;gap:8px;align-items:center}
-  .search{margin:8px 0}
-  .content{max-height:72vh;overflow:auto;padding:12px}
-  section{margin-bottom:18px}
-  section h2{margin:0 0 8px 0;font-size:15px}
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;border:1px solid transparent; flex-wrap: wrap;}
-  label{display:flex;align-items:center;gap:8px}
-  input[type="checkbox"]{width:18px;height:18px}
-  .note{width:100%;min-height:36px;padding:8px;border-radius:8px;background:#071827;border:1px solid var(--card-border);color:var(--muted);resize:vertical}
-  .row{display:flex;gap:8px;align-items:center}
-  .muted{color:var(--muted);font-size:13px}
-  footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-  .small{font-size:13px;color:var(--muted)}
-  .btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger);padding:6px 8px;border-radius:8px}
-  .btn-primary{background:linear-gradient(90deg,var(--accent),#3b82f6);border:0;color:#021127;padding:8px 12px;border-radius:8px}
-  .controls .icon{opacity:0.9}
-  .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border)}
-  @media(max-width:880px){
-    .layout{grid-template-columns:1fr; }
-    .months{flex-direction:row;overflow:auto}
-    .months .month-btn{min-width:200px}
-  }
+:root{
+  --bg:#0f1724; --card:#0b1220; --muted:#9aa7b2; --accent:#60a5fa; --glass: rgba(255,255,255,0.03);
+  --success:#10b981; --danger:#ef4444; --card-border: rgba(255,255,255,0.04);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:linear-gradient(180deg,#071027 0%, #071a2a 100%); color:#e6eef3;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+.wrap{max-width:1100px;margin:28px auto;padding:20px;}
+header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+h1{font-size:20px;margin:0}
+.sub{color:var(--muted);font-size:13px}
+.topbar{display:flex;gap:8px;margin-left:auto;align-items:center}
+select,input[type="text"],button{
+  background:var(--glass);border:1px solid var(--card-border);color:inherit;padding:8px 10px;border-radius:8px;font-size:14px;
+}
+button{cursor:pointer}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+.panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid var(--card-border); padding:12px;border-radius:12px}
+.months{display:flex;flex-direction:column;gap:8px}
+.month-btn{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:transparent;border:1px dashed var(--card-border);font-size:14px}
+.month-btn.active{background:linear-gradient(90deg, rgba(96,165,250,0.12), rgba(96,165,250,0.04));border:1px solid rgba(96,165,250,0.18)}
+.controls{display:flex;gap:8px;align-items:center}
+.search{margin:8px 0}
+.content{max-height:72vh;overflow:auto;padding:12px}
+section{margin-bottom:18px}
+section h2{margin:0 0 8px 0;font-size:15px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;border:1px solid transparent; flex-wrap: wrap;}
+label{display:flex;align-items:center;gap:8px}
+input[type="checkbox"]{width:18px;height:18px}
+.note{width:100%;min-height:36px;padding:8px;border-radius:8px;background:#071827;border:1px solid var(--card-border);color:var(--muted);resize:vertical}
+.row{display:flex;gap:8px;align-items:center}
+.muted{color:var(--muted);font-size:13px}
+footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.small{font-size:13px;color:var(--muted)}
+.btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger);padding:6px 8px;border-radius:8px}
+.btn-primary{background:linear-gradient(90deg,var(--accent),#3b82f6);border:0;color:#021127;padding:8px 12px;border-radius:8px}
+.controls .icon{opacity:0.9}
+.tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border)}
+@media(max-width:880px){
+  .layout{grid-template-columns:1fr; }
+  .months{flex-direction:row;overflow:auto}
+  .months .month-btn{min-width:200px}
+}
 </style>
 </head>
 <body>
@@ -96,15 +96,30 @@
 
     <main class="panel">
       <div class="content" id="contentArea">
-        <!-- Aqui você mantém todo o checklist que já tinha, mantendo as seções existentes... -->
-
-        <!-- Exemplo de item com textarea automático se não tinha -->
+        <!-- Exemplo de checklist -->
         <section id="s-estrutura">
           <h2>🏦 Estrutura do Fundo</h2>
-          <div class="item"><label><input type="checkbox" data-key="estrutura.estrategia_present" /> <div><strong>Qual a estratégia/objetivo do fundo?</strong><div class="muted">Ex: renda, ganho de capital...</div></div></label><textarea class="note" data-key="estrutura.obs" placeholder="Observações sobre estrutura (escreva texto livre)"></textarea></div>
-          <!-- Repita o mesmo padrão para todos os outros itens do checklist -->
+          <div class="item">
+            <label>
+              <input type="checkbox" data-key="estrutura.estrategia_present" />
+              <div><strong>Qual a estratégia/objetivo do fundo?</strong><div class="muted">Ex: renda, ganho de capital...</div></div>
+            </label>
+            <textarea class="note" data-key="estrutura.obs" placeholder="Observações sobre estrutura (escreva texto livre)"></textarea>
+          </div>
         </section>
 
+        <section id="s-segmento">
+          <h2>📊 Segmento e Tipo</h2>
+          <div class="item">
+            <label>
+              <input type="checkbox" data-key="segmento.tipo_checked" />
+              <div><strong>Segmento do fundo</strong><div class="muted">Ex: logística, lajes corporativas...</div></div>
+            </label>
+            <textarea class="note" data-key="segmento.obs" placeholder="Observações sobre segmento"></textarea>
+          </div>
+        </section>
+
+        <!-- Aqui você pode adicionar todos os outros itens do seu checklist seguindo o mesmo padrão -->
       </div>
 
       <footer>
@@ -184,7 +199,10 @@ function deleteMonth(m){
   else clearUI();
 }
 
-function clearUI(){ document.querySelectorAll('[data-key]').forEach(n=>{ if(n.type==='checkbox') n.checked=false; else n.value=''; }); document.getElementById('fiiTicker').value=''; }
+function clearUI(){ 
+  document.querySelectorAll('[data-key]').forEach(n=>{ if(n.type==='checkbox') n.checked=false; else n.value=''; }); 
+  document.getElementById('fiiTicker').value=''; 
+}
 
 function loadMonthToUI(m){
   clearUI();
