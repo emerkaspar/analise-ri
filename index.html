@@ -11,18 +11,13 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 *{box-sizing:border-box}
-body{
-  margin:0; background:linear-gradient(180deg,#071027 0%, #071a2a 100%); color:#e6eef3;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-}
+body{margin:0;background:linear-gradient(180deg,#071027 0%, #071a2a 100%); color:#e6eef3; font-smoothing:antialiased;}
 .wrap{max-width:1100px;margin:28px auto;padding:20px;}
 header{display:flex;gap:12px;align-items:center;margin-bottom:18px}
 h1{font-size:20px;margin:0}
 .sub{color:var(--muted);font-size:13px}
 .topbar{display:flex;gap:8px;margin-left:auto;align-items:center}
-select,input[type="text"],button{
-  background:var(--glass);border:1px solid var(--card-border);color:inherit;padding:8px 10px;border-radius:8px;font-size:14px;
-}
+select,input[type="text"],button{background:var(--glass);border:1px solid var(--card-border);color:inherit;padding:8px 10px;border-radius:8px;font-size:14px;}
 button{cursor:pointer}
 .layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
 .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid var(--card-border); padding:12px;border-radius:12px}
@@ -47,11 +42,7 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
 .btn-primary{background:linear-gradient(90deg,var(--accent),#3b82f6);border:0;color:#021127;padding:8px 12px;border-radius:8px}
 .controls .icon{opacity:0.9}
 .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border)}
-@media(max-width:880px){
-  .layout{grid-template-columns:1fr; }
-  .months{flex-direction:row;overflow:auto}
-  .months .month-btn{min-width:200px}
-}
+@media(max-width:880px){.layout{grid-template-columns:1fr;}.months{flex-direction:row;overflow:auto}.months .month-btn{min-width:200px}}
 </style>
 </head>
 <body>
@@ -96,30 +87,81 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
 
     <main class="panel">
       <div class="content" id="contentArea">
-        <!-- Exemplo de checklist -->
-        <section id="s-estrutura">
+
+        <!-- Seção: Estrutura do Fundo -->
+        <section>
           <h2>🏦 Estrutura do Fundo</h2>
           <div class="item">
-            <label>
-              <input type="checkbox" data-key="estrutura.estrategia_present" />
-              <div><strong>Qual a estratégia/objetivo do fundo?</strong><div class="muted">Ex: renda, ganho de capital...</div></div>
-            </label>
-            <textarea class="note" data-key="estrutura.obs" placeholder="Observações sobre estrutura (escreva texto livre)"></textarea>
+            <label><input type="checkbox" data-key="estrutura.estrategia" /> Qual a estratégia/objetivo do fundo?</label>
+            <textarea class="note" data-key="estrutura.obs" placeholder="Observações"></textarea>
           </div>
         </section>
 
-        <section id="s-segmento">
+        <!-- Seção: Segmento / Tipo -->
+        <section>
           <h2>📊 Segmento e Tipo</h2>
           <div class="item">
-            <label>
-              <input type="checkbox" data-key="segmento.tipo_checked" />
-              <div><strong>Segmento do fundo</strong><div class="muted">Ex: logística, lajes corporativas...</div></div>
-            </label>
-            <textarea class="note" data-key="segmento.obs" placeholder="Observações sobre segmento"></textarea>
+            <label><input type="checkbox" data-key="segmento.segmento" /> Segmento do fundo</label>
+            <textarea class="note" data-key="segmento.obs" placeholder="Observações"></textarea>
+          </div>
+          <div class="item">
+            <label><input type="checkbox" data-key="tipo.tipo" /> Tipo do fundo</label>
+            <textarea class="note" data-key="tipo.obs" placeholder="Observações"></textarea>
           </div>
         </section>
 
-        <!-- Aqui você pode adicionar todos os outros itens do seu checklist seguindo o mesmo padrão -->
+        <!-- Seção: Dividendos / Rendimento -->
+        <section>
+          <h2>💵 Dividendos / Rendimento</h2>
+          <div class="item">
+            <label><input type="checkbox" data-key="dividendos.regularidade" /> Regularidade de pagamento</label>
+            <textarea class="note" data-key="dividendos.obs" placeholder="Observações"></textarea>
+          </div>
+          <div class="item">
+            <label><input type="checkbox" data-key="dividendos.historico" /> Histórico de rendimento</label>
+            <textarea class="note" data-key="dividendos.historico_obs" placeholder="Observações"></textarea>
+          </div>
+        </section>
+
+        <!-- Seção: Ativos / Portfólio -->
+        <section>
+          <h2>🏢 Ativos / Portfólio</h2>
+          <div class="item">
+            <label><input type="checkbox" data-key="ativos.quantidade" /> Quantidade de ativos</label>
+            <textarea class="note" data-key="ativos.obs" placeholder="Observações"></textarea>
+          </div>
+          <div class="item">
+            <label><input type="checkbox" data-key="ativos.localizacao" /> Localização dos imóveis</label>
+            <textarea class="note" data-key="ativos.localizacao_obs" placeholder="Observações"></textarea>
+          </div>
+        </section>
+
+        <!-- Seção: Gestão -->
+        <section>
+          <h2>👨‍💼 Gestão</h2>
+          <div class="item">
+            <label><input type="checkbox" data-key="gestao.administrador" /> Administrador do fundo</label>
+            <textarea class="note" data-key="gestao.obs" placeholder="Observações"></textarea>
+          </div>
+          <div class="item">
+            <label><input type="checkbox" data-key="gestao.gestor" /> Gestor do fundo</label>
+            <textarea class="note" data-key="gestao.gestor_obs" placeholder="Observações"></textarea>
+          </div>
+        </section>
+
+        <!-- Seção: Documentos / RI -->
+        <section>
+          <h2>📄 Documentos / RI</h2>
+          <div class="item">
+            <label><input type="checkbox" data-key="ri.demonstrativos" /> Demonstrativos publicados</label>
+            <textarea class="note" data-key="ri.obs" placeholder="Observações"></textarea>
+          </div>
+          <div class="item">
+            <label><input type="checkbox" data-key="ri.assembleias" /> Convocações e atas</label>
+            <textarea class="note" data-key="ri.assembleias_obs" placeholder="Observações"></textarea>
+          </div>
+        </section>
+
       </div>
 
       <footer>
@@ -142,7 +184,7 @@ function defaultStructure(){
     if(n.type==='checkbox') obj[k] = false;
     else obj[k] = '';
   });
-  obj['meta.ativo'] = '';
+  obj['meta.ativo']='';
   return obj;
 }
 
