@@ -409,7 +409,7 @@
 <body>
     <div class="container">
         <header>
-            <h1><img src="https://i.ibb.co/9kpYwVdn/logomarca-com-fundo.png" alt="logomarca-com-fundo" border="0">Checklist de Análise de FIIs</h1>
+            <h1>Checklist de Análise de FIIs</h1>
             <p class="app-description">Análise completa de fundos imobiliários com sistema de salvamento</p>
         </header>
         
@@ -571,6 +571,80 @@
                     </div>
                 </div>
                 
+                <!-- 🔎 GOVERNANÇA E GESTÃO (NOVA SEÇÃO) -->
+                <div class="section">
+                    <div class="section-title">
+                        <span>🔎</span>
+                        <h2>Governança e Gestão</h2>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="manager-history">Quem é o gestor e qual o histórico dele no mercado?</label>
+                        <textarea id="manager-history" placeholder="Descreva o gestor e seu histórico..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Existe troca de gestor ou equipe recente?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="manager-change-yes" name="manager-change" value="sim">
+                                <label for="manager-change-yes">Sim</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="manager-change-no" name="manager-change" value="nao">
+                                <label for="manager-change-no">Não</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="manager-change-details">Se houve troca, detalhe as circunstâncias:</label>
+                        <textarea id="manager-change-details" placeholder="Detalhe a troca de gestão..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>O fundo tem conflitos de interesse (gestor/administrador ligados a ativos/inquilinos)?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="conflicts-yes" name="conflicts" value="sim">
+                                <label for="conflicts-yes">Sim</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="conflicts-no" name="conflicts" value="nao">
+                                <label for="conflicts-no">Não</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="conflicts-details">Se houver conflitos, detalhe:</label>
+                        <textarea id="conflicts-details" placeholder="Descreva os conflitos de interesse..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Grau de transparência dos relatórios:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="transparency-high" name="transparency" value="alta">
+                                <label for="transparency-high">Alta (claros e detalhados)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="transparency-medium" name="transparency" value="media">
+                                <label for="transparency-medium">Média</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="transparency-low" name="transparency" value="baixa">
+                                <label for="transparency-low">Baixa (superficiais)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Observações:</label>
+                        <textarea class="observations" placeholder="Anotações sobre governança e gestão..."></textarea>
+                    </div>
+                </div>
+                
                 <!-- VACÂNCIA E RECEITA -->
                 <div class="section">
                     <div class="section-title">
@@ -619,6 +693,57 @@
                     <div class="checklist-item">
                         <label>Observações:</label>
                         <textarea class="observations" placeholder="Anotações sobre vacância e receita..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- 📈 DESEMPENHO COMPARATIVO (NOVA SEÇÃO) -->
+                <div class="section">
+                    <div class="section-title">
+                        <span>📈</span>
+                        <h2>Desempenho Comparativo</h2>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="vpc-evolution">Evolução do valor patrimonial por cota (VPC) nos últimos 12 meses</label>
+                        <textarea id="vpc-evolution" placeholder="Descreva a evolução do VPC..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="current-vs-avg">Cotação atual vs média dos últimos 12 meses</label>
+                        <input type="text" id="current-vs-avg" placeholder="Ex: 5% acima, 10% abaixo">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="yield-comparison">Rendimento atual vs média histórica (em %)</label>
+                        <input type="text" id="yield-comparison" placeholder="Ex: 6.5% vs 7.2%">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="sector-comparison">DY vs média do setor (logística, lajes, shopping, etc.)</label>
+                        <input type="text" id="sector-comparison" placeholder="Ex: 0.5% acima da média de shoppings">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Classificação do fundo:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="risk-fund" name="fund-classification">
+                                <label for="risk-fund">⚠️ Risco</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="growth-fund" name="fund-classification">
+                                <label for="growth-fund">📈 Crescimento</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="anchor-fund" name="fund-classification">
+                                <label for="anchor-fund">⚓ Ancoragem</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Observações:</label>
+                        <textarea class="observations" placeholder="Anotações sobre desempenho comparativo..."></textarea>
                     </div>
                 </div>
                 
@@ -982,6 +1107,20 @@
                     tenantConcentration: document.getElementById('tenant-concentration').value,
                     tenantFinancials: document.getElementById('tenant-financials').value,
                     gracePeriod: getSelectedRadio('grace-period'),
+                    // Novos campos de Governança
+                    managerHistory: document.getElementById('manager-history').value,
+                    managerChange: getSelectedRadio('manager-change'),
+                    managerChangeDetails: document.getElementById('manager-change-details').value,
+                    conflicts: getSelectedRadio('conflicts'),
+                    conflictsDetails: document.getElementById('conflicts-details').value,
+                    transparency: getSelectedRadio('transparency'),
+                    // Novos campos de Desempenho
+                    vpcEvolution: document.getElementById('vpc-evolution').value,
+                    currentVsAvg: document.getElementById('current-vs-avg').value,
+                    yieldComparison: document.getElementById('yield-comparison').value,
+                    sectorComparison: document.getElementById('sector-comparison').value,
+                    fundClassification: getSelectedCheckboxes('fund-classification'),
+                    // Campos existentes
                     financialVacancy: document.getElementById('financial-vacancy').value,
                     physicalVacancy: document.getElementById('physical-vacancy').value,
                     defaultRate: document.getElementById('default-rate').value,
@@ -1159,6 +1298,16 @@
                 document.getElementById('largest-sector').value = report.largestSector || '';
                 document.getElementById('tenant-concentration').value = report.tenantConcentration || '';
                 document.getElementById('tenant-financials').value = report.tenantFinancials || '';
+                // Novos campos de Governança
+                document.getElementById('manager-history').value = report.managerHistory || '';
+                document.getElementById('manager-change-details').value = report.managerChangeDetails || '';
+                document.getElementById('conflicts-details').value = report.conflictsDetails || '';
+                // Novos campos de Desempenho
+                document.getElementById('vpc-evolution').value = report.vpcEvolution || '';
+                document.getElementById('current-vs-avg').value = report.currentVsAvg || '';
+                document.getElementById('yield-comparison').value = report.yieldComparison || '';
+                document.getElementById('sector-comparison').value = report.sectorComparison || '';
+                // Campos existentes
                 document.getElementById('financial-vacancy').value = report.financialVacancy || '';
                 document.getElementById('physical-vacancy').value = report.physicalVacancy || '';
                 document.getElementById('default-rate').value = report.defaultRate || '';
@@ -1181,6 +1330,28 @@
                     document.getElementById('other-segment-text').style.display = 'block';
                 }
                 
+                // Selecionar opções de rádio
+                selectRadioOption('management-type', report.managementType);
+                selectRadioOption('ifix-comparison', report.ifixComparison);
+                selectRadioOption('grace-period', report.gracePeriod);
+                selectRadioOption('manager-change', report.managerChange);
+                selectRadioOption('conflicts', report.conflicts);
+                selectRadioOption('transparency', report.transparency);
+                selectRadioOption('result-comparison', report.resultComparison);
+                selectRadioOption('leverage', report.leverage);
+                selectRadioOption('liquidity', report.liquidity);
+                selectRadioOption('risk-level', report.riskLevel);
+                selectRadioOption('anchor', report.anchor);
+                selectRadioOption('expectation', report.expectation);
+                selectRadioOption('recommendation', report.recommendation);
+                
+                // Selecionar classificações do fundo
+                if (report.fundClassification) {
+                    document.querySelectorAll('input[name="fund-classification"]').forEach(cb => {
+                        cb.checked = report.fundClassification.includes(cb.nextElementSibling.textContent);
+                    });
+                }
+                
                 // Mudar para a aba do formulário
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
@@ -1188,6 +1359,13 @@
                 document.getElementById('form-tab').classList.add('active');
                 
                 alert(`Relatório de ${report.fundName} carregado com sucesso!`);
+            }
+            
+            // Função auxiliar para selecionar opção de rádio
+            function selectRadioOption(name, value) {
+                if (!value) return;
+                const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                if (radio) radio.checked = true;
             }
             
             // Função para excluir relatório
