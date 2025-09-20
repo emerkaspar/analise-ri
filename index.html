@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Checklist RI - FIIs (mensal)</title>
+<title>Checklist RI - FIIs (completo)</title>
 <style>
 :root{
   --bg:#0f1724; --card:#0b1220; --muted:#9aa7b2; --accent:#60a5fa; --glass: rgba(255,255,255,0.03);
@@ -29,9 +29,8 @@ button{cursor:pointer}
 .content{max-height:72vh;overflow:auto;padding:12px}
 section{margin-bottom:18px}
 section h2{margin:0 0 8px 0;font-size:15px}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;border:1px solid transparent; flex-wrap: wrap;}
-label{display:flex;align-items:center;gap:8px}
+label{display:flex;align-items:center;gap:8px; flex:1 1 300px}
 input[type="checkbox"]{width:18px;height:18px}
 .note{width:100%;min-height:36px;padding:8px;border-radius:8px;background:#071827;border:1px solid var(--card-border);color:var(--muted);resize:vertical}
 .row{display:flex;gap:8px;align-items:center}
@@ -49,14 +48,14 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
 <div class="wrap">
   <header>
     <div>
-      <h1>📋 Checklist RI — Fundos Imobiliários</h1>
+      <h1>📋 Checklist RI — Fundos Imobiliários (Completo)</h1>
       <div class="sub">Mantenha um histórico mensal — salva localmente no navegador</div>
     </div>
 
     <div class="topbar">
       <div class="controls">
         <select id="monthSelect" title="Escolha mês/ano"></select>
-        <input id="newMonthName" type="text" placeholder="MM/YYYY (Ex: 09/2025)" style="width:120px">
+        <input id="newMonthName" type="text" placeholder="MM/YYYY" style="width:120px">
         <input id="fiiTicker" type="text" placeholder="Ativo (Ex: XPLG11)" style="width:100px" title="Insira o ticker do fundo" />
         <button id="addMonthBtn" title="Adicionar mês">➕</button>
         <button id="saveBtn" class="btn-primary" title="Salvar agora">Salvar</button>
@@ -88,78 +87,53 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
     <main class="panel">
       <div class="content" id="contentArea">
 
-        <!-- Seção: Estrutura do Fundo -->
+        <!-- Estrutura do Fundo -->
         <section>
           <h2>🏦 Estrutura do Fundo</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="estrutura.estrategia" /> Qual a estratégia/objetivo do fundo?</label>
-            <textarea class="note" data-key="estrutura.obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="estrutura.estrategia"> Estratégia / Objetivo do fundo</label><textarea class="note" data-key="estrutura.estrategia_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="estrutura.criacao"> Data de criação</label><textarea class="note" data-key="estrutura.criacao_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="estrutura.cnpj"> CNPJ / Status legal</label><textarea class="note" data-key="estrutura.cnpj_obs" placeholder="Observações"></textarea></div>
         </section>
 
-        <!-- Seção: Segmento / Tipo -->
+        <!-- Segmento e Tipo -->
         <section>
           <h2>📊 Segmento e Tipo</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="segmento.segmento" /> Segmento do fundo</label>
-            <textarea class="note" data-key="segmento.obs" placeholder="Observações"></textarea>
-          </div>
-          <div class="item">
-            <label><input type="checkbox" data-key="tipo.tipo" /> Tipo do fundo</label>
-            <textarea class="note" data-key="tipo.obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="segmento.segmento"> Segmento do fundo</label><textarea class="note" data-key="segmento.obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="tipo.tipo"> Tipo do fundo</label><textarea class="note" data-key="tipo.obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="tipo.hibrido"> Fundos híbridos?</label><textarea class="note" data-key="tipo.hibrido_obs" placeholder="Observações"></textarea></div>
         </section>
 
-        <!-- Seção: Dividendos / Rendimento -->
+        <!-- Dividendos / Rendimento -->
         <section>
           <h2>💵 Dividendos / Rendimento</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="dividendos.regularidade" /> Regularidade de pagamento</label>
-            <textarea class="note" data-key="dividendos.obs" placeholder="Observações"></textarea>
-          </div>
-          <div class="item">
-            <label><input type="checkbox" data-key="dividendos.historico" /> Histórico de rendimento</label>
-            <textarea class="note" data-key="dividendos.historico_obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="dividendos.regularidade"> Regularidade de pagamento</label><textarea class="note" data-key="dividendos.regularidade_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="dividendos.historico"> Histórico de rendimento</label><textarea class="note" data-key="dividendos.historico_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="dividendos.yield"> Yield atual / estimativa</label><textarea class="note" data-key="dividendos.yield_obs" placeholder="Observações"></textarea></div>
         </section>
 
-        <!-- Seção: Ativos / Portfólio -->
+        <!-- Ativos / Portfólio -->
         <section>
           <h2>🏢 Ativos / Portfólio</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="ativos.quantidade" /> Quantidade de ativos</label>
-            <textarea class="note" data-key="ativos.obs" placeholder="Observações"></textarea>
-          </div>
-          <div class="item">
-            <label><input type="checkbox" data-key="ativos.localizacao" /> Localização dos imóveis</label>
-            <textarea class="note" data-key="ativos.localizacao_obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="ativos.quantidade"> Quantidade de ativos</label><textarea class="note" data-key="ativos.quantidade_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="ativos.localizacao"> Localização dos imóveis</label><textarea class="note" data-key="ativos.localizacao_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="ativos.valor"> Valor dos imóveis</label><textarea class="note" data-key="ativos.valor_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="ativos.ocupacao"> Taxa de ocupação</label><textarea class="note" data-key="ativos.ocupacao_obs" placeholder="Observações"></textarea></div>
         </section>
 
-        <!-- Seção: Gestão -->
+        <!-- Gestão -->
         <section>
           <h2>👨‍💼 Gestão</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="gestao.administrador" /> Administrador do fundo</label>
-            <textarea class="note" data-key="gestao.obs" placeholder="Observações"></textarea>
-          </div>
-          <div class="item">
-            <label><input type="checkbox" data-key="gestao.gestor" /> Gestor do fundo</label>
-            <textarea class="note" data-key="gestao.gestor_obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="gestao.administrador"> Administrador do fundo</label><textarea class="note" data-key="gestao.administrador_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="gestao.gestor"> Gestor do fundo</label><textarea class="note" data-key="gestao.gestor_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="gestao.experiencia"> Experiência / histórico da gestão</label><textarea class="note" data-key="gestao.experiencia_obs" placeholder="Observações"></textarea></div>
         </section>
 
-        <!-- Seção: Documentos / RI -->
+        <!-- Documentos / RI -->
         <section>
           <h2>📄 Documentos / RI</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="ri.demonstrativos" /> Demonstrativos publicados</label>
-            <textarea class="note" data-key="ri.obs" placeholder="Observações"></textarea>
-          </div>
-          <div class="item">
-            <label><input type="checkbox" data-key="ri.assembleias" /> Convocações e atas</label>
-            <textarea class="note" data-key="ri.assembleias_obs" placeholder="Observações"></textarea>
-          </div>
+          <div class="item"><label><input type="checkbox" data-key="ri.demonstrativos"> Demonstrativos publicados</label><textarea class="note" data-key="ri.demonstrativos_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="ri.assembleias"> Convocações e atas</label><textarea class="note" data-key="ri.assembleias_obs" placeholder="Observações"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="ri.fatos_relevantes"> Fatos relevantes / comunicados</label><textarea class="note" data-key="ri.fatos_relevantes_obs" placeholder="Observações"></textarea></div>
         </section>
 
       </div>
@@ -173,8 +147,7 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
 </div>
 
 <script>
-const STORAGE_KEY = 'fii_checklist_v1';
-
+const STORAGE_KEY = 'fii_checklist_v2';
 function defaultStructure(){
   const nodes = document.querySelectorAll('[data-key]');
   const obj = {};
@@ -187,17 +160,14 @@ function defaultStructure(){
   obj['meta.ativo']='';
   return obj;
 }
-
 function loadDB(){ try{ const raw=localStorage.getItem(STORAGE_KEY); return raw?JSON.parse(raw):{months:{},order:[]};}catch(e){return{months:{},order:[]}}}
 function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
-
 function populateMonthSelect(){
   const sel=document.getElementById('monthSelect'); sel.innerHTML='';
   const db=loadDB();
   db.order.forEach(m=>{ const opt=document.createElement('option'); opt.value=m; opt.textContent=m; sel.appendChild(opt); });
   if(sel.options.length) sel.value=sel.options[sel.options.length-1].value;
 }
-
 function renderMonthsList(){
   const list=document.getElementById('monthsList'); list.innerHTML='';
   const db=loadDB();
@@ -210,15 +180,12 @@ function renderMonthsList(){
   });
   document.getElementById('countTag').textContent=db.order.length;
 }
-
 function getCurrentMonthKey(){ return document.getElementById('monthSelect').value || null; }
-
 function setCurrentMonth(m){
   document.getElementById('monthSelect').value=m;
   renderMonthsList();
   loadMonthToUI(m);
 }
-
 function addMonth(m){
   if(!m){ alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
   const db=loadDB();
@@ -228,7 +195,6 @@ function addMonth(m){
   saveDB(db);
   populateMonthSelect(); renderMonthsList(); setCurrentMonth(m);
 }
-
 function deleteMonth(m){
   const db=loadDB();
   if(!db.order.includes(m)) return;
@@ -240,12 +206,10 @@ function deleteMonth(m){
   if(sel.options.length) setCurrentMonth(sel.options[sel.options.length-1].value);
   else clearUI();
 }
-
 function clearUI(){ 
   document.querySelectorAll('[data-key]').forEach(n=>{ if(n.type==='checkbox') n.checked=false; else n.value=''; }); 
   document.getElementById('fiiTicker').value=''; 
 }
-
 function loadMonthToUI(m){
   clearUI();
   const db=loadDB();
@@ -258,7 +222,6 @@ function loadMonthToUI(m){
   });
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
 }
-
 function saveCurrentMonth(){
   const m=getCurrentMonthKey(); if(!m) return alert('Selecione mês');
   const db=loadDB(); if(!db.months[m]) db.months[m]=defaultStructure();
@@ -273,14 +236,13 @@ function saveCurrentMonth(){
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
   renderMonthsList();
 }
-
 document.getElementById('addMonthBtn').onclick=()=>addMonth(document.getElementById('newMonthName').value.trim());
 document.getElementById('monthSelect').onchange=()=>setCurrentMonth(getCurrentMonthKey());
 document.getElementById('saveBtn').onclick=saveCurrentMonth;
 document.getElementById('clearBtn').onclick=()=>{ if(confirm('Limpar os campos do mês atual?')) clearUI(); };
 document.getElementById('exportBtn').onclick=()=>{
   const blob=new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist_fii.json'; a.click();
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist_fii_completo.json'; a.click();
 };
 document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
 document.getElementById('importFile').onchange=(ev)=>{
@@ -289,18 +251,4 @@ document.getElementById('importFile').onchange=(ev)=>{
   reader.onload=e=>{
     try{
       const data=JSON.parse(e.target.result);
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-      populateMonthSelect(); renderMonthsList(); alert('Importação concluída!');
-    }catch(err){ alert('Erro ao importar JSON'); }
-  };
-  reader.readAsText(file);
-};
-document.getElementById('printBtn').onclick=()=>window.print();
-
-// inicialização
-populateMonthSelect();
-renderMonthsList();
-if(document.getElementById('monthSelect').options.length) setCurrentMonth(document.getElementById('monthSelect').options[0].value);
-</script>
-</body>
-</html>
+      localStorage.setItem
