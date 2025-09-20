@@ -410,7 +410,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-chart-line"></i> Checklist de Análise de FIIs</h1>
-            <p class="app-description">Teste análise completa de fundos imobiliários com sistema de salvamento</p>
+            <p class="app-description">Análise completa de fundos imobiliários com sistema de salvamento</p>
         </header>
         
         <div class="tabs">
@@ -495,124 +495,264 @@
                     </div>
                     
                     <div class="checklist-item">
+                        <label for="property-count">Quantidade de imóveis</label>
+                        <input type="number" id="property-count" placeholder="Número de imóveis no portfólio">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Alocação do Fundo</label>
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <input type="text" id="allocation-properties" placeholder="% Imóveis">
+                            <input type="text" id="allocation-fiis" placeholder="% FIIs">
+                            <input type="text" id="allocation-cash" placeholder="% Caixa">
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>% de contratos</label>
+                        <div style="display: flex; gap: 10px; margin-top: 8px;">
+                            <input type="text" id="typical-contracts" placeholder="% Típicos">
+                            <input type="text" id="atypical-contracts" placeholder="% Atípicos">
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="average-contract-term">Tempo médio de vencimento dos contratos (meses)</label>
+                        <input type="number" id="average-contract-term" placeholder="Tempo médio em meses">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="expiring-contracts">Há contratos próximos do vencimento? Qual % da receita?</label>
+                        <textarea id="expiring-contracts" placeholder="Descreva a situação dos contratos..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="active-tenants">Quantos inquilinos ativos</label>
+                        <input type="number" id="active-tenants" placeholder="Número de inquilinos ativos">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="tenant-segments">Segmentos de mercado dos inquilinos</label>
+                        <textarea id="tenant-segments" placeholder="Liste os segmentos de mercado..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="largest-sector">% da carteira alocada no maior setor</label>
+                        <input type="text" id="largest-sector" placeholder="Percentual do maior setor">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="tenant-concentration">Concentração em algum inquilino? Qual e qual %?</label>
+                        <textarea id="tenant-concentration" placeholder="Descreva a concentração..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="tenant-financials">Situação financeira do inquilino com maior concentração</label>
+                        <textarea id="tenant-financials" placeholder="Descreva a situação financeira..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Existe inquilino em período de carência?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="grace-period-yes" name="grace-period" value="sim">
+                                <label for="grace-period-yes">Sim</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="grace-period-no" name="grace-period" value="nao">
+                                <label for="grace-period-no">Não</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
                         <label>Observações:</label>
                         <textarea class="observations" placeholder="Anotações sobre a estrutura do fundo..."></textarea>
                     </div>
                 </div>
                 
-                <!-- CUSTOS DO FUNDO -->
+                <!-- VACÂNCIA E RECEITA -->
+                <div class="section">
+                    <div class="section-title">
+                        <span>📊</span>
+                        <h2>Vacância e Receita</h2>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="financial-vacancy">Vacância financeira (%)</label>
+                        <input type="text" id="financial-vacancy" placeholder="Percentual de vacância financeira">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="physical-vacancy">Vacância física (%)</label>
+                        <input type="text" id="physical-vacancy" placeholder="Percentual de vacância física">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="default-rate">Inadimplência (%)</label>
+                        <input type="text" id="default-rate" placeholder="Percentual de inadimplência">
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Resultado superior ou inferior ao mês anterior?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="result-higher" name="result-comparison" value="superior">
+                                <label for="result-higher">Superior</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="result-lower" name="result-comparison" value="inferior">
+                                <label for="result-lower">Inferior</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="result-same" name="result-comparison" value="igual">
+                                <label for="result-same">Igual</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="result-reason">Se diferente, qual o motivo?</label>
+                        <textarea id="result-reason" placeholder="Explique o motivo da variação..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Observações:</label>
+                        <textarea class="observations" placeholder="Anotações sobre vacância e receita..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- ALAVANCAGEM E ESTRUTURA DE CAPITAL -->
                 <div class="section">
                     <div class="section-title">
                         <span>💰</span>
-                        <h2>Custos do Fundo</h2>
+                        <h2>Alavancagem e Estrutura de Capital</h2>
                     </div>
                     
                     <div class="checklist-item">
-                        <label for="admin-fee">Taxa de administração (% sobre PL ou receita)</label>
-                        <input type="text" id="admin-fee" placeholder="Ex: 1,2% sobre PL">
+                        <label>Existe alavancagem?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="leverage-yes" name="leverage" value="sim">
+                                <label for="leverage-yes">Sim</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="leverage-no" name="leverage" value="nao">
+                                <label for="leverage-no">Não</label>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="checklist-item">
-                        <label for="performance-fee">Taxa de performance (% e benchmark)</label>
-                        <input type="text" id="performance-fee" placeholder="Ex: 20% acima do CDI">
+                        <label for="leverage-rate">Taxa média da alavancagem (%)</label>
+                        <input type="text" id="leverage-rate" placeholder="Taxa média de juros">
                     </div>
                     
                     <div class="checklist-item">
-                        <label for="other-fees">Outras taxas relevantes? (consultoria, escrituração, etc.)</label>
-                        <textarea id="other-fees" placeholder="Liste outras taxas..."></textarea>
+                        <label for="amortization-plan">Plano de amortização detalhado</label>
+                        <textarea id="amortization-plan" placeholder="Descreva o plano de amortização..."></textarea>
                     </div>
                     
                     <div class="checklist-item">
                         <label>Observações:</label>
-                        <textarea class="observations" placeholder="Anotações sobre os custos do fundo..."></textarea>
+                        <textarea class="observations" placeholder="Anotações sobre alavancagem..."></textarea>
                     </div>
                 </div>
                 
-                <!-- DISTRIBUIÇÃO DE RENDIMENTOS -->
+                <!-- LIQUIDEZ E MERCADO -->
                 <div class="section">
                     <div class="section-title">
-                        <span>💸</span>
-                        <h2>Distribuição de Rendimentos</h2>
+                        <span>📈</span>
+                        <h2>Liquidez e Mercado</h2>
                     </div>
                     
                     <div class="checklist-item">
-                        <label>Padrão de distribuição:</label>
+                        <label>Liquidez: estabilizada, crescente ou decrescente?</label>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
-                                <input type="radio" id="decreasing" name="distribution-pattern" value="queda">
-                                <label for="decreasing">⬇️ Queda</label>
+                                <input type="radio" id="liquidity-stable" name="liquidity" value="estavel">
+                                <label for="liquidity-stable">Estabilizada</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="radio" id="constant" name="distribution-pattern" value="constante">
-                                <label for="constant">➡️ Constante</label>
+                                <input type="radio" id="liquidity-increasing" name="liquidity" value="crescente">
+                                <label for="liquidity-increasing">Crescente</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="radio" id="increasing" name="distribution-pattern" value="crescente">
-                                <label for="increasing">⬆️ Crescente</label>
+                                <input type="radio" id="liquidity-decreasing" name="liquidity" value="decrescente">
+                                <label for="liquidity-decreasing">Decrescente</label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="checklist-item">
-                        <label for="distribution-increasing">Distribuição aumentando ano a ano?</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="radio" id="dist-increase-yes" name="distribution-increasing" value="sim">
-                                <label for="dist-increase-yes">Sim</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="radio" id="dist-increase-no" name="distribution-increasing" value="nao">
-                                <label for="dist-increase-no">Não</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checklist-item">
-                        <label>Resultado por cota:</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="radio" id="result-higher" name="result-per-share" value="maior">
-                                <label for="result-higher">📊 Maior que distribuição</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="radio" id="result-lower" name="result-per-share" value="menor">
-                                <label for="result-lower">📉 Menor</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="radio" id="result-equal" name="result-per-share" value="igual">
-                                <label for="result-equal">➡️ Igual</label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="checklist-item">
-                        <label for="accumulated-balance">Saldo acumulado por cota</label>
-                        <input type="text" id="accumulated-balance" placeholder="Valor em R$">
-                    </div>
-                    
-                    <div class="checklist-item">
-                        <label for="balance-consumption">Saldo está sendo consumido mensalmente? Quanto tempo duraria?</label>
-                        <textarea id="balance-consumption" placeholder="Descreva a situação..."></textarea>
-                    </div>
-                    
-                    <div class="checklist-item">
-                        <label for="ffo-vs-dy">FFO vs DY: O FFO sustenta a distribuição?</label>
-                        <textarea id="ffo-vs-dy" placeholder="Analise a relação FFO x DY..."></textarea>
-                    </div>
-                    
-                    <div class="checklist-item">
-                        <label for="extraordinary-revenues">Caso FFO < DY: receitas extraordinárias ou saldo acumulado alto?</label>
-                        <textarea id="extraordinary-revenues" placeholder="Detalhe as receitas extraordinárias..."></textarea>
+                        <label for="important-notices">Comunicados importantes no período (aquisições, vendas, novos contratos, problemas com inquilinos)</label>
+                        <textarea id="important-notices" placeholder="Liste os comunicados importantes..."></textarea>
                     </div>
                     
                     <div class="checklist-item">
                         <label>Observações:</label>
-                        <textarea class="observations" placeholder="Anotações sobre distribuição de rendimentos..."></textarea>
+                        <textarea class="observations" placeholder="Anotações sobre liquidez e mercado..."></textarea>
                     </div>
                 </div>
                 
-                <!-- Adicione as outras seções seguindo o mesmo padrão -->
-                <!-- Por questão de espaço, vou incluir apenas algumas seções no exemplo -->
+                <!-- AVALIAÇÃO DE RISCO E OPORTUNIDADE -->
+                <div class="section">
+                    <div class="section-title">
+                        <span>⚖️</span>
+                        <h2>Avaliação de Risco e Oportunidade</h2>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Risco: baixo / médio / alto?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="risk-low" name="risk-level" value="baixo">
+                                <label for="risk-low">Baixo</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="risk-medium" name="risk-level" value="medio">
+                                <label for="risk-medium">Médio</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="risk-high" name="risk-level" value="alto">
+                                <label for="risk-high">Alto</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="main-risks">Principais riscos elencados (ex.: concentração, vacância, endividamento, setor específico)</label>
+                        <textarea id="main-risks" placeholder="Liste os principais riscos..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label for="opportunities">Existem oportunidades claras? (ex.: nova ancoragem, desconto de mercado, potencial de crescimento)</label>
+                        <textarea id="opportunities" placeholder="Descreva as oportunidades..."></textarea>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>O fundo apresenta ancoragem sólida?</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="anchor-yes" name="anchor" value="sim">
+                                <label for="anchor-yes">Sim</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="anchor-no" name="anchor" value="nao">
+                                <label for="anchor-no">Não</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="anchor-partial" name="anchor" value="parcial">
+                                <label for="anchor-partial">Parcialmente</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <label>Observações:</label>
+                        <textarea class="observations" placeholder="Anotações sobre risco e oportunidade..."></textarea>
+                    </div>
+                </div>
                 
                 <!-- CONCLUSÃO -->
                 <div class="section">
@@ -828,16 +968,34 @@
                     otherSegment: document.getElementById('other-segment-text').value,
                     managementType: getSelectedRadio('management-type'),
                     ifixComparison: getSelectedRadio('ifix-comparison'),
-                    adminFee: document.getElementById('admin-fee').value,
-                    performanceFee: document.getElementById('performance-fee').value,
-                    otherFees: document.getElementById('other-fees').value,
-                    distributionPattern: getSelectedRadio('distribution-pattern'),
-                    distributionIncreasing: getSelectedRadio('distribution-increasing'),
-                    resultPerShare: getSelectedRadio('result-per-share'),
-                    accumulatedBalance: document.getElementById('accumulated-balance').value,
-                    balanceConsumption: document.getElementById('balance-consumption').value,
-                    ffoVsDy: document.getElementById('ffo-vs-dy').value,
-                    extraordinaryRevenues: document.getElementById('extraordinary-revenues').value,
+                    propertyCount: document.getElementById('property-count').value,
+                    allocationProperties: document.getElementById('allocation-properties').value,
+                    allocationFiis: document.getElementById('allocation-fiis').value,
+                    allocationCash: document.getElementById('allocation-cash').value,
+                    typicalContracts: document.getElementById('typical-contracts').value,
+                    atypicalContracts: document.getElementById('atypical-contracts').value,
+                    averageContractTerm: document.getElementById('average-contract-term').value,
+                    expiringContracts: document.getElementById('expiring-contracts').value,
+                    activeTenants: document.getElementById('active-tenants').value,
+                    tenantSegments: document.getElementById('tenant-segments').value,
+                    largestSector: document.getElementById('largest-sector').value,
+                    tenantConcentration: document.getElementById('tenant-concentration').value,
+                    tenantFinancials: document.getElementById('tenant-financials').value,
+                    gracePeriod: getSelectedRadio('grace-period'),
+                    financialVacancy: document.getElementById('financial-vacancy').value,
+                    physicalVacancy: document.getElementById('physical-vacancy').value,
+                    defaultRate: document.getElementById('default-rate').value,
+                    resultComparison: getSelectedRadio('result-comparison'),
+                    resultReason: document.getElementById('result-reason').value,
+                    leverage: getSelectedRadio('leverage'),
+                    leverageRate: document.getElementById('leverage-rate').value,
+                    amortizationPlan: document.getElementById('amortization-plan').value,
+                    liquidity: getSelectedRadio('liquidity'),
+                    importantNotices: document.getElementById('important-notices').value,
+                    riskLevel: getSelectedRadio('risk-level'),
+                    mainRisks: document.getElementById('main-risks').value,
+                    opportunities: document.getElementById('opportunities').value,
+                    anchor: getSelectedRadio('anchor'),
                     positivePoints: document.getElementById('positive-points').value,
                     negativePoints: document.getElementById('negative-points').value,
                     cashBurn: document.getElementById('cash-burn').value,
@@ -988,9 +1146,28 @@
                 document.getElementById('analysis-date').value = report.analysisDate || '';
                 document.getElementById('analyst-name').value = report.analystName || '';
                 document.getElementById('strategy').value = report.strategy || '';
-                document.getElementById('admin-fee').value = report.adminFee || '';
-                document.getElementById('performance-fee').value = report.performanceFee || '';
-                document.getElementById('other-fees').value = report.otherFees || '';
+                document.getElementById('property-count').value = report.propertyCount || '';
+                document.getElementById('allocation-properties').value = report.allocationProperties || '';
+                document.getElementById('allocation-fiis').value = report.allocationFiis || '';
+                document.getElementById('allocation-cash').value = report.allocationCash || '';
+                document.getElementById('typical-contracts').value = report.typicalContracts || '';
+                document.getElementById('atypical-contracts').value = report.atypicalContracts || '';
+                document.getElementById('average-contract-term').value = report.averageContractTerm || '';
+                document.getElementById('expiring-contracts').value = report.expiringContracts || '';
+                document.getElementById('active-tenants').value = report.activeTenants || '';
+                document.getElementById('tenant-segments').value = report.tenantSegments || '';
+                document.getElementById('largest-sector').value = report.largestSector || '';
+                document.getElementById('tenant-concentration').value = report.tenantConcentration || '';
+                document.getElementById('tenant-financials').value = report.tenantFinancials || '';
+                document.getElementById('financial-vacancy').value = report.financialVacancy || '';
+                document.getElementById('physical-vacancy').value = report.physicalVacancy || '';
+                document.getElementById('default-rate').value = report.defaultRate || '';
+                document.getElementById('result-reason').value = report.resultReason || '';
+                document.getElementById('leverage-rate').value = report.leverageRate || '';
+                document.getElementById('amortization-plan').value = report.amortizationPlan || '';
+                document.getElementById('important-notices').value = report.importantNotices || '';
+                document.getElementById('main-risks').value = report.mainRisks || '';
+                document.getElementById('opportunities').value = report.opportunities || '';
                 document.getElementById('positive-points').value = report.positivePoints || '';
                 document.getElementById('negative-points').value = report.negativePoints || '';
                 document.getElementById('cash-burn').value = report.cashBurn || '';
