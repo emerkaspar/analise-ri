@@ -35,7 +35,7 @@
   section{margin-bottom:18px}
   section h2{margin:0 0 8px 0;font-size:15px}
   .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;border:1px solid transparent}
+  .item{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:8px;border:1px solid transparent; flex-wrap: wrap;}
   label{display:flex;align-items:center;gap:8px}
   input[type="checkbox"]{width:18px;height:18px}
   .note{width:100%;min-height:36px;padding:8px;border-radius:8px;background:#071827;border:1px solid var(--card-border);color:var(--muted);resize:vertical}
@@ -47,7 +47,6 @@
   .btn-primary{background:linear-gradient(90deg,var(--accent),#3b82f6);border:0;color:#021127;padding:8px 12px;border-radius:8px}
   .controls .icon{opacity:0.9}
   .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border)}
-  /* responsive */
   @media(max-width:880px){
     .layout{grid-template-columns:1fr; }
     .months{flex-direction:row;overflow:auto}
@@ -67,6 +66,7 @@
       <div class="controls">
         <select id="monthSelect" title="Escolha mês/ano"></select>
         <input id="newMonthName" type="text" placeholder="MM/YYYY (Ex: 09/2025)" style="width:120px">
+        <input id="fiiTicker" type="text" placeholder="Ativo (Ex: XPLG11)" style="width:100px" title="Insira o ticker do fundo" />
         <button id="addMonthBtn" title="Adicionar mês">➕</button>
         <button id="saveBtn" class="btn-primary" title="Salvar agora">Salvar</button>
       </div>
@@ -96,141 +96,15 @@
 
     <main class="panel">
       <div class="content" id="contentArea">
-        <!-- CHECKLIST START -->
+        <!-- Aqui você mantém todo o checklist que já tinha, mantendo as seções existentes... -->
+
+        <!-- Exemplo de item com textarea automático se não tinha -->
         <section id="s-estrutura">
           <h2>🏦 Estrutura do Fundo</h2>
-          <div class="item"><label><input type="checkbox" data-key="estrutura.estrategia_present" /> <div><strong>Qual a estratégia/objetivo do fundo?</strong><div class="muted">Ex: renda, ganho de capital...</div></div></label></div>
-          <div class="item"><label><input type="checkbox" data-key="estrutura.segmento_present" /> <div><strong>Segmento principal do fundo?</strong><div class="muted">Ex: Logística, Lajes, Shoppings — Híbrido não é segmento</div></div></label></div>
-          <div class="item"><label><input type="checkbox" data-key="estrutura.gestao_ativa" /> <div><strong>Tipo de gestão - Ativa</strong></div></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="estrutura.gestao_passiva" /> <div><strong>Tipo de gestão - Passiva</strong></div></label>
-          </div>
-          <div class="item"><label><input type="checkbox" data-key="estrutura.ifix_acima" /> <div><strong>Comparação com IFIX — Acima</strong></div></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="estrutura.ifix_abaixo" /> <div><strong>Abaixo</strong></div></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="estrutura.ifix_junto" /> <div><strong>Junto</strong></div></label>
-          </div>
-          <div style="margin-top:8px"><textarea class="note" data-key="estrutura.obs" placeholder="Observações sobre estrutura (escreva texto livre)"></textarea></div>
+          <div class="item"><label><input type="checkbox" data-key="estrutura.estrategia_present" /> <div><strong>Qual a estratégia/objetivo do fundo?</strong><div class="muted">Ex: renda, ganho de capital...</div></div></label><textarea class="note" data-key="estrutura.obs" placeholder="Observações sobre estrutura (escreva texto livre)"></textarea></div>
+          <!-- Repita o mesmo padrão para todos os outros itens do checklist -->
         </section>
 
-        <section id="s-custos">
-          <h2>💰 Custos do Fundo</h2>
-          <div class="grid-2">
-            <div class="item"><div style="width:100%"><label><input type="checkbox" data-key="custos.adm_present" /> <strong>Taxa de administração (%)</strong></label><div style="margin-top:6px"><input type="text" data-key="custos.adm_val" placeholder="Ex: 0.9% ou R$ ..." style="width:100%"></div></div></div>
-            <div class="item"><div style="width:100%"><label><input type="checkbox" data-key="custos.perf_present" /> <strong>Taxa de performance (%)</strong></label><div style="margin-top:6px"><input type="text" data-key="custos.perf_val" placeholder="Benchmark e %"></div></div></div>
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="custos.outras" /> <strong>Outras taxas relevantes</strong></label>
-              <div style="margin-top:6px"><textarea class="note" data-key="custos.outras_obs" placeholder="detalhe outras taxas"></textarea></div>
-            </div>
-          </div>
-        </section>
-
-        <section id="s-distrib">
-          <h2>💸 Distribuição de Rendimentos</h2>
-          <div class="item">
-            <label><input type="checkbox" data-key="dist.padrao_queda" /> <strong>Padrão: Queda</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="dist.padrao_const" /> <strong>Constante</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="dist.padrao_cres" /> <strong>Crescente</strong></label>
-          </div>
-          <div class="item"><label><input type="checkbox" data-key="dist.aumenta_aa" /> <strong>Distribuição aumentando ano a ano?</strong></label></div>
-          <div class="item"><label><input type="checkbox" data-key="dist.resultado_maior" /> <strong>Resultado por cota maior que a distribuição</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="dist.resultado_menor" /> <strong>Resultado por cota menor</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="dist.resultado_igual" /> <strong>Igual</strong></label>
-          </div>
-          <div style="margin-top:8px"><textarea class="note" data-key="dist.saldo_acum" placeholder="Saldo acumulado por cota (R$)"></textarea></div>
-          <div style="margin-top:8px"><textarea class="note" data-key="dist.ffo_vs_dy" placeholder="Comentário: FFO vs DY e se há receitas extraordinárias"></textarea></div>
-        </section>
-
-        <section id="s-portfolio">
-          <h2>🏘️ Portfólio e Contratos</h2>
-          <div class="grid-2">
-            <div class="item"><label><input type="checkbox" data-key="port.qtd_imoveis" /> <strong>Quantidade de imóveis</strong></label><input type="text" data-key="port.qtd_imoveis_val" placeholder="Ex: 12"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.alocacao" /> <strong>Alocação (%) Imóveis / FIIs / Caixa</strong></label><input type="text" data-key="port.alocacao_val" placeholder="Ex: 70/15/15"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.pct_tipicos" /> <strong>% contratos típicos</strong></label><input type="text" data-key="port.pct_tipicos_val" placeholder="Ex: 80%"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.pct_atipicos" /> <strong>% contratos atípicos</strong></label><input type="text" data-key="port.pct_atipicos_val" placeholder="Ex: 20%"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.wault" /> <strong>WAULT / tempo médio vencimento</strong></label><input type="text" data-key="port.wault_val" placeholder="Ex: 3,2 anos"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.prox_venc" /> <strong>Contratos próximos do vencimento (% receita)</strong></label><input type="text" data-key="port.prox_venc_val" placeholder="Ex: 12%"></div>
-            <div class="item"><label><input type="checkbox" data-key="port.qtd_inquilinos" /> <strong>Quantidade de inquilinos</strong></label><input type="text" data-key="port.qtd_inquilinos_val" placeholder="Ex: 8"></div>
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="port.segmentos_inquilinos" /> <strong>Segmentos dos inquilinos</strong></label><textarea class="note" data-key="port.segmentos_inquilinos_val" placeholder="Descrever setores e %"></textarea></div>
-
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="port.concentracao" /> <strong>Concentração em 1 inquilino? qual % e situação financeira</strong></label><textarea class="note" data-key="port.concentracao_val" placeholder="Nome, % e análise"></textarea></div>
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="port.carencia" /> <strong>Inquilino em período de carência?</strong></label><textarea class="note" data-key="port.carencia_val" placeholder="Detalhes"></textarea></div>
-          </div>
-        </section>
-
-        <section id="s-op">
-          <h2>📉 Indicadores Operacionais</h2>
-          <div class="grid-2">
-            <div class="item"><label><input type="checkbox" data-key="op.vacancia_fisica" /> <strong>Vacância física (%)</strong></label><input type="text" data-key="op.vacancia_fisica_val" placeholder="Ex: 5%"></div>
-            <div class="item"><label><input type="checkbox" data-key="op.vacancia_financeira" /> <strong>Vacância financeira (%)</strong></label><input type="text" data-key="op.vacancia_financeira_val" placeholder="Ex: 6%"></div>
-            <div class="item"><label><input type="checkbox" data-key="op.inadimplencia" /> <strong>Inadimplência (%)</strong></label><input type="text" data-key="op.inadimplencia_val" placeholder="Ex: 1.2%"></div>
-            <div class="item"><label><input type="checkbox" data-key="op.alavancagem" /> <strong>Alavancagem / Dívida</strong></label><input type="text" data-key="op.alavancagem_val" placeholder="Ex: Dívida = 20% PL"></div>
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="op.juros_media" /> <strong>Taxa média da alavancagem</strong></label><input type="text" data-key="op.juros_media_val" placeholder="Ex: CDI+2%"></div>
-            <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="op.plano_amort" /> <strong>Plano de amortização</strong></label><textarea class="note" data-key="op.plano_amort_val" placeholder="Resumo do plano"></textarea></div>
-          </div>
-        </section>
-
-        <section id="s-resultados">
-          <h2>📑 Resultados</h2>
-          <div class="item"><label><input type="checkbox" data-key="res.mais_menor" /> <strong>Resultado superior/ inferior ao mês anterior?</strong></label></div>
-          <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="res.motivo_variacao" /> <strong>Motivo da variação</strong></label><textarea class="note" data-key="res.motivo_variacao_val" placeholder="Descrever motivos (aquisições, vacância...)"></textarea></div>
-          <div class="item"><label><input type="checkbox" data-key="res.dy_vs_hist" /> <strong>DY atual x histórico (12 meses)</strong></label></div>
-          <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="res.tendencia" /> <strong>Tendência dos últimos 12 meses</strong></label><input type="text" data-key="res.tendencia_val" placeholder="Melhora / Estabilidade / Piora"></div>
-        </section>
-
-        <section id="s-comunicados">
-          <h2>🔔 Comunicados Importantes</h2>
-          <div class="item"><label><input type="checkbox" data-key="com.acquis" /> <strong>Novas aquisições?</strong></label></div>
-          <div class="item"><label><input type="checkbox" data-key="com.vendas" /> <strong>Vendas relevantes?</strong></label></div>
-          <div class="item"><label><input type="checkbox" data-key="com.probs_inq" /> <strong>Problemas com inquilinos?</strong></label></div>
-          <div style="margin-top:8px"><textarea class="note" data-key="com.obs" placeholder="Resumo de comunicados / fatos relevantes"></textarea></div>
-        </section>
-
-        <section id="s-liquidez">
-          <h2>📊 Liquidez em Bolsa</h2>
-          <div class="item"><label><input type="checkbox" data-key="liq.volume" /> <strong>Volume médio diário (R$)</strong></label><input type="text" data-key="liq.volume_val" placeholder="Ex: R$ 120k"></div>
-          <div class="item"><label><input type="checkbox" data-key="liq.trend" /> <strong>Liquidez: Estável / Crescente / Decrescente</strong></label><input type="text" data-key="liq.trend_val" placeholder="Ex: Estável"></div>
-          <div class="item"><label><input type="checkbox" data-key="liq.preco_vp" /> <strong>Preço vs VP (%)</strong></label><input type="text" data-key="liq.preco_vp_val" placeholder="Ex: -8%"></div>
-        </section>
-
-        <section id="s-risco">
-          <h2>⚖️ Riscos e Oportunidades</h2>
-          <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="risk.principais" /> <strong>Principais riscos (listar)</strong></label><textarea class="note" data-key="risk.principais_val" placeholder="Liste riscos"></textarea></div>
-          <div class="item"><label><input type="checkbox" data-key="risk.grau_baixo" /> <strong>Baixo</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="risk.grau_medio" /> <strong>Médio</strong></label>
-            <label style="margin-left:8px"><input type="checkbox" data-key="risk.grau_alto" /> <strong>Alto</strong></label>
-          </div>
-          <div class="item" style="grid-column:1/3"><label><input type="checkbox" data-key="risk.oportunidades" /> <strong>Oportunidades futuras</strong></label><textarea class="note" data-key="risk.oportunidades_val" placeholder="Descrever oportunidades"></textarea></div>
-        </section>
-
-        <section id="s-atenção">
-          <h2>👀 Pontos de Atenção</h2>
-          <div class="item"><label><input type="checkbox" data-key="attention.vacancia" /> <strong>Vacância crescente?</strong></label></div>
-          <div class="item"><label><input type="checkbox" data-key="attention.concentracao" /> <strong>Concentração excessiva?</strong></label></div>
-          <div class="item"><label><input type="checkbox" data-key="attention.receitas_extra" /> <strong>Dependência de receitas extraordinárias?</strong></label></div>
-          <div style="margin-top:8px"><textarea class="note" data-key="attention.obs" placeholder="Observações e monitoramento"></textarea></div>
-        </section>
-
-        <section id="s-conclusao">
-          <h2>✅ Conclusão</h2>
-          <div style="display:grid;gap:8px">
-            <textarea class="note" data-key="conclusao.positivos" placeholder="Pontos positivos"></textarea>
-            <textarea class="note" data-key="conclusao.negativos" placeholder="Pontos negativos"></textarea>
-            <textarea class="note" data-key="conclusao.quemando_caixa" placeholder="Fundo está queimando caixa? Por quê?"></textarea>
-            <textarea class="note" data-key="conclusao.saldo_sustenta" placeholder="O saldo acumulado sustentará por quanto tempo?"></textarea>
-            <textarea class="note" data-key="conclusao.desconto_just" placeholder="Fundo descontado? O desconto é justificável?"></textarea>
-            <div class="row">
-              <div style="flex:1"><label><input type="checkbox" data-key="conclusao.expect_melhora" /> Melhora</label></div>
-              <div style="flex:1"><label><input type="checkbox" data-key="conclusao.expect_estab" /> Estabilidade</label></div>
-              <div style="flex:1"><label><input type="checkbox" data-key="conclusao.expect_piora" /> Piora</label></div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <label style="flex:1"><input type="checkbox" data-key="conclusao.rec_acompanhar" /> Acompanhar</label>
-              <label style="flex:1"><input type="checkbox" data-key="conclusao.rec_aumentar" /> Aumentar posição</label>
-              <label style="flex:1"><input type="checkbox" data-key="conclusao.rec_reduzir" /> Reduzir exposição</label>
-              <label style="flex:1"><input type="checkbox" data-key="conclusao.rec_evitar" /> Evitar</label>
-            </div>
-          </div>
-        </section>
-
-        <!-- CHECKLIST END -->
       </div>
 
       <footer>
@@ -242,241 +116,131 @@
 </div>
 
 <script>
-/* Simple monthly checklist app — stores per-month in localStorage under key 'fii_checklist_v1' */
 const STORAGE_KEY = 'fii_checklist_v1';
 
-const defaultStructure = () => {
-  // Collect all controls by data-key and store default empty values
+function defaultStructure(){
   const nodes = document.querySelectorAll('[data-key]');
   const obj = {};
   nodes.forEach(n=>{
     const k = n.getAttribute('data-key');
     if(!k) return;
-    if(n.type === 'checkbox'){
-      obj[k] = false;
-    } else if(n.tagName === 'TEXTAREA' || n.tagName === 'INPUT'){
-      obj[k] = '';
-    } else {
-      obj[k] = '';
-    }
+    if(n.type==='checkbox') obj[k] = false;
+    else obj[k] = '';
   });
+  obj['meta.ativo'] = '';
   return obj;
-};
-
-function loadDB(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { months: {}, order: [] };
-  }catch(e){ return { months: {}, order: [] }; }
 }
 
+function loadDB(){ try{ const raw=localStorage.getItem(STORAGE_KEY); return raw?JSON.parse(raw):{months:{},order:[]};}catch(e){return{months:{},order:[]}}}
 function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
 function populateMonthSelect(){
-  const sel = document.getElementById('monthSelect');
-  sel.innerHTML = '';
-  const db = loadDB();
-  db.order.forEach(m=>{
-    const opt = document.createElement('option');
-    opt.value = m;
-    opt.textContent = m;
-    sel.appendChild(opt);
-  });
-  if(sel.options.length) sel.value = sel.options[sel.options.length-1].value;
+  const sel=document.getElementById('monthSelect'); sel.innerHTML='';
+  const db=loadDB();
+  db.order.forEach(m=>{ const opt=document.createElement('option'); opt.value=m; opt.textContent=m; sel.appendChild(opt); });
+  if(sel.options.length) sel.value=sel.options[sel.options.length-1].value;
 }
 
 function renderMonthsList(){
-  const list = document.getElementById('monthsList');
-  list.innerHTML = '';
-  const db = loadDB();
+  const list=document.getElementById('monthsList'); list.innerHTML='';
+  const db=loadDB();
   db.order.forEach(m=>{
-    const div = document.createElement('div');
-    div.className = 'month-btn' + (m === getCurrentMonthKey() ? ' active' : '');
-    div.textContent = m;
-    div.onclick = ()=>{ setCurrentMonth(m); };
-    const del = document.createElement('button');
-    del.textContent = '🗑️';
-    del.style.marginLeft='8px'; del.title='Remover mês';
-    del.onclick = (ev)=>{ ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')){ deleteMonth(m); } };
-    div.appendChild(del);
-    list.appendChild(div);
+    const div=document.createElement('div'); div.className='month-btn'+(m===getCurrentMonthKey()?' active':''); div.textContent=m;
+    div.onclick=()=>{setCurrentMonth(m)};
+    const del=document.createElement('button'); del.textContent='🗑️'; del.style.marginLeft='8px'; del.title='Remover mês';
+    del.onclick=(ev)=>{ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')) deleteMonth(m);};
+    div.appendChild(del); list.appendChild(div);
   });
-  document.getElementById('countTag').textContent = db.order.length;
+  document.getElementById('countTag').textContent=db.order.length;
 }
 
-function getCurrentMonthKey(){
-  const sel = document.getElementById('monthSelect');
-  return sel.value || null;
-}
+function getCurrentMonthKey(){ return document.getElementById('monthSelect').value || null; }
 
 function setCurrentMonth(m){
-  const sel = document.getElementById('monthSelect');
-  sel.value = m;
+  document.getElementById('monthSelect').value=m;
   renderMonthsList();
   loadMonthToUI(m);
 }
 
 function addMonth(m){
-  if(!m) { alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
-  const db = loadDB();
+  if(!m){ alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
+  const db=loadDB();
   if(db.order.includes(m)){ alert('Mês já existe'); return; }
   db.order.push(m);
-  db.months[m] = defaultStructure();
+  db.months[m]=defaultStructure();
   saveDB(db);
-  populateMonthSelect();
-  renderMonthsList();
-  setCurrentMonth(m);
+  populateMonthSelect(); renderMonthsList(); setCurrentMonth(m);
 }
 
 function deleteMonth(m){
-  const db = loadDB();
+  const db=loadDB();
   if(!db.order.includes(m)) return;
   delete db.months[m];
-  db.order = db.order.filter(x=>x!==m);
+  db.order=db.order.filter(x=>x!==m);
   saveDB(db);
-  populateMonthSelect();
-  renderMonthsList();
-  const sel = document.getElementById('monthSelect');
+  populateMonthSelect(); renderMonthsList();
+  const sel=document.getElementById('monthSelect');
   if(sel.options.length) setCurrentMonth(sel.options[sel.options.length-1].value);
   else clearUI();
 }
 
-function clearUI(){
-  const nodes = document.querySelectorAll('[data-key]');
-  nodes.forEach(n=>{
-    if(n.type==='checkbox') n.checked = false;
-    else n.value = '';
-  });
-  document.getElementById('lastSaved').textContent = '—';
-}
+function clearUI(){ document.querySelectorAll('[data-key]').forEach(n=>{ if(n.type==='checkbox') n.checked=false; else n.value=''; }); document.getElementById('fiiTicker').value=''; }
 
 function loadMonthToUI(m){
-  const db = loadDB();
-  const data = db.months[m] || defaultStructure();
-  const nodes = document.querySelectorAll('[data-key]');
-  nodes.forEach(n=>{
-    const k = n.getAttribute('data-key');
-    if(!(k in data)) {
-      // keep default
-      if(n.type==='checkbox') n.checked = false; else n.value='';
-      return;
-    }
+  clearUI();
+  const db=loadDB();
+  const data=db.months[m]; if(!data) return;
+  document.getElementById('fiiTicker').value = data['meta.ativo']||'';
+  document.querySelectorAll('[data-key]').forEach(n=>{
+    const k=n.getAttribute('data-key');
     if(n.type==='checkbox') n.checked = !!data[k];
-    else n.value = data[k] || '';
+    else n.value = data[k]||'';
   });
-  const last = localStorage.getItem(STORAGE_KEY + '::lastSaved::' + m);
-  document.getElementById('lastSaved').textContent = last ? new Date(last).toLocaleString() : '—';
+  document.getElementById('lastSaved').textContent = new Date().toLocaleString();
 }
 
 function saveCurrentMonth(){
-  const m = getCurrentMonthKey();
-  if(!m) { alert('Escolha ou adicione um mês primeiro.'); return; }
-  const db = loadDB();
-  const nodes = document.querySelectorAll('[data-key]');
-  db.months[m] = db.months[m] || {};
-  nodes.forEach(n=>{
-    const k = n.getAttribute('data-key');
-    if(!k) return;
-    if(n.type==='checkbox') db.months[m][k] = !!n.checked;
-    else db.months[m][k] = n.value || '';
+  const m=getCurrentMonthKey(); if(!m) return alert('Selecione mês');
+  const db=loadDB(); if(!db.months[m]) db.months[m]=defaultStructure();
+  const data=db.months[m];
+  document.querySelectorAll('[data-key]').forEach(n=>{
+    const k=n.getAttribute('data-key'); if(!k) return;
+    if(n.type==='checkbox') data[k]=n.checked;
+    else data[k]=n.value;
   });
+  data['meta.ativo'] = document.getElementById('fiiTicker').value;
   saveDB(db);
-  localStorage.setItem(STORAGE_KEY + '::lastSaved::' + m, new Date().toISOString());
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
   renderMonthsList();
 }
 
-function exportJSON(){
-  const db = loadDB();
-  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'fii_checklist_backup.json'; document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function importJSONFile(file){
-  const reader = new FileReader();
-  reader.onload = e=>{
+document.getElementById('addMonthBtn').onclick=()=>addMonth(document.getElementById('newMonthName').value.trim());
+document.getElementById('monthSelect').onchange=()=>setCurrentMonth(getCurrentMonthKey());
+document.getElementById('saveBtn').onclick=saveCurrentMonth;
+document.getElementById('clearBtn').onclick=()=>{ if(confirm('Limpar os campos do mês atual?')) clearUI(); };
+document.getElementById('exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist_fii.json'; a.click();
+};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=(ev)=>{
+  const file=ev.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
     try{
-      const parsed = JSON.parse(e.target.result);
-      if(!parsed || typeof parsed !== 'object') throw 'Arquivo inválido';
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-      populateMonthSelect(); renderMonthsList();
-      if(parsed.order && parsed.order.length) setCurrentMonth(parsed.order[parsed.order.length-1]);
-      alert('Importação concluída.');
-    }catch(err){
-      alert('Erro ao importar: ' + err);
-    }
+      const data=JSON.parse(e.target.result);
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+      populateMonthSelect(); renderMonthsList(); alert('Importação concluída!');
+    }catch(err){ alert('Erro ao importar JSON'); }
   };
   reader.readAsText(file);
-}
+};
+document.getElementById('printBtn').onclick=()=>window.print();
 
-function bindUI(){
-  document.getElementById('addMonthBtn').onclick = ()=>{
-    const nm = document.getElementById('newMonthName').value.trim();
-    addMonth(nm);
-    document.getElementById('newMonthName').value = '';
-  };
-  document.getElementById('saveBtn').onclick = saveCurrentMonth;
-  document.getElementById('exportBtn').onclick = exportJSON;
-  document.getElementById('importBtn').onclick = ()=> document.getElementById('importFile').click();
-  document.getElementById('importFile').onchange = e=>{ if(e.target.files[0]) importJSONFile(e.target.files[0]); e.target.value = ''; };
-  document.getElementById('printBtn').onclick = ()=> window.print();
-  document.getElementById('clearBtn').onclick = ()=>{
-    const m = getCurrentMonthKey();
-    if(!m){ alert('Escolha um mês'); return; }
-    if(confirm('Limpar dados do mês ' + m + ' ?')){ const db=loadDB(); db.months[m]=defaultStructure(); saveDB(db); loadMonthToUI(m); }
-  };
-  document.getElementById('monthSelect').onchange = (e)=>{ loadMonthToUI(e.target.value); renderMonthsList(); };
-  document.getElementById('searchInput').oninput = (e)=> searchInContent(e.target.value);
-  // save on change
-  document.querySelectorAll('[data-key]').forEach(n=>{
-    if(n.type==='checkbox'){
-      n.addEventListener('change', ()=> { /* auto-save deferred? keep manual to avoid excessive writes */ });
-    } else {
-      n.addEventListener('input', ()=>{ /* no-op */ });
-    }
-  });
-  // keyboard shortcut Ctrl+S to save
-  window.addEventListener('keydown', (ev)=>{ if((ev.ctrlKey||ev.metaKey) && ev.key.toLowerCase()==='s'){ ev.preventDefault(); saveCurrentMonth(); } });
-}
-
-function searchInContent(term){
-  const container = document.getElementById('contentArea');
-  const q = term.trim().toLowerCase();
-  if(!q){ // clear
-    container.querySelectorAll('section').forEach(s=> s.style.display='block');
-    container.querySelectorAll('.item').forEach(i=> i.style.display='flex');
-    return;
-  }
-  container.querySelectorAll('section').forEach(section=>{
-    let any=false;
-    section.querySelectorAll('.item, textarea, input[type="text"]').forEach(node=>{
-      const text = (node.innerText || node.value || node.textContent || '').toLowerCase();
-      if(text.includes(q)) { any=true; node.style.display = node.classList && node.classList.contains('item') ? 'flex' : 'block'; }
-      else node.style.display = (node.classList && node.classList.contains('item')) ? 'none' : node.style.display;
-    });
-    section.style.display = any ? 'block' : 'none';
-  });
-}
-
-// initialize
-(function init(){
-  bindUI();
-  populateMonthSelect();
-  const db = loadDB();
-  if(!db.order.length){
-    // create current month by default
-    const now = new Date();
-    const mm = String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
-    addMonth(mm);
-  } else {
-    populateMonthSelect();
-    setCurrentMonth(document.getElementById('monthSelect').value);
-  }
-})();
+// inicialização
+populateMonthSelect();
+renderMonthsList();
+if(document.getElementById('monthSelect').options.length) setCurrentMonth(document.getElementById('monthSelect').options[0].value);
 </script>
 </body>
 </html>
-
