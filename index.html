@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checklist de Análise de FIIs</title>
+    <title>Analisador de Fundos Imobiliários</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -12,6 +13,7 @@
             --light-color: #ecf0f1;
             --success-color: #27ae60;
             --warning-color: #f39c12;
+            --dark-color: #2c3e50;
         }
         
         * {
@@ -47,6 +49,41 @@
         h1 {
             color: var(--primary-color);
             margin-bottom: 10px;
+        }
+        
+        .app-description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            border-bottom: none;
+        }
+        
+        .tab.active {
+            background: white;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         .fund-info {
@@ -174,13 +211,71 @@
             background-color: #2980b9;
         }
         
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-box button {
+            padding: 10px 15px;
+        }
+        
+        .reports-list {
+            margin-top: 20px;
+        }
+        
+        .report-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .report-info {
+            flex: 1;
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .report-btn {
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        
+        .storage-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef7ff;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
         @media print {
-            button {
+            button, .tabs, .search-box {
                 display: none;
             }
             
             .container {
                 box-shadow: none;
+            }
+            
+            .tab-content {
+                display: block !important;
             }
         }
         
@@ -192,278 +287,315 @@
             .fund-info input, .fund-info select {
                 width: 100%;
             }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .report-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .report-actions {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📊 Checklist de Análise de Relatório Gerencial / RI – Fundos Imobiliários</h1>
-            <p>Preencha os dados do fundo e marque as opções relevantes para sua análise</p>
+            <h1><i class="fas fa-chart-line"></i> Analisador de Fundos Imobiliários</h1>
+            <p class="app-description">Checklist completo para análise de relatórios gerenciais - Salve e pesquise suas análises</p>
         </header>
         
-        <div class="fund-info">
-            <input type="text" id="fund-name" placeholder="Nome do Fundo">
-            <input type="text" id="analysis-date" placeholder="Mês/Ano de Referência (MM/AAAA)">
-            <input type="text" id="analyst-name" placeholder="Nome do Analista">
+        <div class="tabs">
+            <div class="tab active" data-tab="form">Nova Análise</div>
+            <div class="tab" data-tab="reports">Relatórios Salvos</div>
+            <div class="tab" data-tab="help">Ajuda</div>
         </div>
         
-        <form id="checklist-form">
-            <div class="section">
-                <div class="section-title">
-                    <span>🏦</span>
-                    <h2>Estrutura do Fundo</h2>
-                </div>
-                
-                <div class="form-group">
-                    <label>Qual a estratégia/objetivo do fundo? (renda, ganho de capital, reciclagem de portfólio, etc.)</label>
-                    <textarea id="strategy"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Segmento principal do fundo? – ⚠️ Híbrido não é segmento</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="logistics" name="segment">
-                            <label for="logistics">📦 Logística</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="offices" name="segment">
-                            <label for="offices">🏢 Lajes</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="shoppings" name="segment">
-                            <label for="shoppings">🏬 Shoppings</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="other-segment" name="segment">
-                            <label for="other-segment">📍 Outros</label>
-                        </div>
-                    </div>
-                    <input type="text" id="other-segment-text" placeholder="Especifique outros segmentos" style="margin-top: 10px; display: none;">
-                </div>
-                
-                <div class="form-group">
-                    <label>Tipo de gestão:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="active-management" name="management-type" value="ativa">
-                            <label for="active-management">Ativa</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="passive-management" name="management-type" value="passiva">
-                            <label for="passive-management">Passiva</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Comparação com IFIX:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="above-ifix" name="ifix-comparison" value="acima">
-                            <label for="above-ifix">📈 Acima</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="below-ifix" name="ifix-comparison" value="abaixo">
-                            <label for="below-ifix">📉 Abaixo</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="with-ifix" name="ifix-comparison" value="junto">
-                            <label for="with-ifix">➡️ Junto</label>
-                        </div>
-                    </div>
-                </div>
+        <div class="tab-content active" id="form-tab">
+            <div class="fund-info">
+                <input type="text" id="fund-name" placeholder="Nome do Fundo">
+                <input type="text" id="analysis-date" placeholder="Mês/Ano de Referência (MM/AAAA)">
+                <input type="text" id="analyst-name" placeholder="Nome do Analista">
             </div>
+            
+            <form id="checklist-form">
+                <div class="section">
+                    <div class="section-title">
+                        <span>🏦</span>
+                        <h2>Estrutura do Fundo</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Qual a estratégia/objetivo do fundo? (renda, ganho de capital, reciclagem de portfólio, etc.)</label>
+                        <textarea id="strategy"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Segmento principal do fundo? – ⚠️ Híbrido não é segmento</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="logistics" name="segment">
+                                <label for="logistics">📦 Logística</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="offices" name="segment">
+                                <label for="offices">🏢 Lajes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="shoppings" name="segment">
+                                <label for="shoppings">🏬 Shoppings</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="other-segment" name="segment">
+                                <label for="other-segment">📍 Outros</label>
+                            </div>
+                        </div>
+                        <input type="text" id="other-segment-text" placeholder="Especifique outros segmentos" style="margin-top: 10px; display: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de gestão:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="active-management" name="management-type" value="ativa">
+                                <label for="active-management">Ativa</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="passive-management" name="management-type" value="passiva">
+                                <label for="passive-management">Passiva</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Comparação com IFIX:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="above-ifix" name="ifix-comparison" value="acima">
+                                <label for="above-ifix">📈 Acima</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="below-ifix" name="ifix-comparison" value="abaixo">
+                                <label for="below-ifix">📉 Abaixo</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="with-ifix" name="ifix-comparison" value="junto">
+                                <label for="with-ifix">➡️ Junto</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <span>💰</span>
+                        <h2>Custos do Fundo</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-fee">Taxa de administração (% sobre PL ou receita)</label>
+                        <input type="text" id="admin-fee">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="performance-fee">Taxa de performance (% e benchmark)</label>
+                        <input type="text" id="performance-fee">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="other-fees">Outras taxas relevantes? (consultoria, escrituração, etc.)</label>
+                        <textarea id="other-fees"></textarea>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <span>✅</span>
+                        <h2>Conclusão da Análise</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="positive-points">Pontos positivos:</label>
+                        <textarea id="positive-points"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="negative-points">Pontos negativos:</label>
+                        <textarea id="negative-points"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cash-burn">Fundo está queimando caixa? Se sim, por quê?</label>
+                        <textarea id="cash-burn"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="balance-sustainability">O saldo acumulado sustentará a distribuição por quanto tempo?</label>
+                        <input type="text" id="balance-sustainability">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discount">O fundo está descontado? Se sim, esse desconto é justificável?</label>
+                        <textarea id="discount"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Expectativa para próximos resultados:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="expect-improve" name="expectation" value="melhora">
+                                <label for="expect-improve">Melhora</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="expect-stable" name="expectation" value="estabilidade">
+                                <label for="expect-stable">Estabilidade</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="expect-worse" name="expectation" value="piora">
+                                <label for="expect-worse">Piora</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Recomendação:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="recommend-follow" name="recommendation" value="acompanhar">
+                                <label for="recommend-follow">✔️ Acompanhar</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="recommend-increase" name="recommendation" value="aumentar">
+                                <label for="recommend-increase">✔️ Aumentar posição</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="recommend-reduce" name="recommendation" value="reduzir">
+                                <label for="recommend-reduce">✔️ Reduzir exposição</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="recommend-avoid" name="recommendation" value="evitar">
+                                <label for="recommend-avoid">✔️ Evitar</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="button" class="btn-save" id="save-btn">
+                        <i class="fas fa-save"></i> Salvar Análise
+                    </button>
+                    <button type="reset" class="btn-reset">
+                        <i class="fas fa-trash"></i> Limpar Formulário
+                    </button>
+                    <button type="button" class="btn-print" id="print-btn">
+                        <i class="fas fa-print"></i> Imprimir/Exportar
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="tab-content" id="reports-tab">
+            <h2><i class="fas fa-file-alt"></i> Relatórios Salvos</h2>
+            <p>Encontre e gerencie suas análises salvas</p>
+            
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Pesquisar por nome do fundo ou data...">
+                <button class="btn-save" id="search-btn">
+                    <i class="fas fa-search"></i> Pesquisar
+                </button>
+            </div>
+            
+            <div class="storage-info">
+                <p>Espaço utilizado: <span id="storage-used">0 KB</span> | 
+                   Relatórios salvos: <span id="reports-count">0</span></p>
+                <button class="btn-reset" id="clear-all-btn">
+                    <i class="fas fa-trash"></i> Limpar Todos os Relatórios
+                </button>
+            </div>
+            
+            <div class="reports-list" id="reports-list">
+                <!-- Os relatórios serão listados aqui via JavaScript -->
+            </div>
+        </div>
+        
+        <div class="tab-content" id="help-tab">
+            <h2><i class="fas fa-question-circle"></i> Ajuda e Informações</h2>
             
             <div class="section">
-                <div class="section-title">
-                    <span>💰</span>
-                    <h2>Custos do Fundo</h2>
-                </div>
-                
-                <div class="form-group">
-                    <label for="admin-fee">Taxa de administração (% sobre PL ou receita)</label>
-                    <input type="text" id="admin-fee">
-                </div>
-                
-                <div class="form-group">
-                    <label for="performance-fee">Taxa de performance (% e benchmark)</label>
-                    <input type="text" id="performance-fee">
-                </div>
-                
-                <div class="form-group">
-                    <label for="other-fees">Outras taxas relevantes? (consultoria, escrituração, etc.)</label>
-                    <textarea id="other-fees"></textarea>
-                </div>
+                <h3>Onde os relatórios são salvos?</h3>
+                <p>Todos os relatórios são salvos localmente no seu navegador usando uma tecnologia chamada <strong>LocalStorage</strong>.</p>
+                <p>Isso significa que seus dados ficam armazenados apenas no seu computador e não são enviados para nenhum servidor.</p>
             </div>
             
             <div class="section">
-                <div class="section-title">
-                    <span>💸</span>
-                    <h2>Distribuição de Rendimentos</h2>
-                </div>
-                
-                <div class="form-group">
-                    <label>Padrão de distribuição:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="decreasing" name="distribution-pattern" value="queda">
-                            <label for="decreasing">⬇️ Queda</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="constant" name="distribution-pattern" value="constante">
-                            <label for="constant">➡️ Constante</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="increasing" name="distribution-pattern" value="crescente">
-                            <label for="increasing">⬆️ Crescente</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="distribution-increasing">Distribuição aumentando ano a ano?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="dist-increase-yes" name="distribution-increasing" value="sim">
-                            <label for="dist-increase-yes">Sim</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="dist-increase-no" name="distribution-increasing" value="nao">
-                            <label for="dist-increase-no">Não</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Resultado por cota:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="result-higher" name="result-per-share" value="maior">
-                            <label for="result-higher">📊 Maior que distribuição</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="result-lower" name="result-per-share" value="menor">
-                            <label for="result-lower">📉 Menor</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="result-equal" name="result-per-share" value="igual">
-                            <label for="result-equal">➡️ Igual</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="accumulated-balance">Saldo acumulado por cota?</label>
-                    <input type="text" id="accumulated-balance">
-                </div>
-                
-                <div class="form-group">
-                    <label for="balance-consumption">Saldo está sendo consumido mensalmente? Tempo estimado de duração?</label>
-                    <textarea id="balance-consumption"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="ffo-vs-dy">FFO vs DY: (🔎 O FFO sustenta a distribuição?)</label>
-                    <textarea id="ffo-vs-dy"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="extraordinary-revenues">Caso FFO < DY: há receitas extraordinárias? saldo acumulado alto?</label>
-                    <textarea id="extraordinary-revenues"></textarea>
-                </div>
+                <h3>Como pesquisar relatórios?</h3>
+                <p>Na aba "Relatórios Salvos", digite o nome do fundo ou a data no campo de pesquisa e clique no botão "Pesquisar".</p>
+                <p>Você também pode visualizar, carregar ou excluir relatórios individualmente usando os botões ao lado de cada relatório.</p>
             </div>
-            
-            <!-- As outras seções seguem o mesmo padrão -->
-            <!-- Por questão de espaço, vou incluir apenas algumas seções no exemplo -->
-            <!-- No código completo, todas as seções seriam implementadas -->
             
             <div class="section">
-                <div class="section-title">
-                    <span>✅</span>
-                    <h2>Conclusão da Análise</h2>
-                </div>
-                
-                <div class="form-group">
-                    <label for="positive-points">Pontos positivos:</label>
-                    <textarea id="positive-points"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="negative-points">Pontos negativos:</label>
-                    <textarea id="negative-points"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="cash-burn">Fundo está queimando caixa? Se sim, por quê?</label>
-                    <textarea id="cash-burn"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="balance-sustainability">O saldo acumulado sustentará a distribuição por quanto tempo?</label>
-                    <input type="text" id="balance-sustainability">
-                </div>
-                
-                <div class="form-group">
-                    <label for="discount">O fundo está descontado? Se sim, esse desconto é justificável?</label>
-                    <textarea id="discount"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Expectativa para próximos resultados:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="expect-improve" name="expectation" value="melhora">
-                            <label for="expect-improve">Melhora</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="expect-stable" name="expectation" value="estabilidade">
-                            <label for="expect-stable">Estabilidade</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="expect-worse" name="expectation" value="piora">
-                            <label for="expect-worse">Piora</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label>Recomendação:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="radio" id="recommend-follow" name="recommendation" value="acompanhar">
-                            <label for="recommend-follow">✔️ Acompanhar</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="recommend-increase" name="recommendation" value="aumentar">
-                            <label for="recommend-increase">✔️ Aumentar posição</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="recommend-reduce" name="recommendation" value="reduzir">
-                            <label for="recommend-reduce">✔️ Reduzir exposição</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="radio" id="recommend-avoid" name="recommendation" value="evitar">
-                            <label for="recommend-avoid">✔️ Evitar</label>
-                        </div>
-                    </div>
-                </div>
+                <h3>Como imprimir ou exportar?</h3>
+                <p>Use o botão "Imprimir/Exportar" para gerar uma versão para impressão da análise atual.</p>
+                <p>Na visualização de impressão, você pode salvar como PDF usando a função "Salvar como PDF" do seu navegador.</p>
             </div>
             
-            <div class="btn-group">
-                <button type="button" class="btn-save" id="save-btn">Salvar Análise</button>
-                <button type="reset" class="btn-reset">Limpar Formulário</button>
-                <button type="button" class="btn-print" id="print-btn">Imprimir/Exportar</button>
+            <div class="section">
+                <h3>Os dados serão perdidos se eu limpar o navegador?</h3>
+                <p>Sim, como os dados são armazenados localmente, se você limpar o histórico e dados de navegação, todos os relatórios serão perdidos.</p>
+                <p>Para evitar perda de dados, exporte e salve suas análises importantes em outro local.</p>
             </div>
-        </form>
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Elementos da interface
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const otherSegmentCheckbox = document.getElementById('other-segment');
+            const otherSegmentText = document.getElementById('other-segment-text');
+            const saveBtn = document.getElementById('save-btn');
+            const printBtn = document.getElementById('print-btn');
+            const searchBtn = document.getElementById('search-btn');
+            const searchInput = document.getElementById('search-input');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const reportsList = document.getElementById('reports-list');
+            const storageUsed = document.getElementById('storage-used');
+            const reportsCount = document.getElementById('reports-count');
+            
+            // Sistema de abas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Ativar aba clicada
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Mostrar conteúdo correspondente
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    // Se for a aba de relatórios, atualizar a lista
+                    if (tabId === 'reports') {
+                        updateReportsList();
+                    }
+                });
+            });
+            
             // Mostrar campo de texto para "Outros" segmentos quando selecionado
-            document.getElementById('other-segment').addEventListener('change', function() {
-                document.getElementById('other-segment-text').style.display = this.checked ? 'block' : 'none';
+            otherSegmentCheckbox.addEventListener('change', function() {
+                otherSegmentText.style.display = this.checked ? 'block' : 'none';
             });
             
             // Preencher automaticamente a data atual no campo de data
@@ -473,23 +605,34 @@
             document.getElementById('analysis-date').value = `${month.toString().padStart(2, '0')}/${year}`;
             
             // Salvar dados no localStorage
-            document.getElementById('save-btn').addEventListener('click', function() {
+            saveBtn.addEventListener('click', function() {
                 const fundName = document.getElementById('fund-name').value;
                 if (!fundName) {
                     alert('Por favor, informe o nome do fundo antes de salvar.');
                     return;
                 }
                 
-                // Coletar todos os dados do formulário (simplificado para exemplo)
+                // Coletar todos os dados do formulário
                 const formData = {
                     fundName: fundName,
                     analysisDate: document.getElementById('analysis-date').value,
                     analystName: document.getElementById('analyst-name').value,
                     strategy: document.getElementById('strategy').value,
-                    // Coletar outros campos aqui...
+                    segments: getSelectedCheckboxes('segment'),
+                    otherSegment: document.getElementById('other-segment-text').value,
+                    managementType: getSelectedRadio('management-type'),
+                    ifixComparison: getSelectedRadio('ifix-comparison'),
+                    adminFee: document.getElementById('admin-fee').value,
+                    performanceFee: document.getElementById('performance-fee').value,
+                    otherFees: document.getElementById('other-fees').value,
                     positivePoints: document.getElementById('positive-points').value,
                     negativePoints: document.getElementById('negative-points').value,
-                    // ... outros campos
+                    cashBurn: document.getElementById('cash-burn').value,
+                    balanceSustainability: document.getElementById('balance-sustainability').value,
+                    discount: document.getElementById('discount').value,
+                    expectation: getSelectedRadio('expectation'),
+                    recommendation: getSelectedRadio('recommendation'),
+                    timestamp: new Date().toISOString()
                 };
                 
                 // Salvar no localStorage usando o nome do fundo e data como chave
@@ -497,12 +640,207 @@
                 localStorage.setItem(storageKey, JSON.stringify(formData));
                 
                 alert(`Análise de ${fundName} salva com sucesso!`);
+                updateStorageInfo();
             });
             
             // Imprimir/exportar formulário
-            document.getElementById('print-btn').addEventListener('click', function() {
+            printBtn.addEventListener('click', function() {
                 window.print();
             });
+            
+            // Pesquisar relatórios
+            searchBtn.addEventListener('click', function() {
+                updateReportsList(searchInput.value);
+            });
+            
+            // Limpar todos os relatórios
+            clearAllBtn.addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja excluir TODOS os relatórios salvos? Esta ação não pode ser desfeita.')) {
+                    // Encontrar e remover todas as chaves relacionadas a relatórios
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.startsWith('fi-analysis-')) {
+                            localStorage.removeItem(key);
+                        }
+                    }
+                    
+                    alert('Todos os relatórios foram excluídos.');
+                    updateReportsList();
+                    updateStorageInfo();
+                }
+            });
+            
+            // Função para atualizar a lista de relatórios
+            function updateReportsList(searchTerm = '') {
+                reportsList.innerHTML = '';
+                let count = 0;
+                
+                // Percorrer todos os itens no localStorage
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    
+                    if (key.startsWith('fi-analysis-')) {
+                        try {
+                            const report = JSON.parse(localStorage.getItem(key));
+                            
+                            // Verificar se corresponde ao termo de pesquisa
+                            if (!searchTerm || 
+                                report.fundName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                report.analysisDate.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                
+                                const reportElement = document.createElement('div');
+                                reportElement.className = 'report-item';
+                                reportElement.innerHTML = `
+                                    <div class="report-info">
+                                        <h3>${report.fundName}</h3>
+                                        <p>Data: ${report.analysisDate} | Analista: ${report.analystName || 'Não informado'}</p>
+                                        <p>Salvo em: ${new Date(report.timestamp).toLocaleString()}</p>
+                                    </div>
+                                    <div class="report-actions">
+                                        <button class="btn-save report-btn view-btn" data-key="${key}">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                        <button class="btn-print report-btn load-btn" data-key="${key}">
+                                            <i class="fas fa-upload"></i> Carregar
+                                        </button>
+                                        <button class="btn-reset report-btn delete-btn" data-key="${key}">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                    </div>
+                                `;
+                                
+                                reportsList.appendChild(reportElement);
+                                count++;
+                            }
+                        } catch (e) {
+                            console.error('Erro ao processar relatório:', e);
+                        }
+                    }
+                }
+                
+                if (count === 0) {
+                    reportsList.innerHTML = '<p>Nenhum relatório encontrado.</p>';
+                }
+                
+                // Adicionar event listeners aos botões
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const key = this.getAttribute('data-key');
+                        viewReport(key);
+                    });
+                });
+                
+                document.querySelectorAll('.load-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const key = this.getAttribute('data-key');
+                        loadReport(key);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const key = this.getAttribute('data-key');
+                        deleteReport(key);
+                    });
+                });
+            }
+            
+            // Função para visualizar relatório
+            function viewReport(key) {
+                const report = JSON.parse(localStorage.getItem(key));
+                let content = `
+                    <h2>Relatório: ${report.fundName}</h2>
+                    <p><strong>Data:</strong> ${report.analysisDate}</p>
+                    <p><strong>Analista:</strong> ${report.analystName || 'Não informado'}</p>
+                    <p><strong>Salvo em:</strong> ${new Date(report.timestamp).toLocaleString()}</p>
+                    <hr>
+                    <h3>Estratégia/Objetivo:</h3>
+                    <p>${report.strategy || 'Não informado'}</p>
+                    <h3>Pontos Positivos:</h3>
+                    <p>${report.positivePoints || 'Não informado'}</p>
+                    <h3>Pontos Negativos:</h3>
+                    <p>${report.negativePoints || 'Não informado'}</p>
+                `;
+                
+                alertify.alert('Visualizar Relatório', content);
+            }
+            
+            // Função para carregar relatório no formulário
+            function loadReport(key) {
+                const report = JSON.parse(localStorage.getItem(key));
+                
+                // Preencher campos do formulário
+                document.getElementById('fund-name').value = report.fundName || '';
+                document.getElementById('analysis-date').value = report.analysisDate || '';
+                document.getElementById('analyst-name').value = report.analystName || '';
+                document.getElementById('strategy').value = report.strategy || '';
+                document.getElementById('admin-fee').value = report.adminFee || '';
+                document.getElementById('performance-fee').value = report.performanceFee || '';
+                document.getElementById('other-fees').value = report.otherFees || '';
+                document.getElementById('positive-points').value = report.positivePoints || '';
+                document.getElementById('negative-points').value = report.negativePoints || '';
+                document.getElementById('cash-burn').value = report.cashBurn || '';
+                document.getElementById('balance-sustainability').value = report.balanceSustainability || '';
+                document.getElementById('discount').value = report.discount || '';
+                
+                // Preencher checkboxes e radios (simplificado para exemplo)
+                if (report.otherSegment) {
+                    document.getElementById('other-segment').checked = true;
+                    document.getElementById('other-segment-text').value = report.otherSegment;
+                    document.getElementById('other-segment-text').style.display = 'block';
+                }
+                
+                // Mudar para a aba do formulário
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                document.querySelector('.tab[data-tab="form"]').classList.add('active');
+                document.getElementById('form-tab').classList.add('active');
+                
+                alert(`Relatório de ${report.fundName} carregado com sucesso!`);
+            }
+            
+            // Função para excluir relatório
+            function deleteReport(key) {
+                const report = JSON.parse(localStorage.getItem(key));
+                
+                if (confirm(`Tem certeza que deseja excluir o relatório de ${report.fundName}?`)) {
+                    localStorage.removeItem(key);
+                    alert('Relatório excluído com sucesso.');
+                    updateReportsList();
+                    updateStorageInfo();
+                }
+            }
+            
+            // Função para atualizar informações de armazenamento
+            function updateStorageInfo() {
+                let totalSize = 0;
+                let reportCount = 0;
+                
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('fi-analysis-')) {
+                        totalSize += localStorage.getItem(key).length;
+                        reportCount++;
+                    }
+                }
+                
+                storageUsed.textContent = `${(totalSize / 1024).toFixed(2)} KB`;
+                reportsCount.textContent = reportCount;
+            }
+            
+            // Funções auxiliares para obter valores de checkboxes e radios
+            function getSelectedCheckboxes(name) {
+                const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+                return Array.from(checkboxes).map(cb => cb.nextElementSibling.textContent);
+            }
+            
+            function getSelectedRadio(name) {
+                const radio = document.querySelector(`input[name="${name}"]:checked`);
+                return radio ? radio.value : null;
+            }
+            
+            // Inicializar informações de armazenamento
+            updateStorageInfo();
             
             // Carregar análise salva anteriormente se os parâmetros estiverem na URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -514,20 +852,14 @@
                 const savedData = localStorage.getItem(storageKey);
                 
                 if (savedData) {
-                    const formData = JSON.parse(savedData);
-                    document.getElementById('fund-name').value = formData.fundName || '';
-                    document.getElementById('analysis-date').value = formData.analysisDate || '';
-                    document.getElementById('analyst-name').value = formData.analystName || '';
-                    document.getElementById('strategy').value = formData.strategy || '';
-                    // Preencher outros campos aqui...
-                    document.getElementById('positive-points').value = formData.positivePoints || '';
-                    document.getElementById('negative-points').value = formData.negativePoints || '';
-                    // ... outros campos
-                    
-                    alert(`Análise de ${loadFund} carregada com sucesso!`);
+                    loadReport(storageKey);
                 }
             }
         });
     </script>
+    
+    <!-- Alertify.js para diálogos melhores -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 </body>
 </html>
