@@ -242,90 +242,80 @@
 </div>
 
 <script>
-/* Simple monthly checklist app — stores per-month in localStorage under key 'fii_checklist_v1' */
-const STORAGE_KEY = 'fii_checklist_v1';
+<script>
+const STORAGE_KEY = 'fii_checklist_v3';
 
-const defaultStructure = () => {
-  // Collect all controls by data-key and store default empty values
+function defaultStructure(){
   const nodes = document.querySelectorAll('[data-key]');
   const obj = {};
   nodes.forEach(n=>{
     const k = n.getAttribute('data-key');
     if(!k) return;
-    if(n.type === 'checkbox'){
-      obj[k] = false;
-    } else if(n.tagName === 'TEXTAREA' || n.tagName === 'INPUT'){
-      obj[k] = '';
-    } else {
-      obj[k] = '';
-    }
+    if(n.type==='checkbox') obj[k] = false;
+    else obj[k] = '';
   });
   return obj;
-};
-
-function loadDB(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { months: {}, order: [] };
-  }catch(e){ return { months: {}, order: [] }; }
 }
 
-function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+function loadDB(){ 
+  try{ 
+    const raw = localStorage.getItem(STORAGE_KEY); 
+    return raw ? JSON.parse(raw) : {months:{}, order:[]}; 
+  } catch(e){ 
+    return {months:{}, order:[]}; 
+  }
+}
+
+function saveDB(db){ 
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); 
+}
 
 function populateMonthSelect(){
-  const sel = document.getElementById('monthSelect');
-  sel.innerHTML = '';
+  const sel = document.getElementById('monthSelect'); sel.innerHTML='';
   const db = loadDB();
   db.order.forEach(m=>{
-    const opt = document.createElement('option');
-    opt.value = m;
-    opt.textContent = m;
-    sel.appendChild(opt);
+    const opt = document.createElement('option'); 
+    opt.value = m; 
+    opt.textContent = m; 
+    sel.appendChild(opt); 
   });
   if(sel.options.length) sel.value = sel.options[sel.options.length-1].value;
 }
 
 function renderMonthsList(){
-  const list = document.getElementById('monthsList');
-  list.innerHTML = '';
+  const list = document.getElementById('monthsList'); list.innerHTML='';
   const db = loadDB();
   db.order.forEach(m=>{
-    const div = document.createElement('div');
-    div.className = 'month-btn' + (m === getCurrentMonthKey() ? ' active' : '');
+    const div = document.createElement('div'); 
+    div.className='month-btn'+(m===getCurrentMonthKey()?' active':''); 
     div.textContent = m;
-    div.onclick = ()=>{ setCurrentMonth(m); };
-    const del = document.createElement('button');
-    del.textContent = '🗑️';
-    del.style.marginLeft='8px'; del.title='Remover mês';
-    del.onclick = (ev)=>{ ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')){ deleteMonth(m); } };
-    div.appendChild(del);
+    div.onclick=()=>{ setCurrentMonth(m); };
+    const del = document.createElement('button'); 
+    del.textContent='🗑️'; del.style.marginLeft='8px'; del.title='Remover mês';
+    del.onclick=(ev)=>{ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')) deleteMonth(m);};
+    div.appendChild(del); 
     list.appendChild(div);
   });
-  document.getElementById('countTag').textContent = db.order.length;
 }
 
-function getCurrentMonthKey(){
-  const sel = document.getElementById('monthSelect');
-  return sel.value || null;
-}
+function getCurrentMonthKey(){ return document.getElementById('monthSelect').value || null; }
+
+function getCurrentTicker(){ return document.getElementById('fiiTicker').value.trim().toUpperCase(); }
 
 function setCurrentMonth(m){
-  const sel = document.getElementById('monthSelect');
-  sel.value = m;
+  document.getElementById('monthSelect').value = m;
   renderMonthsList();
   loadMonthToUI(m);
 }
 
 function addMonth(m){
-  if(!m) { alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
+  if(!m){ alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
   const db = loadDB();
   if(db.order.includes(m)){ alert('Mês já existe'); return; }
   db.order.push(m);
-  db.months[m] = defaultStructure();
+  db.months[m] = {}; // cada mês guarda vários ativos
   saveDB(db);
-  populateMonthSelect();
-  renderMonthsList();
-  setCurrentMonth(m);
+  populateMonthSelect(); renderMonthsList(); setCurrentMonth(m);
 }
 
 function deleteMonth(m){
@@ -334,148 +324,82 @@ function deleteMonth(m){
   delete db.months[m];
   db.order = db.order.filter(x=>x!==m);
   saveDB(db);
-  populateMonthSelect();
-  renderMonthsList();
+  populateMonthSelect(); renderMonthsList();
   const sel = document.getElementById('monthSelect');
   if(sel.options.length) setCurrentMonth(sel.options[sel.options.length-1].value);
   else clearUI();
 }
 
-function clearUI(){
-  const nodes = document.querySelectorAll('[data-key]');
-  nodes.forEach(n=>{
-    if(n.type==='checkbox') n.checked = false;
-    else n.value = '';
+function clearUI(){ 
+  document.querySelectorAll('[data-key]').forEach(n=>{
+    if(n.type==='checkbox') n.checked=false; 
+    else n.value='';
   });
-  document.getElementById('lastSaved').textContent = '—';
 }
 
 function loadMonthToUI(m){
+  clearUI();
   const db = loadDB();
-  const data = db.months[m] || defaultStructure();
-  const nodes = document.querySelectorAll('[data-key]');
-  nodes.forEach(n=>{
+  const ticker = getCurrentTicker();
+  if(!ticker) return;
+  if(!db.months[m]) db.months[m]={};
+  if(!db.months[m][ticker]) db.months[m][ticker]=defaultStructure();
+  const data = db.months[m][ticker];
+  document.querySelectorAll('[data-key]').forEach(n=>{
     const k = n.getAttribute('data-key');
-    if(!(k in data)) {
-      // keep default
-      if(n.type==='checkbox') n.checked = false; else n.value='';
-      return;
-    }
     if(n.type==='checkbox') n.checked = !!data[k];
-    else n.value = data[k] || '';
+    else n.value = data[k]||'';
   });
-  const last = localStorage.getItem(STORAGE_KEY + '::lastSaved::' + m);
-  document.getElementById('lastSaved').textContent = last ? new Date(last).toLocaleString() : '—';
+  document.getElementById('lastSaved').textContent = new Date().toLocaleString();
 }
 
 function saveCurrentMonth(){
-  const m = getCurrentMonthKey();
-  if(!m) { alert('Escolha ou adicione um mês primeiro.'); return; }
+  const m = getCurrentMonthKey(); if(!m) return alert('Selecione mês');
+  const ticker = getCurrentTicker(); if(!ticker) return alert('Informe o ticker do ativo');
   const db = loadDB();
-  const nodes = document.querySelectorAll('[data-key]');
-  db.months[m] = db.months[m] || {};
-  nodes.forEach(n=>{
-    const k = n.getAttribute('data-key');
-    if(!k) return;
-    if(n.type==='checkbox') db.months[m][k] = !!n.checked;
-    else db.months[m][k] = n.value || '';
+  if(!db.months[m]) db.months[m]={};
+  if(!db.months[m][ticker]) db.months[m][ticker]=defaultStructure();
+  const data = db.months[m][ticker];
+  document.querySelectorAll('[data-key]').forEach(n=>{
+    const k = n.getAttribute('data-key'); if(!k) return;
+    if(n.type==='checkbox') data[k] = n.checked;
+    else data[k] = n.value;
   });
   saveDB(db);
-  localStorage.setItem(STORAGE_KEY + '::lastSaved::' + m, new Date().toISOString());
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
   renderMonthsList();
 }
 
-function exportJSON(){
-  const db = loadDB();
-  const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'fii_checklist_backup.json'; document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function importJSONFile(file){
-  const reader = new FileReader();
-  reader.onload = e=>{
+// eventos
+document.getElementById('addMonthBtn').onclick = ()=>addMonth(document.getElementById('newMonthName').value.trim());
+document.getElementById('monthSelect').onchange = ()=>loadMonthToUI(getCurrentMonthKey());
+document.getElementById('fiiTicker').onchange = ()=>loadMonthToUI(getCurrentMonthKey());
+document.getElementById('saveBtn').onclick = saveCurrentMonth;
+document.getElementById('clearBtn').onclick = ()=>{ if(confirm('Limpar os campos do ativo atual?')) clearUI(); };
+document.getElementById('exportBtn').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='checklist_fii_ativos.json'; a.click();
+};
+document.getElementById('importBtn').onclick = ()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=(ev)=>{
+  const file=ev.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
     try{
-      const parsed = JSON.parse(e.target.result);
-      if(!parsed || typeof parsed !== 'object') throw 'Arquivo inválido';
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-      populateMonthSelect(); renderMonthsList();
-      if(parsed.order && parsed.order.length) setCurrentMonth(parsed.order[parsed.order.length-1]);
-      alert('Importação concluída.');
-    }catch(err){
-      alert('Erro ao importar: ' + err);
-    }
-  };
+      const data=JSON.parse(e.target.result);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      populateMonthSelect(); renderMonthsList(); alert('Importado com sucesso!');
+    } catch(err){ alert('Arquivo inválido'); }
+  }
   reader.readAsText(file);
-}
+};
+document.getElementById('printBtn').onclick = ()=>window.print();
 
-function bindUI(){
-  document.getElementById('addMonthBtn').onclick = ()=>{
-    const nm = document.getElementById('newMonthName').value.trim();
-    addMonth(nm);
-    document.getElementById('newMonthName').value = '';
-  };
-  document.getElementById('saveBtn').onclick = saveCurrentMonth;
-  document.getElementById('exportBtn').onclick = exportJSON;
-  document.getElementById('importBtn').onclick = ()=> document.getElementById('importFile').click();
-  document.getElementById('importFile').onchange = e=>{ if(e.target.files[0]) importJSONFile(e.target.files[0]); e.target.value = ''; };
-  document.getElementById('printBtn').onclick = ()=> window.print();
-  document.getElementById('clearBtn').onclick = ()=>{
-    const m = getCurrentMonthKey();
-    if(!m){ alert('Escolha um mês'); return; }
-    if(confirm('Limpar dados do mês ' + m + ' ?')){ const db=loadDB(); db.months[m]=defaultStructure(); saveDB(db); loadMonthToUI(m); }
-  };
-  document.getElementById('monthSelect').onchange = (e)=>{ loadMonthToUI(e.target.value); renderMonthsList(); };
-  document.getElementById('searchInput').oninput = (e)=> searchInContent(e.target.value);
-  // save on change
-  document.querySelectorAll('[data-key]').forEach(n=>{
-    if(n.type==='checkbox'){
-      n.addEventListener('change', ()=> { /* auto-save deferred? keep manual to avoid excessive writes */ });
-    } else {
-      n.addEventListener('input', ()=>{ /* no-op */ });
-    }
-  });
-  // keyboard shortcut Ctrl+S to save
-  window.addEventListener('keydown', (ev)=>{ if((ev.ctrlKey||ev.metaKey) && ev.key.toLowerCase()==='s'){ ev.preventDefault(); saveCurrentMonth(); } });
-}
-
-function searchInContent(term){
-  const container = document.getElementById('contentArea');
-  const q = term.trim().toLowerCase();
-  if(!q){ // clear
-    container.querySelectorAll('section').forEach(s=> s.style.display='block');
-    container.querySelectorAll('.item').forEach(i=> i.style.display='flex');
-    return;
-  }
-  container.querySelectorAll('section').forEach(section=>{
-    let any=false;
-    section.querySelectorAll('.item, textarea, input[type="text"]').forEach(node=>{
-      const text = (node.innerText || node.value || node.textContent || '').toLowerCase();
-      if(text.includes(q)) { any=true; node.style.display = node.classList && node.classList.contains('item') ? 'flex' : 'block'; }
-      else node.style.display = (node.classList && node.classList.contains('item')) ? 'none' : node.style.display;
-    });
-    section.style.display = any ? 'block' : 'none';
-  });
-}
-
-// initialize
-(function init(){
-  bindUI();
-  populateMonthSelect();
-  const db = loadDB();
-  if(!db.order.length){
-    // create current month by default
-    const now = new Date();
-    const mm = String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
-    addMonth(mm);
-  } else {
-    populateMonthSelect();
-    setCurrentMonth(document.getElementById('monthSelect').value);
-  }
-})();
+// inicialização
+populateMonthSelect();
+renderMonthsList();
 </script>
+
 </body>
 </html>
+
