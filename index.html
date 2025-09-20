@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checklist de Análise de FIIs</title>
     
+    <!-- Primeiro, carregar Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -493,7 +498,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>Checklist de Análise de FIIs</h1>
+            <h1>GD Checklist de Análise de FIIs</h1>
             <p class="app-description">Análise completa de fundos imobiliários com sistema de salvamento</p>
         </header>
         
@@ -694,14 +699,14 @@
                             </div>
                             <div class="checkbox-item">
                                 <input type="radio" id="manager-change-no" name="manager-change" value="nao">
-                                <label for('manager-change-no')>Não</label>
+                                <label for="manager-change-no">Não</label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="checklist-item">
                         <label for="manager-change-details">Se houve troca, detalhe as circunstâncias:</label>
-                        <textarea id="manager-change-details' placeholder='Detalhe a troca de gestão...'"></textarea>
+                        <textarea id="manager-change-details" placeholder="Detalhe a troca de gestão..."></textarea>
                     </div>
                     
                     <div class="checklist-item">
@@ -901,12 +906,12 @@
                                 <label for="liquidity-stable">Estabilizada</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="radio" id="liquidity-increasing" name='liquidity' value='crescente'>
-                                <label for='liquidity-increasing'>Crescente</label>
+                                <input type="radio" id="liquidity-increasing" name="liquidity" value="crescente">
+                                <label for="liquidity-increasing">Crescente</label>
                             </div>
                             <div class="checkbox-item">
-                                <input type="radio" id="liquidity-decreasing" name='liquidity' value='decrescente'>
-                                <label for='liquidity-decreasing'>Decrescente</label>
+                                <input type="radio" id="liquidity-decreasing" name="liquidity" value="decrescente">
+                                <label for="liquidity-decreasing">Decrescente</label>
                             </div>
                         </div>
                     </div>
@@ -1107,7 +1112,7 @@
             
             <div class='section'>
                 <h3>Como pesquisar relatórios?</h3>
-                <p>Na aba "Relatórios Salvos", digite o nome do fundo ou a data no campo de pesquisa e clique no botão "Pesquisar".</p>
+                <p>Na aba "Relatórios Salvos", digite o nome do fundo ou a data no campo de pesquisa и clique no botão "Pesquisar".</p>
                 <p>Você também pode visualizar, carregar ou excluir relatórios individualmente usando os botões ao lado de cada relatório.</p>
             </div>
             
@@ -1150,14 +1155,25 @@
             };
 
             // Inicializar Firebase
+            let db = null;
+            let auth = null;
+            let isFirebaseInitialized = false;
+            
             try {
-                firebase.initializeApp(firebaseConfig);
-                const db = firebase.firestore();
-                const auth = firebase.auth();
+                // Verificar se o Firebase já foi inicializado
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                
+                db = firebase.firestore();
+                auth = firebase.auth();
+                isFirebaseInitialized = true;
                 
                 // Atualizar status
                 document.getElementById('firebase-status').textContent = "Firebase inicializado com sucesso";
                 document.getElementById('firebase-status').className = "firebase-status status-connected";
+                
+                console.log("Firebase inicializado com sucesso");
             } catch (error) {
                 console.error("Erro ao inicializar Firebase:", error);
                 document.getElementById('firebase-status').textContent = "Erro ao inicializar Firebase: " + error.message;
@@ -1184,16 +1200,10 @@
             
             // Estado da aplicação
             let currentUser = null;
-            let isFirebaseConnected = false;
-            let firebaseDb = null;
             
-            // Verificar se o Firebase foi inicializado corretamente
-            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
-                isFirebaseConnected = true;
-                firebaseDb = firebase.firestore();
-                
-                // Monitorar estado de autenticação
-                firebase.auth().onAuthStateChanged((user) => {
+            // Monitorar estado de autenticação se o Firebase foi inicializado
+            if (isFirebaseInitialized) {
+                auth.onAuthStateChanged((user) => {
                     if (user) {
                         currentUser = user;
                         userEmail.textContent = user.email;
@@ -1226,13 +1236,13 @@
             
             // Login com Google
             loginBtn.addEventListener('click', () => {
-                if (typeof firebase === 'undefined') {
-                    alert("Firebase não carregado. Verifique sua conexão com a internet.");
+                if (!isFirebaseInitialized) {
+                    alert("Firebase não inicializado. Verifique sua conexão com a internet.");
                     return;
                 }
                 
                 const provider = new firebase.auth.GoogleAuthProvider();
-                firebase.auth().signInWithPopup(provider)
+                auth.signInWithPopup(provider)
                     .then((result) => {
                         console.log("Login bem-sucedido:", result.user);
                     })
@@ -1248,8 +1258,8 @@
             
             // Logout
             logoutBtn.addEventListener('click', () => {
-                if (typeof firebase !== 'undefined') {
-                    firebase.auth().signOut()
+                if (isFirebaseInitialized) {
+                    auth.signOut()
                         .then(() => {
                             console.log("Logout bem-sucedido");
                         })
@@ -1296,6 +1306,16 @@
             
             // Salvar dados no Firebase
             saveBtn.addEventListener('click', function() {
+                if (!isFirebaseInitialized) {
+                    alert('Firebase não está inicializado. Verifique sua conexão e tente novamente.');
+                    return;
+                }
+                
+                if (!currentUser) {
+                    alert('Faça login para salvar suas análises na nuvem.');
+                    return;
+                }
+                
                 const fundName = document.getElementById('fund-name').value;
                 if (!fundName) {
                     alert('Por favor, informe o nome do fundo antes de salvar.');
@@ -1364,36 +1384,32 @@
                     timestamp: new Date().toISOString()
                 };
                 
-                // Salvar no Firebase se estiver logado
-                if (currentUser && isFirebaseConnected) {
-                    const firebaseData = {
-                        ...formData,
-                        userId: currentUser.uid,
-                        userEmail: currentUser.email,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    
-                    // Mostrar indicador de carregamento
-                    const originalText = saveBtn.innerHTML;
-                    saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
-                    saveBtn.disabled = true;
-                    
-                    firebaseDb.collection('analises').add(firebaseData)
-                        .then((docRef) => {
-                            console.log("Análise salva no Firebase com ID: ", docRef.id);
-                            saveBtn.innerHTML = originalText;
-                            saveBtn.disabled = false;
-                            alert(`Análise de ${fundName} salva com sucesso na nuvem!`);
-                        })
-                        .catch((error) => {
-                            console.error("Erro ao salvar no Firebase: ", error);
-                            saveBtn.innerHTML = originalText;
-                            saveBtn.disabled = false;
-                            alert(`Erro ao salvar na nuvem: ${error.message}`);
-                        });
-                } else {
-                    alert('Faça login para salvar suas análises na nuvem.');
-                }
+                // Salvar no Firebase
+                const firebaseData = {
+                    ...formData,
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Mostrar indicador de carregamento
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
+                saveBtn.disabled = true;
+                
+                db.collection('analises').add(firebaseData)
+                    .then((docRef) => {
+                        console.log("Análise salva no Firebase com ID: ", docRef.id);
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.disabled = false;
+                        alert(`Análise de ${fundName} salva com sucesso na nuvem!`);
+                    })
+                    .catch((error) => {
+                        console.error("Erro ao salvar no Firebase: ", error);
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.disabled = false;
+                        alert(`Erro ao salvar na nuvem: ${error.message}`);
+                    });
             });
             
             // Imprimir/exportar formulário
@@ -1424,10 +1440,15 @@
                     return;
                 }
                 
+                if (!isFirebaseInitialized) {
+                    reportsList.innerHTML = '<p>Firebase não inicializado. Não é possível carregar relatórios.</p>';
+                    return;
+                }
+                
                 let reports = [];
                 
                 try {
-                    let query = firebaseDb.collection('analises')
+                    let query = db.collection('analises')
                         .where('userId', '==', currentUser.uid)
                         .orderBy('timestamp', 'desc');
                     
@@ -1512,7 +1533,7 @@
             // Função para visualizar relatório
             async function viewReport(id) {
                 try {
-                    const doc = await firebaseDb.collection('analises').doc(id).get();
+                    const doc = await db.collection('analises').doc(id).get();
                     if (doc.exists) {
                         const report = doc.data();
                         let content = `
@@ -1542,7 +1563,7 @@
             // Função para carregar relatório no formulário
             async function loadReport(id) {
                 try {
-                    const doc = await firebaseDb.collection('analises').doc(id).get();
+                    const doc = await db.collection('analises').doc(id).get();
                     if (doc.exists) {
                         const report = doc.data();
                         
@@ -1644,12 +1665,12 @@
             // Função para excluir relatório
             async function deleteReport(id) {
                 try {
-                    const doc = await firebaseDb.collection('analises').doc(id).get();
+                    const doc = await db.collection('analises').doc(id).get();
                     if (doc.exists) {
                         const reportName = doc.data().fundName;
                         
                         if (confirm(`Tem certeza que deseja excluir o relatório de ${reportName}?`)) {
-                            await firebaseDb.collection('analises').doc(id).delete();
+                            await db.collection('analises').doc(id).delete();
                             alert('Relatório excluído com sucesso.');
                             updateReportsList();
                         }
@@ -1674,10 +1695,5 @@
             }
         });
     </script>
-
-    <!-- Incluir Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </body>
 </html>
