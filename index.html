@@ -147,7 +147,9 @@ footer{display:flex;justify-content:space-between;align-items:center;margin-top:
 </div>
 
 <script>
-const STORAGE_KEY = 'fii_checklist_v2';
+<script>
+const STORAGE_KEY = 'fii_checklist_v3';
+
 function defaultStructure(){
   const nodes = document.querySelectorAll('[data-key]');
   const obj = {};
@@ -157,98 +159,150 @@ function defaultStructure(){
     if(n.type==='checkbox') obj[k] = false;
     else obj[k] = '';
   });
-  obj['meta.ativo']='';
   return obj;
 }
-function loadDB(){ try{ const raw=localStorage.getItem(STORAGE_KEY); return raw?JSON.parse(raw):{months:{},order:[]};}catch(e){return{months:{},order:[]}}}
-function saveDB(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+
+function loadDB(){ 
+  try{ 
+    const raw = localStorage.getItem(STORAGE_KEY); 
+    return raw ? JSON.parse(raw) : {months:{}, order:[]}; 
+  } catch(e){ 
+    return {months:{}, order:[]}; 
+  }
+}
+
+function saveDB(db){ 
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); 
+}
+
 function populateMonthSelect(){
-  const sel=document.getElementById('monthSelect'); sel.innerHTML='';
-  const db=loadDB();
-  db.order.forEach(m=>{ const opt=document.createElement('option'); opt.value=m; opt.textContent=m; sel.appendChild(opt); });
-  if(sel.options.length) sel.value=sel.options[sel.options.length-1].value;
-}
-function renderMonthsList(){
-  const list=document.getElementById('monthsList'); list.innerHTML='';
-  const db=loadDB();
+  const sel = document.getElementById('monthSelect'); sel.innerHTML='';
+  const db = loadDB();
   db.order.forEach(m=>{
-    const div=document.createElement('div'); div.className='month-btn'+(m===getCurrentMonthKey()?' active':''); div.textContent=m;
-    div.onclick=()=>{setCurrentMonth(m)};
-    const del=document.createElement('button'); del.textContent='🗑️'; del.style.marginLeft='8px'; del.title='Remover mês';
-    del.onclick=(ev)=>{ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')) deleteMonth(m);};
-    div.appendChild(del); list.appendChild(div);
+    const opt = document.createElement('option'); 
+    opt.value = m; 
+    opt.textContent = m; 
+    sel.appendChild(opt); 
   });
-  document.getElementById('countTag').textContent=db.order.length;
+  if(sel.options.length) sel.value = sel.options[sel.options.length-1].value;
 }
+
+function renderMonthsList(){
+  const list = document.getElementById('monthsList'); list.innerHTML='';
+  const db = loadDB();
+  db.order.forEach(m=>{
+    const div = document.createElement('div'); 
+    div.className='month-btn'+(m===getCurrentMonthKey()?' active':''); 
+    div.textContent = m;
+    div.onclick=()=>{ setCurrentMonth(m); };
+    const del = document.createElement('button'); 
+    del.textContent='🗑️'; del.style.marginLeft='8px'; del.title='Remover mês';
+    del.onclick=(ev)=>{ev.stopPropagation(); if(confirm('Remover mês "'+m+'"?')) deleteMonth(m);};
+    div.appendChild(del); 
+    list.appendChild(div);
+  });
+}
+
 function getCurrentMonthKey(){ return document.getElementById('monthSelect').value || null; }
+
+function getCurrentTicker(){ return document.getElementById('fiiTicker').value.trim().toUpperCase(); }
+
 function setCurrentMonth(m){
-  document.getElementById('monthSelect').value=m;
+  document.getElementById('monthSelect').value = m;
   renderMonthsList();
   loadMonthToUI(m);
 }
+
 function addMonth(m){
   if(!m){ alert('Informe MÊS/ANO no formato MM/YYYY'); return; }
-  const db=loadDB();
+  const db = loadDB();
   if(db.order.includes(m)){ alert('Mês já existe'); return; }
   db.order.push(m);
-  db.months[m]=defaultStructure();
+  db.months[m] = {}; // cada mês guarda vários ativos
   saveDB(db);
   populateMonthSelect(); renderMonthsList(); setCurrentMonth(m);
 }
+
 function deleteMonth(m){
-  const db=loadDB();
+  const db = loadDB();
   if(!db.order.includes(m)) return;
   delete db.months[m];
-  db.order=db.order.filter(x=>x!==m);
+  db.order = db.order.filter(x=>x!==m);
   saveDB(db);
   populateMonthSelect(); renderMonthsList();
-  const sel=document.getElementById('monthSelect');
+  const sel = document.getElementById('monthSelect');
   if(sel.options.length) setCurrentMonth(sel.options[sel.options.length-1].value);
   else clearUI();
 }
+
 function clearUI(){ 
-  document.querySelectorAll('[data-key]').forEach(n=>{ if(n.type==='checkbox') n.checked=false; else n.value=''; }); 
-  document.getElementById('fiiTicker').value=''; 
+  document.querySelectorAll('[data-key]').forEach(n=>{
+    if(n.type==='checkbox') n.checked=false; 
+    else n.value='';
+  });
 }
+
 function loadMonthToUI(m){
   clearUI();
-  const db=loadDB();
-  const data=db.months[m]; if(!data) return;
-  document.getElementById('fiiTicker').value = data['meta.ativo']||'';
+  const db = loadDB();
+  const ticker = getCurrentTicker();
+  if(!ticker) return;
+  if(!db.months[m]) db.months[m]={};
+  if(!db.months[m][ticker]) db.months[m][ticker]=defaultStructure();
+  const data = db.months[m][ticker];
   document.querySelectorAll('[data-key]').forEach(n=>{
-    const k=n.getAttribute('data-key');
+    const k = n.getAttribute('data-key');
     if(n.type==='checkbox') n.checked = !!data[k];
     else n.value = data[k]||'';
   });
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
 }
+
 function saveCurrentMonth(){
-  const m=getCurrentMonthKey(); if(!m) return alert('Selecione mês');
-  const db=loadDB(); if(!db.months[m]) db.months[m]=defaultStructure();
-  const data=db.months[m];
+  const m = getCurrentMonthKey(); if(!m) return alert('Selecione mês');
+  const ticker = getCurrentTicker(); if(!ticker) return alert('Informe o ticker do ativo');
+  const db = loadDB();
+  if(!db.months[m]) db.months[m]={};
+  if(!db.months[m][ticker]) db.months[m][ticker]=defaultStructure();
+  const data = db.months[m][ticker];
   document.querySelectorAll('[data-key]').forEach(n=>{
-    const k=n.getAttribute('data-key'); if(!k) return;
-    if(n.type==='checkbox') data[k]=n.checked;
-    else data[k]=n.value;
+    const k = n.getAttribute('data-key'); if(!k) return;
+    if(n.type==='checkbox') data[k] = n.checked;
+    else data[k] = n.value;
   });
-  data['meta.ativo'] = document.getElementById('fiiTicker').value;
   saveDB(db);
   document.getElementById('lastSaved').textContent = new Date().toLocaleString();
   renderMonthsList();
 }
-document.getElementById('addMonthBtn').onclick=()=>addMonth(document.getElementById('newMonthName').value.trim());
-document.getElementById('monthSelect').onchange=()=>setCurrentMonth(getCurrentMonthKey());
-document.getElementById('saveBtn').onclick=saveCurrentMonth;
-document.getElementById('clearBtn').onclick=()=>{ if(confirm('Limpar os campos do mês atual?')) clearUI(); };
-document.getElementById('exportBtn').onclick=()=>{
-  const blob=new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist_fii_completo.json'; a.click();
+
+// eventos
+document.getElementById('addMonthBtn').onclick = ()=>addMonth(document.getElementById('newMonthName').value.trim());
+document.getElementById('monthSelect').onchange = ()=>loadMonthToUI(getCurrentMonthKey());
+document.getElementById('fiiTicker').onchange = ()=>loadMonthToUI(getCurrentMonthKey());
+document.getElementById('saveBtn').onclick = saveCurrentMonth;
+document.getElementById('clearBtn').onclick = ()=>{ if(confirm('Limpar os campos do ativo atual?')) clearUI(); };
+document.getElementById('exportBtn').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(loadDB(),null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='checklist_fii_ativos.json'; a.click();
 };
-document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importBtn').onclick = ()=>document.getElementById('importFile').click();
 document.getElementById('importFile').onchange=(ev)=>{
   const file=ev.target.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=e=>{
     try{
       const data=JSON.parse(e.target.result);
-      localStorage.setItem
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      populateMonthSelect(); renderMonthsList(); alert('Importado com sucesso!');
+    } catch(err){ alert('Arquivo inválido'); }
+  }
+  reader.readAsText(file);
+};
+document.getElementById('printBtn').onclick = ()=>window.print();
+
+// inicialização
+populateMonthSelect();
+renderMonthsList();
+</script>
+
+
