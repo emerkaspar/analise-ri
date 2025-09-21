@@ -10,6 +10,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
+    <!-- Importação da fonte Inter do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -25,8 +33,8 @@
         --danger: #ef4444;
         --warning: #f59e0b;
         --card-border: rgba(255, 255, 255, 0.04);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-          Roboto, "Helvetica Neue", Arial;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial;
       }
 
       * {
@@ -41,8 +49,8 @@
         line-height: 1.6;
         padding: 20px;
         min-height: 100vh;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-          Roboto, "Helvetica Neue", Arial;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial;
       }
 
       .container {
@@ -55,20 +63,28 @@
         border: 1px solid var(--card-border);
       }
 
+      /* HEADER EM LINHA ÚNICA */
       header {
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         margin-bottom: 30px;
         padding-bottom: 20px;
         border-bottom: 1px solid var(--glass);
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .logo-section {
         display: flex;
-        flex-direction: column;
         align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
       }
 
       .logo {
-        max-width: 150px;
+        max-width: 120px;
         height: auto;
-        margin-bottom: 20px;
       }
 
       .logo img {
@@ -77,16 +93,73 @@
         border-radius: 8px;
       }
 
+      .titles {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
       h1 {
         color: var(--accent);
-        margin-bottom: 10px;
-        font-size: 2.2rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0;
       }
 
       .app-description {
         color: var(--muted);
-        margin-bottom: 20px;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        margin-top: 4px;
+      }
+
+      .auth-section {
+        margin: 0;
+        padding: 12px 16px;
+        background-color: var(--glass);
+        border-radius: 12px;
+        border: 1px solid var(--card-border);
+        text-align: center;
+        flex-shrink: 0;
+        min-width: 200px;
+      }
+
+      .auth-section h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+
+      .auth-section p {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+
+      .user-info {
+        margin-top: 8px;
+        padding: 8px;
+        background: rgba(96, 165, 250, 0.1);
+        border-radius: 6px;
+        font-size: 0.8rem;
+      }
+
+      .auth-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .auth-buttons button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+      }
+
+      .firebase-status {
+        margin-top: 8px;
+        padding: 6px;
+        border-radius: 6px;
+        font-size: 0.8rem;
       }
 
       /* Resto do CSS permanece igual */
@@ -362,36 +435,6 @@
         margin-bottom: 10px;
       }
 
-      .auth-section {
-        margin-bottom: 20px;
-        padding: 20px;
-        background-color: var(--glass);
-        border-radius: 12px;
-        border: 1px solid var(--card-border);
-        text-align: center;
-      }
-
-      .auth-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 15px;
-      }
-
-      .user-info {
-        margin-top: 15px;
-        padding: 10px;
-        background: rgba(96, 165, 250, 0.1);
-        border-radius: 8px;
-      }
-
-      .firebase-status {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 8px;
-        text-align: center;
-      }
-
       .status-connected {
         background: rgba(16, 185, 129, 0.1);
         color: var(--success);
@@ -456,13 +499,35 @@
         }
       }
 
+      @media (max-width: 992px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .logo-section {
+          width: 100%;
+          justify-content: center;
+          margin-bottom: 15px;
+        }
+
+        .titles {
+          text-align: center;
+          width: 100%;
+        }
+
+        .auth-section {
+          width: 100%;
+        }
+      }
+
       @media (max-width: 768px) {
         .logo {
-          max-width: 200px;
+          max-width: 100px;
         }
 
         h1 {
-          font-size: 1.8rem;
+          font-size: 1.5rem;
         }
 
         .fund-info {
@@ -505,15 +570,19 @@
 
       @media (max-width: 480px) {
         .logo {
-          max-width: 150px;
+          max-width: 80px;
         }
 
         h1 {
-          font-size: 1.5rem;
+          font-size: 1.3rem;
         }
 
         .app-description {
-          font-size: 1rem;
+          font-size: 0.85rem;
+        }
+
+        .container {
+          padding: 20px;
         }
       }
 
@@ -576,38 +645,42 @@
   </head>
   <body>
     <div class="container">
+      <!-- HEADER EM LINHA ÚNICA -->
       <header>
-        <div class="logo">
-          <img
-            src="https://i.ibb.co/9kpYwVdn/logomarca-com-fundo.png"
-            alt="GD Checklist de Análise de FIIs"
-          />
+        <div class="logo-section">
+          <div class="logo">
+            <img
+              src="https://i.ibb.co/9kpYwVdn/logomarca-com-fundo.png"
+              alt="GD Checklist de Análise de FIIs"
+            />
+          </div>
+          <div class="titles">
+            <h1>FII Analyzer Pro</h1>
+            <p class="app-description">
+              Ferramenta Completa de Análise de Fundos Imobiliários
+            </p>
+          </div>
         </div>
-        <h1>FII Analyzer Pro</h1>
-        <p class="app-description">
-          Ferramenta Completa de Análise de Fundos Imobiliários
-        </p>
-      </header>
 
-      <!-- Seção de Autenticação Firebase -->
-      <div class="auth-section" id="auth-section">
-        <h3><i class="fas fa-user"></i> Login</h3>
-        <p>Faça login para salvar suas análises</p>
-        <div class="firebase-status" id="firebase-status">
-          Verificando conexão...
+        <div class="auth-section" id="auth-section">
+          <h3><i class="fas fa-user"></i> Login</h3>
+          <p>Faça login para salvar suas análises</p>
+          <div class="firebase-status" id="firebase-status">
+            Verificando conexão...
+          </div>
+          <div id="user-info" class="user-info" style="display: none">
+            <p>Logado como: <span id="user-email"></span></p>
+          </div>
+          <div class="auth-buttons">
+            <button id="login-btn" class="btn-save">
+              <i class="fas fa-sign-in-alt"></i> Fazer Login
+            </button>
+            <button id="logout-btn" class="btn-reset" style="display: none">
+              <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+          </div>
         </div>
-        <div id="user-info" class="user-info" style="display: none">
-          <p>Logado como: <span id="user-email"></span></p>
-        </div>
-        <div class="auth-buttons">
-          <button id="login-btn" class="btn-save">
-            <i class="fas fa-sign-in-alt"></i> Fazer Login
-          </button>
-          <button id="logout-btn" class="btn-reset" style="display: none">
-            <i class="fas fa-sign-out-alt"></i> Sair
-          </button>
-        </div>
-      </div>
+      </header>
 
       <div class="tabs">
         <div class="tab active" data-tab="form">Nova Análise</div>
