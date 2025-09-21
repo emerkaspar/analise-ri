@@ -781,6 +781,46 @@
               />
             </div>
 
+            <!-- NOVOS CAMPOS ADICIONADOS -->
+            <div class="checklist-item">
+              <label for="admin-fee">Taxa de administração (%)</label>
+              <input
+                type="text"
+                id="admin-fee"
+                placeholder="Taxa de administração em %"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label for="performance-fee">Taxa de performance (%)</label>
+              <input
+                type="text"
+                id="performance-fee"
+                placeholder="Taxa de performance em %"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label for="ffo-vs-dy">Valor do FFO vs DY</label>
+              <input
+                type="text"
+                id="ffo-vs-dy"
+                placeholder="Comparação entre FFO e DY"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label for="extraordinary-revenue"
+                >Se o FFO está abaixo do DY, fundo tem gerado receita
+                extraordinária? Tem bastante saldo acumulado?</label
+              >
+              <textarea
+                id="extraordinary-revenue"
+                placeholder="Descreva a situação da receita extraordinária e saldo acumulado..."
+              ></textarea>
+            </div>
+            <!-- FIM DOS NOVOS CAMPOS -->
+
             <div class="checklist-item">
               <label for="expiring-contracts"
                 >Há contratos próximos do vencimento? Qual % da receita?</label
@@ -874,6 +914,213 @@
             </div>
           </div>
 
+          <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
+          <div class="section">
+            <div class="section-title">
+              <span>📄</span>
+              <h2>Análise de Fundos de Papel</h2>
+            </div>
+
+            <div class="checklist-item">
+              <label>Alocação do Fundo</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input
+                  type="text"
+                  id="allocation-cri-cra"
+                  placeholder="% CRI/CRA"
+                />
+                <input
+                  type="text"
+                  id="allocation-fiis-paper"
+                  placeholder="% FIIs"
+                />
+                <input
+                  type="text"
+                  id="allocation-cash-paper"
+                  placeholder="% Caixa"
+                />
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <label for="credits-count">Quantidade de créditos</label>
+              <input
+                type="number"
+                id="credits-count"
+                placeholder="Número total de créditos"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label>Indexador do fundo</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input type="text" id="indexer-cdi" placeholder="% CDI" />
+                <input type="text" id="indexer-ipca" placeholder="% IPCA" />
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <label>Taxa média dos créditos</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
+                <input
+                  type="text"
+                  id="credit-rate-ipca"
+                  placeholder="IPCA+X%"
+                />
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <label for="credit-duration"
+                >Duration da carteira de créditos (anos)</label
+              >
+              <input
+                type="text"
+                id="credit-duration"
+                placeholder="Duration média em anos"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label>Garantias praticadas pelo fundo:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-fiduciary-alienation"
+                    name="warranty"
+                  />
+                  <label for="warranty-fiduciary-alienation"
+                    >Alienação fiduciária</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-fiduciary-cession"
+                    name="warranty"
+                  />
+                  <label for="warranty-fiduciary-cession"
+                    >Cessão fiduciária</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-mortgage"
+                    name="warranty"
+                  />
+                  <label for="warranty-mortgage">Hipoteca</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-reserves"
+                    name="warranty"
+                  />
+                  <label for="warranty-reserves">Reservas</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-guarantors"
+                    name="warranty"
+                  />
+                  <label for="warranty-guarantors">Fiadores</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-participation"
+                    name="warranty"
+                  />
+                  <label for="warranty-participation">Participação</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="warranty-rating" name="warranty" />
+                  <label for="warranty-rating">Rating</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <label>Fundo possui créditos sem garantias?</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="unsecured-credits-yes"
+                    name="unsecured-credits"
+                    value="sim"
+                  />
+                  <label for="unsecured-credits-yes">Sim</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="unsecured-credits-no"
+                    name="unsecured-credits"
+                    value="nao"
+                  />
+                  <label for="unsecured-credits-no">Não</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="checklist-item">
+              <label for="average-ltv"
+                >LTV médio (razão entre o valor do crédito e o valor da
+                garantia)</label
+              >
+              <input
+                type="text"
+                id="average-ltv"
+                placeholder="LTV médio em %"
+              />
+            </div>
+
+            <div class="checklist-item">
+              <label for="debtor-segments"
+                >Segmentos de mercado dos devedores</label
+              >
+              <textarea
+                id="debtor-segments"
+                placeholder="Liste os segmentos de mercado dos devedores..."
+              ></textarea>
+            </div>
+
+            <div class="checklist-item">
+              <label for="debtor-concentration"
+                >Concentração da carteira em algum devedor? Qual devedor e
+                %</label
+              >
+              <textarea
+                id="debtor-concentration"
+                placeholder="Descreva a concentração em devedores..."
+              ></textarea>
+            </div>
+
+            <div class="checklist-item">
+              <label for="main-debtor-financials"
+                >Situação financeira do devedor com maior concentração</label
+              >
+              <textarea
+                id="main-debtor-financials"
+                placeholder="Descreva a situação financeira do principal devedor..."
+              ></textarea>
+            </div>
+
+            <div class="checklist-item">
+              <label>Observações:</label>
+              <textarea
+                class="observations"
+                placeholder="Anotações sobre fundos de papel..."
+              ></textarea>
+            </div>
+          </div>
+          <!-- FIM DA NOVA SEÇÃO -->
+
           <!-- 🔎 GOVERNANÇA E GESTÃO -->
           <div class="section">
             <div class="section-title">
@@ -927,8 +1174,8 @@
 
             <div class="checklist-item">
               <label
-                >O fundo tem conflitos de interesse (gestor/administrador
-                ligados a ativos/inquilinos)?</label
+                >O fundo tem conflitos de interest (gestor/administrador ligados
+                a ativos/inquilinos)?</label
               >
               <div class="checkbox-group">
                 <div class="checkbox-item">
@@ -1438,7 +1685,7 @@
 
             <div class="checklist-item">
               <label for="balance-sustainability"
-                >O saldo acumulado sustentará a distribuição por quanto
+                >O saldo acumulado sustentará a distribution por quanto
                 tempo?</label
               >
               <input
@@ -1842,7 +2089,7 @@
             return;
           }
 
-          // Coletar todos os dados do formulário
+          // Coletar todos os dados do formulário (incluindo os novos campos)
           const formData = {
             fundName: fundName,
             analysisDate: document.getElementById("analysis-date").value,
@@ -1865,6 +2112,38 @@
             averageContractTerm: document.getElementById(
               "average-contract-term"
             ).value,
+            // Novos campos adicionados
+            adminFee: document.getElementById("admin-fee").value,
+            performanceFee: document.getElementById("performance-fee").value,
+            ffoVsDy: document.getElementById("ffo-vs-dy").value,
+            extraordinaryRevenue: document.getElementById(
+              "extraordinary-revenue"
+            ).value,
+            // Campos da nova seção de fundos de papel
+            allocationCriCra:
+              document.getElementById("allocation-cri-cra").value,
+            allocationFiisPaper: document.getElementById(
+              "allocation-fiis-paper"
+            ).value,
+            allocationCashPaper: document.getElementById(
+              "allocation-cash-paper"
+            ).value,
+            creditsCount: document.getElementById("credits-count").value,
+            indexerCdi: document.getElementById("indexer-cdi").value,
+            indexerIpca: document.getElementById("indexer-ipca").value,
+            creditRateCdi: document.getElementById("credit-rate-cdi").value,
+            creditRateIpca: document.getElementById("credit-rate-ipca").value,
+            creditDuration: document.getElementById("credit-duration").value,
+            warranties: getSelectedCheckboxes("warranty"),
+            unsecuredCredits: getSelectedRadio("unsecured-credits"),
+            averageLtv: document.getElementById("average-ltv").value,
+            debtorSegments: document.getElementById("debtor-segments").value,
+            debtorConcentration: document.getElementById("debtor-concentration")
+              .value,
+            mainDebtorFinancials: document.getElementById(
+              "main-debtor-financials"
+            ).value,
+            // Fim dos novos campos
             expiringContracts:
               document.getElementById("expiring-contracts").value,
             activeTenants: document.getElementById("active-tenants").value,
@@ -2098,7 +2377,7 @@
             console.error("Erro ao buscar relatórios do Firebase:", error);
             reportsList.innerHTML =
               "<p>Erro ao carregar relatórios do Firebase.</p>";
-            reportsMessage.innerHTML = `<div class="error-message">Erro ao carregar relatórios: ${error.message}. Verifique sua conexão com a internet e tente novamente.</div>`;
+            reportsMessage.innerHTML = `<div class="error-message">Erro ao carregar relatórios: ${error.message}. Verifique sua conexão com a internet and tente novamente.</div>`;
           }
         }
 
@@ -2143,7 +2422,7 @@
             if (doc.exists) {
               const report = doc.data();
 
-              // Preencher campos do formulário
+              // Preencher campos do formulário (incluindo os novos campos)
               document.getElementById("fund-name").value =
                 report.fundName || "";
               document.getElementById("analysis-date").value =
@@ -2165,6 +2444,42 @@
                 report.atypicalContracts || "";
               document.getElementById("average-contract-term").value =
                 report.averageContractTerm || "";
+              // Novos campos adicionados
+              document.getElementById("admin-fee").value =
+                report.adminFee || "";
+              document.getElementById("performance-fee").value =
+                report.performanceFee || "";
+              document.getElementById("ffo-vs-dy").value = report.ffoVsDy || "";
+              document.getElementById("extraordinary-revenue").value =
+                report.extraordinaryRevenue || "";
+              // Campos da nova seção de fundos de papel
+              document.getElementById("allocation-cri-cra").value =
+                report.allocationCriCra || "";
+              document.getElementById("allocation-fiis-paper").value =
+                report.allocationFiisPaper || "";
+              document.getElementById("allocation-cash-paper").value =
+                report.allocationCashPaper || "";
+              document.getElementById("credits-count").value =
+                report.creditsCount || "";
+              document.getElementById("indexer-cdi").value =
+                report.indexerCdi || "";
+              document.getElementById("indexer-ipca").value =
+                report.indexerIpca || "";
+              document.getElementById("credit-rate-cdi").value =
+                report.creditRateCdi || "";
+              document.getElementById("credit-rate-ipca").value =
+                report.creditRateIpca || "";
+              document.getElementById("credit-duration").value =
+                report.creditDuration || "";
+              document.getElementById("average-ltv").value =
+                report.averageLtv || "";
+              document.getElementById("debtor-segments").value =
+                report.debtorSegments || "";
+              document.getElementById("debtor-concentration").value =
+                report.debtorConcentration || "";
+              document.getElementById("main-debtor-financials").value =
+                report.mainDebtorFinancials || "";
+              // Fim dos novos campos
               document.getElementById("expiring-contracts").value =
                 report.expiringContracts || "";
               document.getElementById("active-tenants").value =
@@ -2242,6 +2557,7 @@
               selectRadioOption("anchor", report.anchor);
               selectRadioOption("expectation", report.expectation);
               selectRadioOption("recommendation", report.recommendation);
+              selectRadioOption("unsecured-credits", report.unsecuredCredits);
 
               // Selecionar classificações do fundo
               if (report.fundClassification) {
@@ -2249,6 +2565,17 @@
                   .querySelectorAll('input[name="fund-classification"]')
                   .forEach((cb) => {
                     cb.checked = report.fundClassification.includes(
+                      cb.nextElementSibling.textContent
+                    );
+                  });
+              }
+
+              // Selecionar garantias
+              if (report.warranties) {
+                document
+                  .querySelectorAll('input[name="warranty"]')
+                  .forEach((cb) => {
+                    cb.checked = report.warranties.includes(
                       cb.nextElementSibling.textContent
                     );
                   });
