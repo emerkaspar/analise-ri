@@ -816,7 +816,7 @@
           class="btn-save"
           onclick="togglePaperSection(this)"
         >
-          📄 Mostrar Análise para Fundos de Papel
+          📄 Clique aqui para mostrar análise para Fundos de Papel
         </button>
 
         <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
@@ -1014,10 +1014,10 @@
 
             if (section.style.display === "none") {
               section.style.display = "block";
-              btn.textContent = "📄 Ocultar Análise de Fundos de Papel";
+              btn.textContent = "📄 Ocultar Análise para Fundos de Papel";
             } else {
               section.style.display = "none";
-              btn.textContent = "📄 Mostrar Análise de Fundos de Papel";
+              btn.textContent = "📄 Mostrar análise para Fundos de Papel";
             }
           }
         </script>
@@ -2078,11 +2078,7 @@
     </div>
 
     <!-- Container do botão flutuante de salvar -->
-    <div
-      class="floating-save-container"
-      id="floating-save-container"
-      style="display: none"
-    >
+    <div class="floating-save-container" id="floating-save-container">
       <div class="progress-indicator">
         <span>Preenchimento: </span>
         <div class="progress-bar">

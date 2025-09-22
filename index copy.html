@@ -10,12 +10,18 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://raw.githubusercontent.com/emerkaspar/analise-ri/refs/heads/main/favicon.png"
+    />
+
     <!-- Importação da fonte Inter do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fo
-      nts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -62,6 +68,7 @@
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         border: 1px solid var(--card-border);
+        position: relative;
       }
 
       /* HEADER EM LINHA ÚNICA */
@@ -642,6 +649,108 @@
         margin: 10px 0;
         border: 1px solid var(--success);
       }
+
+      /* NOVOS ESTILOS PARA O BOTÃO FLUTUANTE */
+      .floating-save-container {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .floating-save-btn {
+        padding: 16px 24px;
+        background-color: var(--success);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .floating-save-btn:hover {
+        background-color: #0da271;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+      }
+
+      .progress-indicator {
+        background: var(--glass);
+        padding: 12px 20px;
+        border-radius: 50px;
+        border: 1px solid var(--card-border);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+      }
+
+      .progress-bar {
+        width: 100px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 4px;
+        transition: width 0.5s ease;
+      }
+
+      @media (max-width: 768px) {
+        .floating-save-container {
+          bottom: 20px;
+          right: 20px;
+        }
+
+        .floating-save-btn {
+          padding: 14px 20px;
+          font-size: 0.9rem;
+        }
+
+        .progress-indicator {
+          padding: 10px 15px;
+          font-size: 0.8rem;
+        }
+
+        .progress-bar {
+          width: 80px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .floating-save-container {
+          bottom: 15px;
+          right: 15px;
+          left: 15px;
+          align-items: center;
+        }
+
+        .floating-save-btn {
+          width: 100%;
+          justify-content: center;
+          border-radius: 12px;
+        }
+
+        .progress-indicator {
+          width: 100%;
+          justify-content: center;
+        }
+      }
     </style>
   </head>
   <body>
@@ -701,6 +810,219 @@
           <input type="text" id="analyst-name" placeholder="Nome do Analista" />
         </div>
 
+        <!-- Botão para mostrar/ocultar seção de fundos de papel-->
+        <button
+          type="button"
+          class="btn-save"
+          onclick="togglePaperSection(this)"
+        >
+          📄 Clique aqui para mostrar análise para Fundos de Papel
+        </button>
+
+        <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
+        <div id="paper-section" class="section" style="display: none">
+          <div class="section-title">
+            <span>📄</span>
+            <h2>Análise de Fundos de Papel</h2>
+          </div>
+
+          <div class="checklist-item">
+            <label>Alocação do Fundo</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input
+                type="text"
+                id="allocation-cri-cra"
+                placeholder="% CRI/CRA"
+              />
+              <input
+                type="text"
+                id="allocation-fiis-paper"
+                placeholder="% FIIs"
+              />
+              <input
+                type="text"
+                id="allocation-cash-paper"
+                placeholder="% Caixa"
+              />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="credits-count">Quantidade de créditos</label>
+            <input
+              type="number"
+              id="credits-count"
+              placeholder="Número total de créditos"
+            />
+          </div>
+
+          <div class="checklist-item">
+            <label>Indexador do fundo</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input type="text" id="indexer-cdi" placeholder="% CDI" />
+              <input type="text" id="indexer-ipca" placeholder="% IPCA" />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label>Taxa média dos créditos</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
+              <input type="text" id="credit-rate-ipca" placeholder="IPCA+X%" />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="credit-duration"
+              >Duration da carteira de créditos (anos)</label
+            >
+            <input
+              type="text"
+              id="credit-duration"
+              placeholder="Duration média em anos"
+            />
+          </div>
+
+          <div class="checklist-item">
+            <label>Garantias praticadas pelo fundo:</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-fiduciary-alienation"
+                  name="warranty"
+                />
+                <label for="warranty-fiduciary-alienation"
+                  >Alienação fiduciária</label
+                >
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-fiduciary-cession"
+                  name="warranty"
+                />
+                <label for="warranty-fiduciary-cession"
+                  >Cessão fiduciária</label
+                >
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-mortgage" name="warranty" />
+                <label for="warranty-mortgage">Hipoteca</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-reserves" name="warranty" />
+                <label for="warranty-reserves">Reservas</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-guarantors"
+                  name="warranty"
+                />
+                <label for="warranty-guarantors">Fiadores</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-participation"
+                  name="warranty"
+                />
+                <label for="warranty-participation">Participação</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-rating" name="warranty" />
+                <label for="warranty-rating">Rating</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label>Fundo possui créditos sem garantias?</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input
+                  type="radio"
+                  id="unsecured-credits-yes"
+                  name="unsecured-credits"
+                  value="sim"
+                />
+                <label for="unsecured-credits-yes">Sim</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="radio"
+                  id="unsecured-credits-no"
+                  name="unsecured-credits"
+                  value="nao"
+                />
+                <label for="unsecured-credits-no">Não</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="average-ltv"
+              >LTV médio (razão entre o valor do crédito e o valor da
+              garantia)</label
+            >
+            <input type="text" id="average-ltv" placeholder="LTV médio em %" />
+          </div>
+
+          <div class="checklist-item">
+            <label for="debtor-segments"
+              >Segmentos de mercado dos devedores</label
+            >
+            <textarea
+              id="debtor-segments"
+              placeholder="Liste os segmentos de mercado dos devedores..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label for="debtor-concentration"
+              >Concentração da carteira em algum devedor? Qual devedor e
+              %</label
+            >
+            <textarea
+              id="debtor-concentration"
+              placeholder="Descreva a concentração em devedores..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label for="main-debtor-financials"
+              >Situação financeira do devedor com maior concentração</label
+            >
+            <textarea
+              id="main-debtor-financials"
+              placeholder="Descreva a situação financeira do principal devedor..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label>Observações:</label>
+            <textarea
+              class="observations"
+              placeholder="Anotações sobre fundos de papel..."
+            ></textarea>
+          </div>
+        </div>
+        <script>
+          function togglePaperSection(btn) {
+            const section = document.getElementById("paper-section");
+
+            if (section.style.display === "none") {
+              section.style.display = "block";
+              btn.textContent = "📄 Ocultar Análise para Fundos de Papel";
+            } else {
+              section.style.display = "none";
+              btn.textContent = "📄 Mostrar análise para Fundos de Papel";
+            }
+          }
+        </script>
+        <!-- FIM DA NOVA SEÇÃO -->
+
         <form id="checklist-form">
           <!-- ESTRUTURA DO FUNDO -->
           <div class="section">
@@ -735,7 +1057,11 @@
                 </div>
                 <div class="checkbox-item">
                   <input type="checkbox" id="shoppings" name="segment" />
-                  <label for="shoppings">🏬 Shoppings</label>
+                  <label for="shoppings">🛍️ Shoppings</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="papel" name="segment" />
+                  <label for="papel">📄 Papel</label>
                 </div>
                 <div class="checkbox-item">
                   <input type="checkbox" id="other-segment" name="segment" />
@@ -989,213 +1315,6 @@
             </div>
           </div>
 
-          <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
-          <div class="section">
-            <div class="section-title">
-              <span>📄</span>
-              <h2>Análise de Fundos de Papel</h2>
-            </div>
-
-            <div class="checklist-item">
-              <label>Alocação do Fundo</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input
-                  type="text"
-                  id="allocation-cri-cra"
-                  placeholder="% CRI/CRA"
-                />
-                <input
-                  type="text"
-                  id="allocation-fiis-paper"
-                  placeholder="% FIIs"
-                />
-                <input
-                  type="text"
-                  id="allocation-cash-paper"
-                  placeholder="% Caixa"
-                />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="credits-count">Quantidade de créditos</label>
-              <input
-                type="number"
-                id="credits-count"
-                placeholder="Número total de créditos"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label>Indexador do fundo</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input type="text" id="indexer-cdi" placeholder="% CDI" />
-                <input type="text" id="indexer-ipca" placeholder="% IPCA" />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label>Taxa média dos créditos</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
-                <input
-                  type="text"
-                  id="credit-rate-ipca"
-                  placeholder="IPCA+X%"
-                />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="credit-duration"
-                >Duration da carteira de créditos (anos)</label
-              >
-              <input
-                type="text"
-                id="credit-duration"
-                placeholder="Duration média em anos"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label>Garantias praticadas pelo fundo:</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-fiduciary-alienation"
-                    name="warranty"
-                  />
-                  <label for="warranty-fiduciary-alienation"
-                    >Alienação fiduciária</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-fiduciary-cession"
-                    name="warranty"
-                  />
-                  <label for="warranty-fiduciary-cession"
-                    >Cessão fiduciária</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-mortgage"
-                    name="warranty"
-                  />
-                  <label for="warranty-mortgage">Hipoteca</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-reserves"
-                    name="warranty"
-                  />
-                  <label for="warranty-reserves">Reservas</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-guarantors"
-                    name="warranty"
-                  />
-                  <label for="warranty-guarantors">Fiadores</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-participation"
-                    name="warranty"
-                  />
-                  <label for="warranty-participation">Participação</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="warranty-rating" name="warranty" />
-                  <label for="warranty-rating">Rating</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label>Fundo possui créditos sem garantias?</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="unsecured-credits-yes"
-                    name="unsecured-credits"
-                    value="sim"
-                  />
-                  <label for="unsecured-credits-yes">Sim</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="unsecured-credits-no"
-                    name="unsecured-credits"
-                    value="nao"
-                  />
-                  <label for="unsecured-credits-no">Não</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="average-ltv"
-                >LTV médio (razão entre o valor do crédito e o valor da
-                garantia)</label
-              >
-              <input
-                type="text"
-                id="average-ltv"
-                placeholder="LTV médio em %"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label for="debtor-segments"
-                >Segmentos de mercado dos devedores</label
-              >
-              <textarea
-                id="debtor-segments"
-                placeholder="Liste os segmentos de mercado dos devedores..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label for="debtor-concentration"
-                >Concentração da carteira em algum devedor? Qual devedor e
-                %</label
-              >
-              <textarea
-                id="debtor-concentration"
-                placeholder="Descreva a concentração em devedores..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label for="main-debtor-financials"
-                >Situação financeira do devedor com maior concentração</label
-              >
-              <textarea
-                id="main-debtor-financials"
-                placeholder="Descreva a situação financeira do principal devedor..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
-                class="observations"
-                placeholder="Anotações sobre fundos de papel..."
-              ></textarea>
-            </div>
-          </div>
-          <!-- FIM DA NOVA SEÇÃO -->
-
           <!-- 🔎 GOVERNANÇA E GESTÃO -->
           <div class="section">
             <div class="section-title">
@@ -1295,7 +1414,7 @@
                     value="alta"
                   />
                   <label for="transparency-high"
-                    >Alta (claros e detalhados)</label
+                    >Alta (claros and detalhados)</label
                   >
                 </div>
                 <div class="checkbox-item">
@@ -1927,7 +2046,7 @@
           <h3>Como pesquisar relatórios?</h3>
           <p>
             Na aba "Relatórios Salvos", digite o nome do fundo ou a data no
-            campo de pesquisa и clique no botão "Pesquisar".
+            campo de pesquisa e clique no botão "Pesquisar".
           </p>
           <p>
             Você também pode visualizar, carregar ou excluir relatórios
@@ -1942,8 +2061,8 @@
             da análise atual.
           </p>
           <p>
-            Na visualização de impressão, você can save as PDF usando a função
-            "Salvar como PDF" do seu navegador.
+            Na visualização de impressão, você pode salvar como PDF usando a
+            função "Salvar como PDF" do seu navegador.
           </p>
         </div>
 
@@ -1956,6 +2075,24 @@
           </p>
         </div>
       </div>
+    </div>
+
+    <!-- Container do botão flutuante de salvar -->
+    <div
+      class="floating-save-container"
+      id="floating-save-container"
+      style="display: none"
+    >
+      <div class="progress-indicator">
+        <span>Preenchimento: </span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <span id="progress-percentage">0%</span>
+      </div>
+      <button class="floating-save-btn" id="floating-save-btn">
+        <i class="fas fa-save"></i> Salvar Análise
+      </button>
     </div>
 
     <script>
@@ -2007,6 +2144,10 @@
         const otherSegmentCheckbox = document.getElementById("other-segment");
         const otherSegmentText = document.getElementById("other-segment-text");
         const saveBtn = document.getElementById("save-btn");
+        const floatingSaveBtn = document.getElementById("floating-save-btn");
+        const floatingSaveContainer = document.getElementById(
+          "floating-save-container"
+        );
         const printBtn = document.getElementById("print-btn");
         const searchBtn = document.getElementById("search-btn");
         const searchInput = document.getElementById("search-input");
@@ -2019,6 +2160,10 @@
         const userEmail = document.getElementById("user-email");
         const firebaseStatus = document.getElementById("firebase-status");
         const reportsMessage = document.getElementById("reports-message");
+        const progressFill = document.getElementById("progress-fill");
+        const progressPercentage = document.getElementById(
+          "progress-percentage"
+        );
 
         // Estado da aplicação
         let currentUser = null;
@@ -2124,6 +2269,14 @@
               }
             });
 
+            // Mostrar/ocultar botão flutuante baseado na aba ativa
+            if (tabId === "form") {
+              floatingSaveContainer.style.display = "flex";
+              calculateFormProgress();
+            } else {
+              floatingSaveContainer.style.display = "none";
+            }
+
             // Se for a aba de relatórios, atualizar a lista
             if (tabId === "reports") {
               updateReportsList();
@@ -2144,8 +2297,63 @@
           .toString()
           .padStart(2, "0")}/${year}`;
 
-        // Salvar dados no Firebase
-        saveBtn.addEventListener("click", function () {
+        // Calcular progresso do formulário
+        function calculateFormProgress() {
+          const inputs = document.querySelectorAll("input, textarea, select");
+          let filledCount = 0;
+
+          inputs.forEach((input) => {
+            if (
+              input.value &&
+              input.type !== "radio" &&
+              input.type !== "checkbox"
+            ) {
+              filledCount++;
+            }
+          });
+
+          // Verificar radios e checkboxes
+          const radioGroups = {};
+          document
+            .querySelectorAll('input[type="radio"]:checked')
+            .forEach((radio) => {
+              radioGroups[radio.name] = true;
+            });
+          filledCount += Object.keys(radioGroups).length;
+
+          document
+            .querySelectorAll('input[type="checkbox"]:checked')
+            .forEach((checkbox) => {
+              filledCount++;
+            });
+
+          const progress = Math.min(
+            100,
+            Math.round((filledCount / inputs.length) * 100)
+          );
+          progressFill.style.width = `${progress}%`;
+          progressPercentage.textContent = `${progress}%`;
+        }
+
+        // Adicionar event listeners para campos do formulário
+        document
+          .querySelectorAll("input, textarea, select")
+          .forEach((input) => {
+            input.addEventListener("input", calculateFormProgress);
+            input.addEventListener("change", calculateFormProgress);
+          });
+
+        // Calcular progresso inicial
+        calculateFormProgress();
+
+        // Salvar dados no Firebase - Botão original
+        saveBtn.addEventListener("click", saveFormData);
+
+        // Salvar dados no Firebase - Botão flutuante
+        floatingSaveBtn.addEventListener("click", saveFormData);
+
+        // Função para salvar os dados do formulário
+        function saveFormData() {
           if (!isFirebaseInitialized) {
             alert(
               "Firebase não está inicializado. Verifique sua conexão e tente novamente."
@@ -2283,24 +2491,32 @@
 
           // Mostrar indicador de carregamento
           const originalText = saveBtn.innerHTML;
+          const floatingOriginalText = floatingSaveBtn.innerHTML;
           saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
+          floatingSaveBtn.innerHTML =
+            '<span class="loading"></span> Salvando...';
           saveBtn.disabled = true;
+          floatingSaveBtn.disabled = true;
 
           db.collection("analises")
             .add(firebaseData)
             .then((docRef) => {
               console.log("Análise salva no Firebase com ID: ", docRef.id);
               saveBtn.innerHTML = originalText;
+              floatingSaveBtn.innerHTML = floatingOriginalText;
               saveBtn.disabled = false;
+              floatingSaveBtn.disabled = false;
               alert(`Análise de ${fundName} salva com sucesso na nuvem!`);
             })
             .catch((error) => {
               console.error("Erro ao salvar no Firebase: ", error);
               saveBtn.innerHTML = originalText;
+              floatingSaveBtn.innerHTML = floatingOriginalText;
               saveBtn.disabled = false;
+              floatingSaveBtn.disabled = false;
               alert(`Erro ao salvar na nuvem: ${error.message}`);
             });
-        });
+        }
 
         // Imprimir/exportar formulário
         printBtn.addEventListener("click", function () {
@@ -2386,7 +2602,7 @@
 
             if (reports.length === 0) {
               reportsList.innerHTML =
-                "<p>Nenhum relatório encontrado com os critérios de pesquisa.</p>";
+                "<p>Nenhum relatório encontrado dengan os critérios de pesquisa.</p>";
               return;
             }
 
@@ -2452,7 +2668,7 @@
             console.error("Erro ao buscar relatórios do Firebase:", error);
             reportsList.innerHTML =
               "<p>Erro ao carregar relatórios do Firebase.</p>";
-            reportsMessage.innerHTML = `<div class="error-message">Erro ao carregar relatórios: ${error.message}. Verifique sua conexão com a internet and tente novamente.</div>`;
+            reportsMessage.innerHTML = `<div class="error-message">Erro ao carregar relatórios: ${error.message}. Verifique sua conexão com a internet e tente novamente.</div>`;
           }
         }
 
@@ -2656,6 +2872,9 @@
                   });
               }
 
+              // Atualizar progresso
+              calculateFormProgress();
+
               // Mudar para a aba do formulário
               tabs.forEach((t) => t.classList.remove("active"));
               tabContents.forEach((c) => c.classList.remove("active"));
@@ -2663,6 +2882,7 @@
                 .querySelector('.tab[data-tab="form"]')
                 .classList.add("active");
               document.getElementById("form-tab").classList.add("active");
+              floatingSaveContainer.style.display = "flex";
 
               alert(`Relatório de ${report.fundName} carregado com sucesso!`);
             } else {
