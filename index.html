@@ -810,6 +810,219 @@
           <input type="text" id="analyst-name" placeholder="Nome do Analista" />
         </div>
 
+        <!-- Botão para mostrar/ocultar seção de fundos de papel-->
+        <button
+          type="button"
+          class="btn-save"
+          onclick="togglePaperSection(this)"
+        >
+          📄 Mostrar Análise para Fundos de Papel
+        </button>
+
+        <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
+        <div id="paper-section" class="section" style="display: none">
+          <div class="section-title">
+            <span>📄</span>
+            <h2>Análise de Fundos de Papel</h2>
+          </div>
+
+          <div class="checklist-item">
+            <label>Alocação do Fundo</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input
+                type="text"
+                id="allocation-cri-cra"
+                placeholder="% CRI/CRA"
+              />
+              <input
+                type="text"
+                id="allocation-fiis-paper"
+                placeholder="% FIIs"
+              />
+              <input
+                type="text"
+                id="allocation-cash-paper"
+                placeholder="% Caixa"
+              />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="credits-count">Quantidade de créditos</label>
+            <input
+              type="number"
+              id="credits-count"
+              placeholder="Número total de créditos"
+            />
+          </div>
+
+          <div class="checklist-item">
+            <label>Indexador do fundo</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input type="text" id="indexer-cdi" placeholder="% CDI" />
+              <input type="text" id="indexer-ipca" placeholder="% IPCA" />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label>Taxa média dos créditos</label>
+            <div style="display: flex; gap: 10px; margin-top: 8px">
+              <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
+              <input type="text" id="credit-rate-ipca" placeholder="IPCA+X%" />
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="credit-duration"
+              >Duration da carteira de créditos (anos)</label
+            >
+            <input
+              type="text"
+              id="credit-duration"
+              placeholder="Duration média em anos"
+            />
+          </div>
+
+          <div class="checklist-item">
+            <label>Garantias praticadas pelo fundo:</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-fiduciary-alienation"
+                  name="warranty"
+                />
+                <label for="warranty-fiduciary-alienation"
+                  >Alienação fiduciária</label
+                >
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-fiduciary-cession"
+                  name="warranty"
+                />
+                <label for="warranty-fiduciary-cession"
+                  >Cessão fiduciária</label
+                >
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-mortgage" name="warranty" />
+                <label for="warranty-mortgage">Hipoteca</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-reserves" name="warranty" />
+                <label for="warranty-reserves">Reservas</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-guarantors"
+                  name="warranty"
+                />
+                <label for="warranty-guarantors">Fiadores</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="checkbox"
+                  id="warranty-participation"
+                  name="warranty"
+                />
+                <label for="warranty-participation">Participação</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="warranty-rating" name="warranty" />
+                <label for="warranty-rating">Rating</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label>Fundo possui créditos sem garantias?</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input
+                  type="radio"
+                  id="unsecured-credits-yes"
+                  name="unsecured-credits"
+                  value="sim"
+                />
+                <label for="unsecured-credits-yes">Sim</label>
+              </div>
+              <div class="checkbox-item">
+                <input
+                  type="radio"
+                  id="unsecured-credits-no"
+                  name="unsecured-credits"
+                  value="nao"
+                />
+                <label for="unsecured-credits-no">Não</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <label for="average-ltv"
+              >LTV médio (razão entre o valor do crédito e o valor da
+              garantia)</label
+            >
+            <input type="text" id="average-ltv" placeholder="LTV médio em %" />
+          </div>
+
+          <div class="checklist-item">
+            <label for="debtor-segments"
+              >Segmentos de mercado dos devedores</label
+            >
+            <textarea
+              id="debtor-segments"
+              placeholder="Liste os segmentos de mercado dos devedores..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label for="debtor-concentration"
+              >Concentração da carteira em algum devedor? Qual devedor e
+              %</label
+            >
+            <textarea
+              id="debtor-concentration"
+              placeholder="Descreva a concentração em devedores..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label for="main-debtor-financials"
+              >Situação financeira do devedor com maior concentração</label
+            >
+            <textarea
+              id="main-debtor-financials"
+              placeholder="Descreva a situação financeira do principal devedor..."
+            ></textarea>
+          </div>
+
+          <div class="checklist-item">
+            <label>Observações:</label>
+            <textarea
+              class="observations"
+              placeholder="Anotações sobre fundos de papel..."
+            ></textarea>
+          </div>
+        </div>
+        <script>
+          function togglePaperSection(btn) {
+            const section = document.getElementById("paper-section");
+
+            if (section.style.display === "none") {
+              section.style.display = "block";
+              btn.textContent = "📄 Ocultar Análise de Fundos de Papel";
+            } else {
+              section.style.display = "none";
+              btn.textContent = "📄 Mostrar Análise de Fundos de Papel";
+            }
+          }
+        </script>
+        <!-- FIM DA NOVA SEÇÃO -->
+
         <form id="checklist-form">
           <!-- ESTRUTURA DO FUNDO -->
           <div class="section">
@@ -844,7 +1057,11 @@
                 </div>
                 <div class="checkbox-item">
                   <input type="checkbox" id="shoppings" name="segment" />
-                  <label for="shoppings">🏬 Shoppings</label>
+                  <label for="shoppings">🛍️ Shoppings</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="papel" name="segment" />
+                  <label for="papel">📄 Papel</label>
                 </div>
                 <div class="checkbox-item">
                   <input type="checkbox" id="other-segment" name="segment" />
@@ -1097,213 +1314,6 @@
               ></textarea>
             </div>
           </div>
-
-          <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
-          <div class="section">
-            <div class="section-title">
-              <span>📄</span>
-              <h2>Análise de Fundos de Papel</h2>
-            </div>
-
-            <div class="checklist-item">
-              <label>Alocação do Fundo</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input
-                  type="text"
-                  id="allocation-cri-cra"
-                  placeholder="% CRI/CRA"
-                />
-                <input
-                  type="text"
-                  id="allocation-fiis-paper"
-                  placeholder="% FIIs"
-                />
-                <input
-                  type="text"
-                  id="allocation-cash-paper"
-                  placeholder="% Caixa"
-                />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="credits-count">Quantidade de créditos</label>
-              <input
-                type="number"
-                id="credits-count"
-                placeholder="Número total de créditos"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label>Indexador do fundo</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input type="text" id="indexer-cdi" placeholder="% CDI" />
-                <input type="text" id="indexer-ipca" placeholder="% IPCA" />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label>Taxa média dos créditos</label>
-              <div style="display: flex; gap: 10px; margin-top: 8px">
-                <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
-                <input
-                  type="text"
-                  id="credit-rate-ipca"
-                  placeholder="IPCA+X%"
-                />
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="credit-duration"
-                >Duration da carteira de créditos (anos)</label
-              >
-              <input
-                type="text"
-                id="credit-duration"
-                placeholder="Duration média em anos"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label>Garantias praticadas pelo fundo:</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-fiduciary-alienation"
-                    name="warranty"
-                  />
-                  <label for="warranty-fiduciary-alienation"
-                    >Alienação fiduciária</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-fiduciary-cession"
-                    name="warranty"
-                  />
-                  <label for="warranty-fiduciary-cession"
-                    >Cessão fiduciária</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-mortgage"
-                    name="warranty"
-                  />
-                  <label for="warranty-mortgage">Hipoteca</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-reserves"
-                    name="warranty"
-                  />
-                  <label for="warranty-reserves">Reservas</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-guarantors"
-                    name="warranty"
-                  />
-                  <label for="warranty-guarantors">Fiadores</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="warranty-participation"
-                    name="warranty"
-                  />
-                  <label for="warranty-participation">Participação</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="warranty-rating" name="warranty" />
-                  <label for="warranty-rating">Rating</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label>Fundo possui créditos sem garantias?</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="unsecured-credits-yes"
-                    name="unsecured-credits"
-                    value="sim"
-                  />
-                  <label for="unsecured-credits-yes">Sim</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="unsecured-credits-no"
-                    name="unsecured-credits"
-                    value="nao"
-                  />
-                  <label for="unsecured-credits-no">Não</label>
-                </div>
-              </div>
-            </div>
-
-            <div class="checklist-item">
-              <label for="average-ltv"
-                >LTV médio (razão entre o valor do crédito e o valor da
-                garantia)</label
-              >
-              <input
-                type="text"
-                id="average-ltv"
-                placeholder="LTV médio em %"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label for="debtor-segments"
-                >Segmentos de mercado dos devedores</label
-              >
-              <textarea
-                id="debtor-segments"
-                placeholder="Liste os segmentos de mercado dos devedores..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label for="debtor-concentration"
-                >Concentração da carteira em algum devedor? Qual devedor e
-                %</label
-              >
-              <textarea
-                id="debtor-concentration"
-                placeholder="Descreva a concentração em devedores..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label for="main-debtor-financials"
-                >Situação financeira do devedor com maior concentração</label
-              >
-              <textarea
-                id="main-debtor-financials"
-                placeholder="Descreva a situação financeira do principal devedor..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
-                class="observations"
-                placeholder="Anotações sobre fundos de papel..."
-              ></textarea>
-            </div>
-          </div>
-          <!-- FIM DA NOVA SEÇÃO -->
 
           <!-- 🔎 GOVERNANÇA E GESTÃO -->
           <div class="section">
