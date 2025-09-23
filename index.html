@@ -650,7 +650,6 @@
         flex-direction: column;
         align-items: flex-end;
         gap: 12px;
-        /* margin-bottom: -4px; /* Adjust to align with main button */
       }
 
       .floating-action-btn {
@@ -2236,165 +2235,202 @@
 
         // --- FUNÇÕES ---
 
-        function saveFormData(status = "finalizado") {
+        async function saveFormData(status = "finalizado") {
           if (!isFirebaseInitialized || !currentUser) {
             alert("Faça login para salvar suas análises.");
             return;
           }
           const fundName = document.getElementById("fund-name").value;
-          if (!fundName) {
-            alert("Por favor, informe o nome do fundo antes de salvar.");
+          const analysisDate = document.getElementById("analysis-date").value;
+
+          if (!fundName || !analysisDate) {
+            alert(
+              "Por favor, informe o Nome do Fundo e o Mês/Ano de Referência antes de salvar."
+            );
             return;
           }
 
-          const formData = {
-            fundName: fundName,
-            analysisDate: document.getElementById("analysis-date").value,
-            analystName: document.getElementById("analyst-name").value,
-            strategy: document.getElementById("strategy").value,
-            segments: getSelectedCheckboxes("segment"),
-            otherSegment: document.getElementById("other-segment-text").value,
-            managementType: getSelectedRadio("management-type"),
-            ifixComparison: getSelectedRadio("ifix-comparison"),
-            propertyCount: document.getElementById("property-count").value,
-            allocationProperties: document.getElementById(
-              "allocation-properties"
-            ).value,
-            allocationFiis: document.getElementById("allocation-fiis").value,
-            allocationCash: document.getElementById("allocation-cash").value,
-            typicalContracts:
-              document.getElementById("typical-contracts").value,
-            atypicalContracts:
-              document.getElementById("atypical-contracts").value,
-            averageContractTerm: document.getElementById(
-              "average-contract-term"
-            ).value,
-            adminFee: document.getElementById("admin-fee").value,
-            performanceFee: document.getElementById("performance-fee").value,
-            ffoVsDy: document.getElementById("ffo-vs-dy").value,
-            extraordinaryRevenue: document.getElementById(
-              "extraordinary-revenue"
-            ).value,
-            allocationCriCra:
-              document.getElementById("allocation-cri-cra").value,
-            allocationFiisPaper: document.getElementById(
-              "allocation-fiis-paper"
-            ).value,
-            allocationCashPaper: document.getElementById(
-              "allocation-cash-paper"
-            ).value,
-            creditsCount: document.getElementById("credits-count").value,
-            indexerCdi: document.getElementById("indexer-cdi").value,
-            indexerIpca: document.getElementById("indexer-ipca").value,
-            creditRateCdi: document.getElementById("credit-rate-cdi").value,
-            creditRateIpca: document.getElementById("credit-rate-ipca").value,
-            creditDuration: document.getElementById("credit-duration").value,
-            warranties: getSelectedCheckboxes("warranty"),
-            unsecuredCredits: getSelectedRadio("unsecured-credits"),
-            averageLtv: document.getElementById("average-ltv").value,
-            debtorSegments: document.getElementById("debtor-segments").value,
-            debtorConcentration: document.getElementById("debtor-concentration")
-              .value,
-            mainDebtorFinancials: document.getElementById(
-              "main-debtor-financials"
-            ).value,
-            expiringContracts:
-              document.getElementById("expiring-contracts").value,
-            activeTenants: document.getElementById("active-tenants").value,
-            tenantSegments: document.getElementById("tenant-segments").value,
-            largestSector: document.getElementById("largest-sector").value,
-            tenantConcentration: document.getElementById("tenant-concentration")
-              .value,
-            tenantFinancials:
-              document.getElementById("tenant-financials").value,
-            gracePeriod: getSelectedRadio("grace-period"),
-            managerHistory: document.getElementById("manager-history").value,
-            managerChange: getSelectedRadio("manager-change"),
-            managerChangeDetails: document.getElementById(
-              "manager-change-details"
-            ).value,
-            conflicts: getSelectedRadio("conflicts"),
-            conflictsDetails:
-              document.getElementById("conflicts-details").value,
-            transparency: getSelectedRadio("transparency"),
-            vpcEvolution: document.getElementById("vpc-evolution").value,
-            currentVsAvg: document.getElementById("current-vs-avg").value,
-            yieldComparison: document.getElementById("yield-comparison").value,
-            sectorComparison:
-              document.getElementById("sector-comparison").value,
-            fundClassification: getSelectedCheckboxes("fund-classification"),
-            financialVacancy:
-              document.getElementById("financial-vacancy").value,
-            physicalVacancy: document.getElementById("physical-vacancy").value,
-            defaultRate: document.getElementById("default-rate").value,
-            resultComparison: getSelectedRadio("result-comparison"),
-            resultReason: document.getElementById("result-reason").value,
-            leverage: getSelectedRadio("leverage"),
-            leverageRate: document.getElementById("leverage-rate").value,
-            amortizationPlan:
-              document.getElementById("amortization-plan").value,
-            liquidity: getSelectedRadio("liquidity"),
-            importantNotices:
-              document.getElementById("important-notices").value,
-            riskLevel: getSelectedRadio("risk-level"),
-            mainRisks: document.getElementById("main-risks").value,
-            opportunities: document.getElementById("opportunities").value,
-            anchor: getSelectedRadio("anchor"),
-            positivePoints: document.getElementById("positive-points").value,
-            negativePoints: document.getElementById("negative-points").value,
-            cashBurn: document.getElementById("cash-burn").value,
-            balanceSustainability: document.getElementById(
-              "balance-sustainability"
-            ).value,
-            discount: document.getElementById("discount").value,
-            expectation: getSelectedRadio("expectation"),
-            recommendation: getSelectedRadio("recommendation"),
-            observations: Array.from(document.querySelectorAll(".observations"))
-              .map((t) => t.value)
-              .filter((v) => v),
-            status: status,
-            timestamp: new Date().toISOString(),
-          };
-
-          const firebaseData = {
-            ...formData,
-            userId: currentUser.uid,
-            userEmail: currentUser.email,
-            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-          };
-
           const originalTextSave = saveBtn.innerHTML;
           const originalTextDraft = saveDraftBtn.innerHTML;
+          const buttonsToDisable = [
+            saveBtn,
+            saveDraftBtn,
+            floatingSaveFinalBtn,
+            floatingSaveDraftBtn,
+          ];
 
-          saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
-          saveDraftBtn.innerHTML = '<span class="loading"></span> Salvando...';
-          saveBtn.disabled = true;
-          saveDraftBtn.disabled = true;
-          floatingSaveFinalBtn.disabled = true;
-          floatingSaveDraftBtn.disabled = true;
+          buttonsToDisable.forEach((btn) => {
+            btn.innerHTML = '<span class="loading"></span> Salvando...';
+            btn.disabled = true;
+          });
 
-          db.collection("analises")
-            .add(firebaseData)
-            .then((docRef) => {
-              const message =
-                status === "rascunho"
-                  ? `Rascunho de ${fundName} salvo com sucesso!`
-                  : `Análise de ${fundName} salva com sucesso!`;
-              alert(message);
-            })
-            .catch((error) => {
-              console.error("Erro ao salvar: ", error);
-              alert(`Erro ao salvar: ${error.message}`);
-            })
-            .finally(() => {
-              saveBtn.innerHTML = originalTextSave;
-              saveDraftBtn.innerHTML = originalTextDraft;
-              saveBtn.disabled = false;
-              saveDraftBtn.disabled = false;
-              floatingSaveFinalBtn.disabled = false;
-              floatingSaveDraftBtn.disabled = false;
-              floatingSaveContainer.classList.remove("active");
+          try {
+            const querySnapshot = await db
+              .collection("analises")
+              .where("userId", "==", currentUser.uid)
+              .where("fundName", "==", fundName)
+              .where("analysisDate", "==", analysisDate)
+              .limit(1)
+              .get();
+
+            const formData = {
+              fundName,
+              analysisDate,
+              analystName: document.getElementById("analyst-name").value,
+              strategy: document.getElementById("strategy").value,
+              segments: getSelectedCheckboxes("segment"),
+              otherSegment: document.getElementById("other-segment-text").value,
+              managementType: getSelectedRadio("management-type"),
+              ifixComparison: getSelectedRadio("ifix-comparison"),
+              propertyCount: document.getElementById("property-count").value,
+              allocationProperties: document.getElementById(
+                "allocation-properties"
+              ).value,
+              allocationFiis: document.getElementById("allocation-fiis").value,
+              allocationCash: document.getElementById("allocation-cash").value,
+              typicalContracts:
+                document.getElementById("typical-contracts").value,
+              atypicalContracts:
+                document.getElementById("atypical-contracts").value,
+              averageContractTerm: document.getElementById(
+                "average-contract-term"
+              ).value,
+              adminFee: document.getElementById("admin-fee").value,
+              performanceFee: document.getElementById("performance-fee").value,
+              ffoVsDy: document.getElementById("ffo-vs-dy").value,
+              extraordinaryRevenue: document.getElementById(
+                "extraordinary-revenue"
+              ).value,
+              allocationCriCra:
+                document.getElementById("allocation-cri-cra").value,
+              allocationFiisPaper: document.getElementById(
+                "allocation-fiis-paper"
+              ).value,
+              allocationCashPaper: document.getElementById(
+                "allocation-cash-paper"
+              ).value,
+              creditsCount: document.getElementById("credits-count").value,
+              indexerCdi: document.getElementById("indexer-cdi").value,
+              indexerIpca: document.getElementById("indexer-ipca").value,
+              creditRateCdi: document.getElementById("credit-rate-cdi").value,
+              creditRateIpca: document.getElementById("credit-rate-ipca").value,
+              creditDuration: document.getElementById("credit-duration").value,
+              warranties: getSelectedCheckboxes("warranty"),
+              unsecuredCredits: getSelectedRadio("unsecured-credits"),
+              averageLtv: document.getElementById("average-ltv").value,
+              debtorSegments: document.getElementById("debtor-segments").value,
+              debtorConcentration: document.getElementById(
+                "debtor-concentration"
+              ).value,
+              mainDebtorFinancials: document.getElementById(
+                "main-debtor-financials"
+              ).value,
+              expiringContracts:
+                document.getElementById("expiring-contracts").value,
+              activeTenants: document.getElementById("active-tenants").value,
+              tenantSegments: document.getElementById("tenant-segments").value,
+              largestSector: document.getElementById("largest-sector").value,
+              tenantConcentration: document.getElementById(
+                "tenant-concentration"
+              ).value,
+              tenantFinancials:
+                document.getElementById("tenant-financials").value,
+              gracePeriod: getSelectedRadio("grace-period"),
+              managerHistory: document.getElementById("manager-history").value,
+              managerChange: getSelectedRadio("manager-change"),
+              managerChangeDetails: document.getElementById(
+                "manager-change-details"
+              ).value,
+              conflicts: getSelectedRadio("conflicts"),
+              conflictsDetails:
+                document.getElementById("conflicts-details").value,
+              transparency: getSelectedRadio("transparency"),
+              vpcEvolution: document.getElementById("vpc-evolution").value,
+              currentVsAvg: document.getElementById("current-vs-avg").value,
+              yieldComparison:
+                document.getElementById("yield-comparison").value,
+              sectorComparison:
+                document.getElementById("sector-comparison").value,
+              fundClassification: getSelectedCheckboxes("fund-classification"),
+              financialVacancy:
+                document.getElementById("financial-vacancy").value,
+              physicalVacancy:
+                document.getElementById("physical-vacancy").value,
+              defaultRate: document.getElementById("default-rate").value,
+              resultComparison: getSelectedRadio("result-comparison"),
+              resultReason: document.getElementById("result-reason").value,
+              leverage: getSelectedRadio("leverage"),
+              leverageRate: document.getElementById("leverage-rate").value,
+              amortizationPlan:
+                document.getElementById("amortization-plan").value,
+              liquidity: getSelectedRadio("liquidity"),
+              importantNotices:
+                document.getElementById("important-notices").value,
+              riskLevel: getSelectedRadio("risk-level"),
+              mainRisks: document.getElementById("main-risks").value,
+              opportunities: document.getElementById("opportunities").value,
+              anchor: getSelectedRadio("anchor"),
+              positivePoints: document.getElementById("positive-points").value,
+              negativePoints: document.getElementById("negative-points").value,
+              cashBurn: document.getElementById("cash-burn").value,
+              balanceSustainability: document.getElementById(
+                "balance-sustainability"
+              ).value,
+              discount: document.getElementById("discount").value,
+              expectation: getSelectedRadio("expectation"),
+              recommendation: getSelectedRadio("recommendation"),
+              observations: Array.from(
+                document.querySelectorAll(".observations")
+              )
+                .map((t) => t.value)
+                .filter((v) => v),
+              status: status,
+              timestamp: new Date().toISOString(),
+            };
+
+            const firebaseData = {
+              ...formData,
+              userId: currentUser.uid,
+              userEmail: currentUser.email,
+              lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+
+            if (!querySnapshot.empty) {
+              const existingDoc = querySnapshot.docs[0];
+              const confirmation = confirm(
+                `Já existe uma análise para "${fundName}" em ${analysisDate}. Deseja sobrescrevê-la?`
+              );
+
+              if (confirmation) {
+                await db
+                  .collection("analises")
+                  .doc(existingDoc.id)
+                  .update(firebaseData);
+                alert(`Análise de ${fundName} ATUALIZADA com sucesso!`);
+              } else {
+                alert("Operação de salvamento cancelada.");
+              }
+            } else {
+              await db.collection("analises").add(firebaseData);
+              alert(`Análise de ${fundName} salva com sucesso!`);
+            }
+          } catch (error) {
+            console.error("Erro ao salvar: ", error);
+            alert(
+              `Erro ao salvar: ${error.message}. Se o erro mencionar 'índice', contate o suporte.`
+            );
+          } finally {
+            saveBtn.innerHTML = originalTextSave;
+            saveDraftBtn.innerHTML = originalTextDraft;
+            buttonsToDisable.forEach((btn) => {
+              if (btn.id === "floating-save-final-btn")
+                btn.innerHTML = '<i class="fas fa-check-circle"></i>';
+              else if (btn.id === "floating-save-draft-btn")
+                btn.innerHTML = '<i class="fas fa-save"></i>';
+              btn.disabled = false;
             });
+            floatingSaveContainer.classList.remove("active");
+          }
         }
 
         async function updateReportsList(searchTerm = "") {
@@ -2456,8 +2492,8 @@
               reportElement.innerHTML = `
                 <div class="report-info">
                     <h3>${report.fundName} ${statusBadge}</h3>
-                    <p>Data: ${report.analysisDate} | Salvo em: ${new Date(
-                report.timestamp
+                    <p>Data: ${report.analysisDate} | Atualizado em: ${new Date(
+                report.lastUpdated.toDate()
               ).toLocaleString()}</p>
                 </div>
                 <div class="report-actions">
@@ -2512,7 +2548,6 @@
             ).textContent = `Relatório Completo: ${report.fundName}`;
             const modalBody = document.getElementById("modal-body");
 
-            // Funções auxiliares
             const createItem = (label, value) => {
               if (
                 value === null ||
@@ -2562,243 +2597,180 @@
               evitar: "Evitar",
             };
 
-            // --- ESTRUTURA COMPLETA DO MODAL ---
-
-            // 1. SEÇÃO DE VEREDITO
-            const vereditoHtml = `
-                <h3>✅ Veredito da Análise</h3>
-                <div class="report-grid">
-                    ${createItem(
-                      "Recomendação",
-                      `<strong>${
-                        friendlyValues[report.recommendation] || "N/A"
-                      }</strong>`
-                    )}
-                    ${createItem(
-                      "Nível de Risco",
-                      friendlyValues[report.riskLevel]
-                    )}
-                    ${createItem(
-                      "Classificação do Fundo",
-                      report.fundClassification
-                    )}
-                    ${createItem(
-                      "Expectativa p/ Resultados",
-                      friendlyValues[report.expectation]
-                    )}
-                    ${createItem("Data da Análise", report.analysisDate)}
-                </div>
-                ${createTextareaItem("Pontos Positivos", report.positivePoints)}
-                ${createTextareaItem("Pontos Negativos", report.negativePoints)}
-                ${createTextareaItem(
-                  "Principais Riscos Elencados",
-                  report.mainRisks
-                )}
-                ${createTextareaItem(
-                  "Oportunidades Claras",
-                  report.opportunities
-                )}
-            `;
-
-            // 2. PAINEL DE INDICADORES
-            const indicadoresHtml = `
-                <h3>📊 Painel de Indicadores Chave</h3>
-                <div class="report-grid">
-                    ${createItem(
-                      "Vacância Financeira",
-                      report.financialVacancy
-                    )}
-                    ${createItem("Vacância Física", report.physicalVacancy)}
-                    ${createItem("Inadimplência", report.defaultRate)}
-                    ${createItem("Liquidez", friendlyValues[report.liquidity])}
-                    ${createItem(
-                      "Comparação com IFIX",
-                      friendlyValues[report.ifixComparison]
-                    )}
-                    ${createItem("FFO vs DY", report.ffoVsDy)}
-                </div>
-            `;
-
-            // 3. SEÇÃO DE DESEMPENHO & VALUATION
-            const desempenhoHtml = `
-                <h3>📈 Desempenho & Valuation</h3>
-                <div class="report-grid">
-                     ${createItem("Cotação vs Média 12M", report.currentVsAvg)}
-                     ${createItem(
-                       "Rendimento vs Média Histórica",
-                       report.yieldComparison
-                     )}
-                     ${createItem(
-                       "DY vs Média do Setor",
-                       report.sectorComparison
-                     )}
-                </div>
-                ${createTextareaItem(
-                  "Evolução do VPC (últimos 12 meses)",
-                  report.vpcEvolution
-                )}
-                ${createTextareaItem(
-                  "Análise de Desconto/Justificativa",
-                  report.discount
-                )}
-            `;
-
-            // 4. SEÇÃO CONDICIONAL DE TIJOLO
+            const vereditoHtml = `<h3>✅ Veredito da Análise</h3><div class="report-grid">${createItem(
+              "Recomendação",
+              `<strong>${
+                friendlyValues[report.recommendation] || "N/A"
+              }</strong>`
+            )}${createItem(
+              "Nível de Risco",
+              friendlyValues[report.riskLevel]
+            )}${createItem(
+              "Classificação do Fundo",
+              report.fundClassification
+            )}${createItem(
+              "Expectativa p/ Resultados",
+              friendlyValues[report.expectation]
+            )}${createItem(
+              "Data da Análise",
+              report.analysisDate
+            )}</div>${createTextareaItem(
+              "Pontos Positivos",
+              report.positivePoints
+            )}${createTextareaItem(
+              "Pontos Negativos",
+              report.negativePoints
+            )}${createTextareaItem(
+              "Principais Riscos Elencados",
+              report.mainRisks
+            )}${createTextareaItem(
+              "Oportunidades Claras",
+              report.opportunities
+            )}`;
+            const indicadoresHtml = `<h3>📊 Painel de Indicadores Chave</h3><div class="report-grid">${createItem(
+              "Vacância Financeira",
+              report.financialVacancy
+            )}${createItem(
+              "Vacância Física",
+              report.physicalVacancy
+            )}${createItem("Inadimplência", report.defaultRate)}${createItem(
+              "Liquidez",
+              friendlyValues[report.liquidity]
+            )}${createItem(
+              "Comparação com IFIX",
+              friendlyValues[report.ifixComparison]
+            )}${createItem("FFO vs DY", report.ffoVsDy)}</div>`;
+            const desempenhoHtml = `<h3>📈 Desempenho & Valuation</h3><div class="report-grid">${createItem(
+              "Cotação vs Média 12M",
+              report.currentVsAvg
+            )}${createItem(
+              "Rendimento vs Média Histórica",
+              report.yieldComparison
+            )}${createItem(
+              "DY vs Média do Setor",
+              report.sectorComparison
+            )}</div>${createTextareaItem(
+              "Evolução do VPC (últimos 12 meses)",
+              report.vpcEvolution
+            )}${createTextareaItem(
+              "Análise de Desconto/Justificativa",
+              report.discount
+            )}`;
             let tijoloHtml = "";
             if (
               report.propertyCount ||
               report.activeTenants ||
               report.tenantConcentration
             ) {
-              tijoloHtml = `
-                <h3>🧱 Portfólio: Ativos Físicos (Tijolo)</h3>
-                <div class="report-grid">
-                    ${createItem("Segmentos", report.segments)}
-                    ${createItem("Quantidade de Imóveis", report.propertyCount)}
-                    ${createItem("Inquilinos Ativos", report.activeTenants)}
-                    ${createItem(
-                      "% Contratos Típicos",
-                      report.typicalContracts
-                    )}
-                    ${createItem(
-                      "% Contratos Atípicos",
-                      report.atypicalContracts
-                    )}
-                    ${createItem(
-                      "Venc. Médio Contratos",
-                      report.averageContractTerm
-                        ? `${report.averageContractTerm} meses`
-                        : null
-                    )}
-                    ${createItem(
-                      "% Carteira no Maior Setor",
-                      report.largestSector
-                    )}
-                    ${createItem(
-                      "Inquilino em Carência?",
-                      friendlyValues[report.gracePeriod]
-                    )}
-                </div>
-                ${createTextareaItem(
-                  "Segmentos dos Inquilinos",
-                  report.tenantSegments
-                )}
-                ${createTextareaItem(
-                  "Concentração por Inquilino",
-                  report.tenantConcentration
-                )}
-                ${createTextareaItem(
-                  "Situação Financeira do Maior Inquilino",
-                  report.tenantFinancials
-                )}
-              `;
+              tijoloHtml = `<h3>🧱 Portfólio: Ativos Físicos (Tijolo)</h3><div class="report-grid">${createItem(
+                "Segmentos",
+                report.segments
+              )}${createItem(
+                "Quantidade de Imóveis",
+                report.propertyCount
+              )}${createItem(
+                "Inquilinos Ativos",
+                report.activeTenants
+              )}${createItem(
+                "% Contratos Típicos",
+                report.typicalContracts
+              )}${createItem(
+                "% Contratos Atípicos",
+                report.atypicalContracts
+              )}${createItem(
+                "Venc. Médio Contratos",
+                report.averageContractTerm
+                  ? `${report.averageContractTerm} meses`
+                  : null
+              )}${createItem(
+                "% Carteira no Maior Setor",
+                report.largestSector
+              )}${createItem(
+                "Inquilino em Carência?",
+                friendlyValues[report.gracePeriod]
+              )}</div>${createTextareaItem(
+                "Segmentos dos Inquilinos",
+                report.tenantSegments
+              )}${createTextareaItem(
+                "Concentração por Inquilino",
+                report.tenantConcentration
+              )}${createTextareaItem(
+                "Situação Financeira do Maior Inquilino",
+                report.tenantFinancials
+              )}`;
             }
-
-            // 5. SEÇÃO CONDICIONAL DE PAPEL
             let papelHtml = "";
             if (
               report.creditsCount ||
               report.averageLtv ||
               report.debtorConcentration
             ) {
-              papelHtml = `
-                <h3>📄 Portfólio: Ativos Financeiros (Papel)</h3>
-                <div class="report-grid">
-                    ${createItem("Quantidade de Créditos", report.creditsCount)}
-                    ${createItem("% Indexado ao CDI", report.indexerCdi)}
-                    ${createItem("% Indexado ao IPCA", report.indexerIpca)}
-                    ${createItem("Taxa Média CDI+", report.creditRateCdi)}
-                    ${createItem("Taxa Média IPCA+", report.creditRateIpca)}
-                    ${createItem(
-                      "Duration da Carteira",
-                      report.creditDuration
-                        ? `${report.creditDuration} anos`
-                        : null
-                    )}
-                    ${createItem("LTV Médio", report.averageLtv)}
-                    ${createItem(
-                      "Créditos sem Garantia?",
-                      friendlyValues[report.unsecuredCredits]
-                    )}
-                </div>
-                ${createItem("Garantias Praticadas", report.warranties)}
-                ${createTextareaItem(
-                  "Concentração por Devedor",
-                  report.debtorConcentration
-                )}
-                ${createTextareaItem(
-                  "Situação Financeira do Principal Devedor",
-                  report.mainDebtorFinancials
-                )}
-              `;
+              papelHtml = `<h3>📄 Portfólio: Ativos Financeiros (Papel)</h3><div class="report-grid">${createItem(
+                "Quantidade de Créditos",
+                report.creditsCount
+              )}${createItem(
+                "% Indexado ao CDI",
+                report.indexerCdi
+              )}${createItem(
+                "% Indexado ao IPCA",
+                report.indexerIpca
+              )}${createItem(
+                "Taxa Média CDI+",
+                report.creditRateCdi
+              )}${createItem(
+                "Taxa Média IPCA+",
+                report.creditRateIpca
+              )}${createItem(
+                "Duration da Carteira",
+                report.creditDuration ? `${report.creditDuration} anos` : null
+              )}${createItem("LTV Médio", report.averageLtv)}${createItem(
+                "Créditos sem Garantia?",
+                friendlyValues[report.unsecuredCredits]
+              )}</div>${createItem(
+                "Garantias Praticadas",
+                report.warranties
+              )}${createTextareaItem(
+                "Concentração por Devedor",
+                report.debtorConcentration
+              )}${createTextareaItem(
+                "Situação Financeira do Principal Devedor",
+                report.mainDebtorFinancials
+              )}`;
             }
+            const saudeFinanceiraHtml = `<h3>❤️ Saúde Financeira</h3><div class="report-grid">${createItem(
+              "Possui Alavancagem?",
+              friendlyValues[report.leverage]
+            )}${createItem(
+              "Taxa Média da Alavancagem",
+              report.leverageRate
+            )}${createItem(
+              "Sustentabilidade do Saldo",
+              report.balanceSustainability
+            )}</div>${createTextareaItem(
+              "Plano de Amortização da Dívida",
+              report.amortizationPlan
+            )}${createTextareaItem(
+              "O Fundo está Queimando Caixa?",
+              report.cashBurn
+            )}`;
+            const governancaHtml = `<h3>🔎 Governança e Gestão</h3><div class="report-grid">${createItem(
+              "Tipo de Gestão",
+              friendlyValues[report.managementType]
+            )}${createItem(
+              "Transparência",
+              friendlyValues[report.transparency]
+            )}${createItem(
+              "Conflitos de Interesse?",
+              friendlyValues[report.conflicts]
+            )}</div>${createTextareaItem(
+              "Sobre o Gestor e seu Histórico",
+              report.managerHistory
+            )}${createTextareaItem(
+              "Comunicados Importantes no Período",
+              report.importantNotices
+            )}`;
 
-            // 6. SEÇÃO DE SAÚDE FINANCEIRA
-            const saudeFinanceiraHtml = `
-                 <h3>❤️ Saúde Financeira</h3>
-                 <div class="report-grid">
-                    ${createItem(
-                      "Possui Alavancagem?",
-                      friendlyValues[report.leverage]
-                    )}
-                    ${createItem(
-                      "Taxa Média da Alavancagem",
-                      report.leverageRate
-                    )}
-                    ${createItem(
-                      "Sustentabilidade do Saldo",
-                      report.balanceSustainability
-                    )}
-                 </div>
-                 ${createTextareaItem(
-                   "Plano de Amortização da Dívida",
-                   report.amortizationPlan
-                 )}
-                 ${createTextareaItem(
-                   "O Fundo está Queimando Caixa?",
-                   report.cashBurn
-                 )}
-            `;
-
-            // 7. SEÇÃO DE GOVERNANÇA
-            const governancaHtml = `
-                <h3>🔎 Governança e Gestão</h3>
-                <div class="report-grid">
-                    ${createItem(
-                      "Tipo de Gestão",
-                      friendlyValues[report.managementType]
-                    )}
-                    ${createItem(
-                      "Transparência",
-                      friendlyValues[report.transparency]
-                    )}
-                    ${createItem(
-                      "Conflitos de Interesse?",
-                      friendlyValues[report.conflicts]
-                    )}
-                </div>
-                ${createTextareaItem(
-                  "Sobre o Gestor e seu Histórico",
-                  report.managerHistory
-                )}
-                ${createTextareaItem(
-                  "Comunicados Importantes no Período",
-                  report.importantNotices
-                )}
-            `;
-
-            // Monta o conteúdo final do modal na ordem de importância
-            const finalContent = `
-                ${vereditoHtml}
-                ${indicadoresHtml}
-                ${desempenhoHtml}
-                ${tijoloHtml}
-                ${papelHtml}
-                ${saudeFinanceiraHtml}
-                ${governancaHtml}
-            `;
-
-            modalBody.innerHTML = finalContent;
+            modalBody.innerHTML = `${vereditoHtml}${indicadoresHtml}${desempenhoHtml}${tijoloHtml}${papelHtml}${saudeFinanceiraHtml}${governancaHtml}`;
             reportModal.style.display = "flex";
           } catch (error) {
             console.error("Erro ao visualizar relatório:", error);
@@ -2815,12 +2787,25 @@
             }
             const report = doc.data();
 
-            // Limpa o formulário antes de carregar
             document.getElementById("checklist-form").reset();
 
+            // --- INÍCIO DA CORREÇÃO ---
             Object.keys(report).forEach((key) => {
-              if (document.getElementById(key)) {
-                document.getElementById(key).value = report[key] || "";
+              // Converte camelCase (ex: fundName) para kebab-case (ex: fund-name)
+              const elementId = key.replace(
+                /[A-Z]/g,
+                (letter) => `-${letter.toLowerCase()}`
+              );
+              const element = document.getElementById(elementId);
+              if (element) {
+                if (
+                  element.type === "textarea" ||
+                  element.type === "text" ||
+                  element.type === "number" ||
+                  element.tagName.toLowerCase() === "select"
+                ) {
+                  element.value = report[key] || "";
+                }
               }
             });
 
@@ -2850,6 +2835,14 @@
               }
             });
 
+            if (report.observations && Array.isArray(report.observations)) {
+              const observationTextareas =
+                document.querySelectorAll(".observations");
+              observationTextareas.forEach((textarea, index) => {
+                textarea.value = report.observations[index] || "";
+              });
+            }
+
             if (report.otherSegment) {
               document.getElementById("other-segment").checked = true;
               document.getElementById("other-segment-text").value =
@@ -2857,19 +2850,14 @@
               document.getElementById("other-segment-text").style.display =
                 "block";
             }
+            // --- FIM DA CORREÇÃO ---
 
             calculateFormProgress();
             document.querySelector('.tab[data-tab="form"]').click();
 
-            if (report.status === "rascunho") {
-              alert(
-                `Rascunho de ${report.fundName} carregado. Lembre-se de salvar a versão final quando terminar.`
-              );
-            } else {
-              alert(
-                `Relatório de ${report.fundName} carregado. Qualquer alteração criará uma nova análise.`
-              );
-            }
+            alert(
+              `Relatório de ${report.fundName} carregado. Você pode editá-lo e, ao salvar, o sistema perguntará se deseja sobrescrever o original.`
+            );
           } catch (error) {
             console.error("Erro ao carregar relatório:", error);
             alert("Erro ao carregar relatório: " + error.message);
