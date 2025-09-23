@@ -2778,10 +2778,6 @@
           }
         }
 
-        function kebabToCamel(kebabString) {
-            return kebabString.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-        }
-
         async function loadReport(id) {
           try {
             const doc = await db.collection("analises").doc(id).get();
@@ -2791,71 +2787,146 @@
             }
             const report = doc.data();
 
-            document.getElementById("checklist-form").reset();
+            document.getElementById("checklist-form").reset(); 
 
-            Object.keys(report).forEach((key) => {
-              const elementId = key.replace(
-                /[A-Z]/g,
-                (letter) => `-${letter.toLowerCase()}`
-              );
-              const element = document.getElementById(elementId);
-              if (element) {
-                if (
-                  element.type === "textarea" ||
-                  element.type === "text" ||
-                  element.type === "number" ||
-                  element.tagName.toLowerCase() === "select"
-                ) {
-                  element.value = report[key] || "";
+            // Helper functions to be used only within this function
+            const setValue = (elementId, value) => {
+                const el = document.getElementById(elementId);
+                if (el && value !== undefined && value !== null) {
+                    el.value = value;
                 }
-              }
-            });
-
-            const radioNames = new Set(
-              Array.from(
-                document.querySelectorAll('#checklist-form input[type="radio"]')
-              ).map((r) => r.name)
-            );
+            };
             
-            radioNames.forEach((name) => {
-                const camelCaseName = kebabToCamel(name);
-                if (report[camelCaseName]) {
-                    selectRadioOption(name, report[camelCaseName]);
+            const setRadio = (name, value) => {
+                if (value) {
+                    const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (radio) radio.checked = true;
                 }
-            });
+            };
 
-            const checkboxNames = new Set(
-              Array.from(
-                document.querySelectorAll(
-                  '#checklist-form input[type="checkbox"]'
-                )
-              ).map((c) => c.name)
-            );
-            checkboxNames.forEach((name) => {
-                const camelCaseName = kebabToCamel(name);
-              if (report[camelCaseName] && Array.isArray(report[camelCaseName])) {
-                document
-                  .querySelectorAll(`input[name="${name}"]`)
-                  .forEach((cb) => {
-                    cb.checked = report[camelCaseName].includes(cb.id);
-                  });
-              }
-            });
+            const setCheckboxes = (name, ids) => {
+                if (ids && Array.isArray(ids)) {
+                    // First, uncheck all checkboxes in the group
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+                        cb.checked = false;
+                    });
+                    // Then, check the ones that are in the ids array
+                    ids.forEach(checkboxId => {
+                        const checkbox = document.getElementById(checkboxId);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            };
 
-            if (report.observations && Array.isArray(report.observations)) {
-              const observationTextareas =
-                document.querySelectorAll(".observations");
-              observationTextareas.forEach((textarea, index) => {
-                textarea.value = report.observations[index] || "";
-              });
+            // --- POPULATE ALL FIELDS EXPLICITLY ---
+
+            // Basic Info
+            setValue("fund-name", report.fundName);
+            setValue("analysis-date", report.analysisDate);
+            setValue("analyst-name", report.analystName);
+
+            // Paper Analysis
+            setValue("allocation-cri-cra", report.allocationCriCra);
+            setValue("allocation-fiis-paper", report.allocationFiisPaper);
+            setValue("allocation-cash-paper", report.allocationCashPaper);
+            setValue("credits-count", report.creditsCount);
+            setValue("indexer-cdi", report.indexerCdi);
+            setValue("indexer-ipca", report.indexerIpca);
+            setValue("credit-rate-cdi", report.creditRateCdi);
+            setValue("credit-rate-ipca", report.creditRateIpca);
+            setValue("credit-duration", report.creditDuration);
+            setCheckboxes("warranty", report.warranties);
+            setRadio("unsecured-credits", report.unsecuredCredits);
+            setValue("average-ltv", report.averageLtv);
+            setValue("debtor-segments", report.debtorSegments);
+            setValue("debtor-concentration", report.debtorConcentration);
+            setValue("main-debtor-financials", report.mainDebtorFinancials);
+            
+            // Tijolo Analysis
+            setCheckboxes("segment", report.segments);
+            if (report.segments && report.segments.includes("other-segment")) {
+                const otherSegmentEl = document.getElementById("other-segment-text");
+                otherSegmentEl.value = report.otherSegment || "";
+                otherSegmentEl.style.display = "block";
             }
+            setValue("property-count", report.propertyCount);
+            setValue("allocation-properties", report.allocationProperties);
+            setValue("allocation-fiis", report.allocationFiis);
+            setValue("allocation-cash", report.allocationCash);
+            setValue("typical-contracts", report.typicalContracts);
+            setValue("atypical-contracts", report.atypicalContracts);
+            setValue("average-contract-term", report.averageContractTerm);
+            setValue("expiring-contracts", report.expiringContracts);
+            setValue("active-tenants", report.activeTenants);
+            setValue("tenant-segments", report.tenantSegments);
+            setValue("largest-sector", report.largestSector);
+            setValue("tenant-concentration", report.tenantConcentration);
+            setValue("tenant-financials", report.tenantFinancials);
+            setRadio("grace-period", report.gracePeriod);
 
-            if (report.otherSegment) {
-              document.getElementById("other-segment").checked = true;
-              document.getElementById("other-segment-text").value =
-                report.otherSegment;
-              document.getElementById("other-segment-text").style.display =
-                "block";
+            // Fund Structure
+            setValue("strategy", report.strategy);
+            setRadio("management-type", report.managementType);
+            setRadio("ifix-comparison", report.ifixComparison);
+            setValue("admin-fee", report.adminFee);
+            setValue("performance-fee", report.performanceFee);
+            setValue("ffo-vs-dy", report.ffoVsDy);
+            setValue("extraordinary-revenue", report.extraordinaryRevenue);
+
+            // Governance
+            setValue("manager-history", report.managerHistory);
+            setRadio("manager-change", report.managerChange);
+            setValue("manager-change-details", report.managerChangeDetails);
+            setRadio("conflicts", report.conflicts);
+            setValue("conflicts-details", report.conflictsDetails);
+            setRadio("transparency", report.transparency);
+            
+            // Vacancy & Revenue
+            setValue("financial-vacancy", report.financialVacancy);
+            setValue("physical-vacancy", report.physicalVacancy);
+            setValue("default-rate", report.defaultRate);
+            setRadio("result-comparison", report.resultComparison);
+            setValue("result-reason", report.resultReason);
+
+            // Comparative Performance
+            setValue("vpc-evolution", report.vpcEvolution);
+            setValue("current-vs-avg", report.currentVsAvg);
+            setValue("yield-comparison", report.yieldComparison);
+            setValue("sector-comparison", report.sectorComparison);
+            setCheckboxes("fund-classification", report.fundClassification);
+
+            // Leverage
+            setRadio("leverage", report.leverage);
+            setValue("leverage-rate", report.leverageRate);
+            setValue("amortization-plan", report.amortizationPlan);
+            
+            // Liquidity
+            setRadio("liquidity", report.liquidity);
+            setValue("important-notices", report.importantNotices);
+            
+            // Risk & Opportunity
+            setRadio("risk-level", report.riskLevel);
+            setValue("main-risks", report.mainRisks);
+            setValue("opportunities", report.opportunities);
+            setRadio("anchor", report.anchor);
+
+            // Conclusion
+            setValue("positive-points", report.positivePoints);
+            setValue("negative-points", report.negativePoints);
+            setValue("cash-burn", report.cashBurn);
+            setValue("balance-sustainability", report.balanceSustainability);
+            setValue("discount", report.discount);
+            setRadio("expectation", report.expectation);
+            setRadio("recommendation", report.recommendation);
+
+            // Observations
+            if (report.observations && Array.isArray(report.observations)) {
+              const textareas = document.querySelectorAll(".observations");
+              textareas.forEach((textarea, index) => {
+                if (report.observations[index]) {
+                  textarea.value = report.observations[index];
+                }
+              });
             }
 
             calculateFormProgress();
@@ -2923,14 +2994,6 @@
         function getSelectedRadio(name) {
           const radio = document.querySelector(`input[name="${name}"]:checked`);
           return radio ? radio.value : null;
-        }
-
-        function selectRadioOption(name, value) {
-          if (!value) return;
-          const radio = document.querySelector(
-            `input[name="${name}"][value="${value}"]`
-          );
-          if (radio) radio.checked = true;
         }
       });
     </script>
