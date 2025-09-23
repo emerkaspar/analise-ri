@@ -1138,9 +1138,16 @@
               </div>
             </div>
             <div class="checklist-item">
-              <label for="credit-duration"
-                >Duration da carteira de créditos (anos)</label
-              ><input
+              <label for="credit-duration">Duration da carteira de créditos (anos)
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> A Duration é o prazo médio ponderado para o recebimento de todos os fluxos de caixa de um título ou carteira.</p>
+                    <p><strong>Onde encontrar:</strong> Esta informação geralmente está disponível nos relatórios gerenciais dos fundos (RI).</p>
+                  </div>
+                </div>
+              </label>
+              <input
                 type="text"
                 id="credit-duration"
                 placeholder="Duration média em anos"
@@ -1227,10 +1234,16 @@
               </div>
             </div>
             <div class="checklist-item">
-              <label for="average-ltv"
-                >LTV médio (razão entre o valor do crédito e o valor da
-                garantia)</label
-              ><input
+              <label for="average-ltv">LTV médio (razão entre o valor do crédito e o valor da garantia)
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> O Loan to Value (LTV) é a relação entre o valor do empréstimo e o valor do ativo dado em garantia. Um LTV mais baixo indica uma garantia mais robusta.</p>
+                    <p><strong>Onde encontrar:</strong> Geralmente disponível nos relatórios gerenciais do fundo (RI).</p>
+                  </div>
+                </div>
+              </label>
+              <input
                 type="text"
                 id="average-ltv"
                 placeholder="LTV médio em %"
@@ -1445,10 +1458,16 @@
                 <h2>Estrutura do Fundo</h2>
                 </div>
                 <div class="checklist-item">
-              <label
-                >Qual a estratégia/objetivo do fundo? (renda, ganho de capital,
-                reciclagem de portfólio, etc.)</label
-              ><textarea
+              <label>Qual a estratégia/objetivo do fundo?
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> Descreve a principal forma como o fundo busca gerar retorno para os cotistas. Pode ser através de renda de aluguéis, ganho de capital com a venda de imóveis, ou uma mistura de ambos (híbrido).</p>
+                    <p><strong>Onde encontrar:</strong> Geralmente descrito no regulamento do fundo e nos relatórios gerenciais (RI).</p>
+                  </div>
+                </div>
+              </label>
+              <textarea
                 id="strategy"
                 placeholder="Descreva a estratégia do fundo..."
               ></textarea>
@@ -1521,8 +1540,16 @@
               />
             </div>
             <div class="checklist-item">
-              <label for="ffo-vs-dy">Valor do FFO vs DY</label
-              ><input
+              <label for="ffo-vs-dy">Valor do FFO vs DY
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> O FFO (Funds From Operations) representa o fluxo de caixa operacional do fundo. O DY (Dividend Yield) é o rendimento distribuído aos cotistas. Comparar ambos ajuda a entender a sustentabilidade dos dividendos.</p>
+                    <p><strong>Onde encontrar:</strong> FFO e DY podem ser encontrados nos relatórios gerenciais (RI) do fundo ou em plataformas de análise de FIIs.</p>
+                  </div>
+                </div>
+              </label>
+              <input
                 type="text"
                 id="ffo-vs-dy"
                 placeholder="Comparação entre FFO e DY"
@@ -1659,16 +1686,32 @@
                 <h2>Vacância e Receita</h2>
                 </div>
                  <div class="checklist-item">
-              <label for="financial-vacancy">Vacância financeira (%)</label
-              ><input
+              <label for="financial-vacancy">Vacância financeira (%)
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> A vacância financeira representa a porcentagem da receita potencial que o fundo deixa de arrecadar devido a imóveis vagos.</p>
+                    <p><strong>Onde encontrar:</strong> Esta informação está disponível nos relatórios gerenciais (RI) do fundo.</p>
+                  </div>
+                </div>
+              </label>
+              <input
                 type="text"
                 id="financial-vacancy"
                 placeholder="Percentual de vacância financeira"
               />
             </div>
             <div class="checklist-item">
-              <label for="physical-vacancy">Vacância física (%)</label
-              ><input
+              <label for="physical-vacancy">Vacância física (%)
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> A vacância física representa a porcentagem da área total do portfólio de imóveis que está desocupada.</p>
+                    <p><strong>Onde encontrar:</strong> Esta informação está disponível nos relatórios gerenciais (RI) do fundo.</p>
+                  </div>
+                </div>
+              </label>
+              <input
                 type="text"
                 id="physical-vacancy"
                 placeholder="Percentual de vacância física"
@@ -1733,10 +1776,16 @@
                 <h2>Desempenho Comparativo</h2>
                 </div>
                  <div class="checklist-item">
-              <label for="vpc-evolution"
-                >Evolução do valor patrimonial por cota (VPC) nos últimos 12
-                meses</label
-              ><textarea
+              <label for="vpc-evolution">Evolução do valor patrimonial por cota (VPC) nos últimos 12 meses
+                <div class="tooltip-container">
+                  <i class="fas fa-question-circle tooltip-icon"></i>
+                  <div class="tooltip-text">
+                    <p><strong>O que é:</strong> O Valor Patrimonial por Cota (VPC) é o valor total do patrimônio líquido do fundo dividido pelo número de cotas. Sua evolução indica o crescimento (ou decrescimento) do patrimônio do fundo.</p>
+                    <p><strong>Onde encontrar:</strong> Os relatórios gerenciais (RI) do fundo costumam apresentar um histórico do VPC.</p>
+                  </div>
+                </div>
+              </label>
+              <textarea
                 id="vpc-evolution"
                 placeholder="Descreva a evolução do VPC..."
               ></textarea>
