@@ -540,28 +540,6 @@
         flex-direction: column;
         align-items: flex-end;
         gap: 15px;
-        transition: all 0.3s ease;
-      }
-
-      .floating-save-btn {
-        padding: 16px 24px;
-        background-color: var(--success);
-        color: white;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: 600;
-        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s ease;
-      }
-
-      .floating-save-btn:hover {
-        background-color: #0da271;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
       }
 
       .progress-indicator {
@@ -574,6 +552,7 @@
         align-items: center;
         gap: 10px;
         font-size: 0.9rem;
+        transition: all 0.3s ease;
       }
 
       .progress-bar {
@@ -589,6 +568,77 @@
         background: var(--accent);
         border-radius: 4px;
         transition: width 0.5s ease;
+      }
+
+      .floating-main-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(25, 196, 182, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        padding: 0;
+      }
+
+      .floating-main-btn:hover {
+        background-color: #15a89c;
+        transform: translateY(-2px);
+      }
+
+      .floating-main-btn .fas {
+        transition: transform 0.3s ease;
+      }
+
+      .floating-save-container.active .floating-main-btn .fas {
+        transform: rotate(135deg);
+      }
+
+      .floating-actions-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        margin-bottom: -4px; /* Adjust to align with main button */
+      }
+
+      .floating-action-btn {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transform: scale(0);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        transform-origin: bottom right;
+      }
+
+      .floating-save-container.active .floating-action-btn {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      .floating-action-btn.floating-save-final-btn {
+        background-color: var(--success);
+        color: white;
+        transition-delay: 0.1s;
+      }
+
+      .floating-action-btn.floating-save-draft-btn {
+        background-color: var(--warning);
+        color: white;
+        transition-delay: 0.05s;
       }
 
       .btn-toggle-special {
@@ -1872,8 +1922,24 @@
         </div>
         <span id="progress-percentage">0%</span>
       </div>
-      <button class="floating-save-btn" id="floating-save-btn">
-        <i class="fas fa-save"></i> Salvar Análise
+      <div class="floating-actions-menu">
+        <button
+          class="floating-action-btn floating-save-draft-btn"
+          id="floating-save-draft-btn"
+          title="Salvar Rascunho"
+        >
+          <i class="fas fa-save"></i>
+        </button>
+        <button
+          class="floating-action-btn floating-save-final-btn"
+          id="floating-save-final-btn"
+          title="Salvar Análise Final"
+        >
+          <i class="fas fa-check-circle"></i>
+        </button>
+      </div>
+      <button class="floating-main-btn" id="floating-main-btn">
+        <i class="fas fa-plus"></i>
       </button>
     </div>
 
@@ -1934,9 +2000,15 @@
         const otherSegmentText = document.getElementById("other-segment-text");
         const saveBtn = document.getElementById("save-btn");
         const saveDraftBtn = document.getElementById("save-draft-btn");
-        const floatingSaveBtn = document.getElementById("floating-save-btn");
         const floatingSaveContainer = document.getElementById(
           "floating-save-container"
+        );
+        const floatingMainBtn = document.getElementById("floating-main-btn");
+        const floatingSaveFinalBtn = document.getElementById(
+          "floating-save-final-btn"
+        );
+        const floatingSaveDraftBtn = document.getElementById(
+          "floating-save-draft-btn"
         );
         const searchBtn = document.getElementById("search-btn");
         const searchInput = document.getElementById("search-input");
@@ -1968,10 +2040,17 @@
         // --- LÓGICA DE EVENTOS ---
 
         saveBtn.addEventListener("click", () => saveFormData("finalizado"));
-        floatingSaveBtn.addEventListener("click", () =>
+        saveDraftBtn.addEventListener("click", () => saveFormData("rascunho"));
+        floatingSaveFinalBtn.addEventListener("click", () =>
           saveFormData("finalizado")
         );
-        saveDraftBtn.addEventListener("click", () => saveFormData("rascunho"));
+        floatingSaveDraftBtn.addEventListener("click", () =>
+          saveFormData("rascunho")
+        );
+
+        floatingMainBtn.addEventListener("click", () => {
+          floatingSaveContainer.classList.toggle("active");
+        });
 
         toggleAnalysisBtn.addEventListener("click", () => {
           if (
@@ -2241,15 +2320,13 @@
 
           const originalTextSave = saveBtn.innerHTML;
           const originalTextDraft = saveDraftBtn.innerHTML;
-          const floatingOriginalText = floatingSaveBtn.innerHTML;
 
           saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
           saveDraftBtn.innerHTML = '<span class="loading"></span> Salvando...';
-          floatingSaveBtn.innerHTML =
-            '<span class="loading"></span> Salvando...';
           saveBtn.disabled = true;
           saveDraftBtn.disabled = true;
-          floatingSaveBtn.disabled = true;
+          floatingSaveFinalBtn.disabled = true;
+          floatingSaveDraftBtn.disabled = true;
 
           db.collection("analises")
             .add(firebaseData)
@@ -2267,10 +2344,11 @@
             .finally(() => {
               saveBtn.innerHTML = originalTextSave;
               saveDraftBtn.innerHTML = originalTextDraft;
-              floatingSaveBtn.innerHTML = floatingOriginalText;
               saveBtn.disabled = false;
               saveDraftBtn.disabled = false;
-              floatingSaveBtn.disabled = false;
+              floatingSaveFinalBtn.disabled = false;
+              floatingSaveDraftBtn.disabled = false;
+              floatingSaveContainer.classList.remove("active");
             });
         }
 
