@@ -14,7 +14,14 @@
       type="image/png"
       href="https://raw.githubusercontent.com/emerkaspar/analise-ri/refs/heads/main/favicon.png"
     />
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -30,8 +37,7 @@
         --danger: #ef4444;
         --warning: #f59e0b;
         --card-border: rgba(255, 255, 255, 0.04);
-        /* NOVA FONTE DE SISTEMA (estilo Apple) */
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
 
       * {
@@ -46,9 +52,13 @@
         line-height: 1.6;
         padding: 10px;
         min-height: 100vh;
-        /* NOVA FONTE DE SISTEMA (estilo Apple) */
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
+      
+      h1, h2, h3, h4, h5, h6, button, input, textarea, select {
+        font-family: "Lato", sans-serif;
+      }
+
 
       .container {
         max-width: 1200px;
@@ -375,11 +385,74 @@
       }
 
       .checklist-item label {
-        display: block;
+        display: flex;
+        align-items: center;
         margin-bottom: 8px;
-        font-weight: 600;
+        font-weight: 700;
         color: white;
       }
+      
+      /* --- ESTILOS PARA TOOLTIPS --- */
+      .tooltip-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin-left: 8px;
+      }
+      .tooltip-icon {
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: color 0.3s ease;
+      }
+      .tooltip-container:hover .tooltip-icon {
+        color: var(--accent);
+      }
+      .tooltip-text {
+        visibility: hidden;
+        width: 320px;
+        background-color: #1a2433;
+        color: #fff;
+        text-align: left;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 10;
+        bottom: 150%;
+        left: 50%;
+        margin-left: -160px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-weight: 400;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        border: 1px solid var(--card-border);
+      }
+      .tooltip-text p {
+        margin-bottom: 8px;
+      }
+      .tooltip-text p:last-child {
+        margin-bottom: 0;
+      }
+      .tooltip-text strong {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .tooltip-container:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+      .tooltip-text::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #1a2433 transparent transparent transparent;
+      }
+
 
       .checkbox-group {
         display: flex;
@@ -425,6 +498,7 @@
         margin: 0;
         transition: color 0.3s ease;
         font-size: 0.9rem;
+        font-weight: 400;
       }
 
       .checkbox-item:hover label,
@@ -502,14 +576,16 @@
         background: rgba(0, 0, 0, 0.2);
         color: white;
         resize: vertical;
+        font-family: "Lato", sans-serif;
       }
 
       textarea {
         min-height: 80px;
       }
 
-      textarea::placeholder {
+      textarea::placeholder, input::placeholder {
         color: var(--muted);
+        font-family: "Lato", sans-serif;
       }
 
       .btn-group {
@@ -2081,49 +2157,47 @@
       </div>
 
       <div class="tab-content" id="help-tab">
-        <h2><i class="fas fa-question-circle"></i> Guia de Uso</h2>
+        <h2><i class="fas fa-question-circle"></i> Ajuda e Informações</h2>
         <div class="section">
-            <h3>1. Começando uma Nova Análise</h3>
-            <p>
-                Na aba <strong>"Nova Análise"</strong>, você verá duas opções: <strong>Análise de FIIs de Papel</strong> e <strong>Análise de FIIs de Tijolo</strong>.
-            </p>
-            <p>
-                Clique em uma das opções para carregar o formulário correspondente. As seções específicas para o tipo de fundo escolhido (Papel ou Tijolo) aparecerão junto com as seções comuns a ambos.
-            </p>
+          <h3>Onde os relatórios são salvos?</h3>
+          <p>
+            Todos os relatórios são salvos na nuvem usando
+            <strong>Firebase</strong>.
+          </p>
+          <p>
+            Isso significa que você pode acessar suas análises de qualquer
+            dispositivo após fazer login.
+          </p>
         </div>
         <div class="section">
-            <h3>2. Trocando o Tipo de Análise</h3>
-            <p>
-                Se você clicou em um tipo de análise por engano ou mudou de ideia, não se preocupe. No topo do formulário, clique no botão <strong>"Trocar Tipo de Análise"</strong>. Isso te levará de volta à tela de seleção inicial.
-            </p>
-            <p>
-                <strong>Atenção:</strong> Ao trocar o tipo de análise, o formulário atual será limpo.
-            </p>
+          <h3>Como pesquisar relatórios?</h3>
+          <p>
+            Na aba "Relatórios Salvos", digite o nome do fundo ou a data no
+            campo de pesquisa e clique no botão "Pesquisar".
+          </p>
+          <p>
+            Você também pode visualizar, carregar ou excluir relatórios
+            individualmente usando os botões ao lado de cada relatório.
+          </p>
         </div>
         <div class="section">
-            <h3>3. Salvando seu Progresso</h3>
-            <p>
-                Para salvar seu trabalho, você precisa estar logado com sua conta Google.
-                <ul>
-                    <li><strong>Salvar Rascunho:</strong> Use este botão para salvar a análise a qualquer momento e continuar depois. Ela ficará marcada como [RASCUNHO] na lista de relatórios.</li>
-                    <li><strong>Salvar Análise Final:</strong> Use quando a análise estiver completa.</li>
-                </ul>
-                Se já existir um relatório com o mesmo nome e data, o sistema perguntará se você deseja sobrescrevê-lo.
-            </p>
+          <h3>Como imprimir ou exportar?</h3>
+          <p>
+            Use o botão "Imprimir/Exportar" na aba de Nova Análise para gerar
+            uma versão para impressão do formulário atual.
+          </p>
+          <p>
+            Na visualização de impressão, você pode salvar como PDF usando a
+            função "Salvar como PDF" do seu navegador.
+          </p>
         </div>
         <div class="section">
-            <h3>4. Acessando Relatórios Salvos</h3>
-            <p>
-                Vá para a aba <strong>"Relatórios Salvos"</strong> para ver todas as suas análises. Você pode usar a barra de pesquisa para filtrar por nome do fundo ou data.
-            </p>
-            <p>
-                Para cada relatório, você tem três opções:
-                <ul>
-                    <li><strong>Ver:</strong> Abre uma visualização limpa do relatório, ideal para consulta e impressão.</li>
-                    <li><strong>Carregar:</strong> Carrega todos os dados do relatório de volta para o formulário na aba "Nova Análise", permitindo que você continue editando.</li>
-                    <li><strong>Excluir:</strong> Remove permanentemente o relatório.</li>
-                </ul>
-            </p>
+          <h3>Os dados serão perdidos se eu limpar o navegador?</h3>
+          <p>
+            Não, pois os dados são salvos na nuvem. Se você limpar o histórico e
+            dados de navegação, basta fazer login novamente para recuperar suas
+            análises.
+          </p>
         </div>
       </div>
     </div>
