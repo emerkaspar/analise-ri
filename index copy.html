@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fundoscópio</title>
 
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-    <!-- Favicon -->
     <link
       rel="icon"
       type="image/png"
       href="https://raw.githubusercontent.com/emerkaspar/analise-ri/refs/heads/main/favicon.png"
     />
 
-    <!-- Importação da fonte Inter do Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -71,7 +68,6 @@
         position: relative;
       }
 
-      /* HEADER EM LINHA ÚNICA */
       header {
         display: flex;
         align-items: center;
@@ -170,7 +166,6 @@
         font-size: 0.8rem;
       }
 
-      /* Resto do CSS permanece igual */
       .tabs {
         display: flex;
         margin-bottom: 20px;
@@ -317,6 +312,7 @@
         justify-content: center;
         gap: 15px;
         margin-top: 30px;
+        flex-wrap: wrap;
       }
 
       button {
@@ -367,29 +363,6 @@
         background-color: #d97706;
       }
 
-      .search-box {
-        display: flex;
-        margin-bottom: 20px;
-        gap: 10px;
-      }
-
-      .search-box input {
-        flex: 1;
-        padding: 12px;
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-        background: rgba(0, 0, 0, 0.2);
-        color: white;
-      }
-
-      .search-box input::placeholder {
-        color: var(--muted);
-      }
-
-      .search-box button {
-        padding: 12px 20px;
-      }
-
       .reports-list {
         margin-top: 20px;
       }
@@ -403,10 +376,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       .report-info {
         flex: 1;
+        min-width: 250px;
       }
 
       .report-info h3 {
@@ -422,6 +398,7 @@
       .report-actions {
         display: flex;
         gap: 10px;
+        flex-shrink: 0;
       }
 
       .report-btn {
@@ -429,191 +406,113 @@
         font-size: 14px;
       }
 
-      .storage-info {
-        margin-top: 20px;
-        padding: 15px;
-        background: rgba(96, 165, 250, 0.1);
-        border-radius: 8px;
-        text-align: center;
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-container {
+        background-color: var(--card);
+        margin: auto;
+        padding: 25px;
         border: 1px solid var(--card-border);
+        width: 90%;
+        max-width: 900px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        max-height: 90vh;
       }
 
-      .storage-info p {
-        color: var(--muted);
-        margin-bottom: 10px;
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--glass);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
       }
 
-      .status-connected {
-        background: rgba(16, 185, 129, 0.1);
-        color: var(--success);
-        border: 1px solid var(--success);
-      }
-
-      .status-disconnected {
-        background: rgba(239, 68, 68, 0.1);
-        color: var(--danger);
-        border: 1px solid var(--danger);
-      }
-
-      .setup-guide {
-        margin-top: 20px;
-        padding: 20px;
-        background: rgba(96, 165, 250, 0.1);
-        border-radius: 12px;
-        border: 1px solid var(--card-border);
-      }
-
-      .setup-guide h3 {
+      .modal-header h2 {
         color: var(--accent);
-        margin-bottom: 15px;
+        font-size: 1.6rem;
       }
 
-      .setup-steps {
-        margin-left: 20px;
-        margin-bottom: 15px;
+      .modal-close-btn {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 2.5rem;
+        font-weight: bold;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
       }
 
-      .setup-steps li {
+      .modal-close-btn:hover {
+        color: white;
+      }
+
+      .modal-body {
+        overflow-y: auto;
+        padding-right: 15px;
+      }
+
+      .modal-body h3 {
+        color: var(--accent);
+        margin-top: 20px;
         margin-bottom: 10px;
-        line-height: 1.6;
+        border-left: 3px solid var(--accent);
+        padding-left: 10px;
       }
 
-      @media print {
-        button,
-        .tabs,
-        .search-box {
-          display: none;
-        }
-
-        .container {
-          box-shadow: none;
-          border: none;
-          background: white;
-          color: black;
-        }
-
-        .tab-content {
-          display: block !important;
-        }
-
-        .section {
-          background: white;
-          border: 1px solid #ddd;
-        }
-
-        .checklist-item {
-          background: #f9f9f9;
-          border-left: 3px solid #333;
-        }
+      .modal-body p,
+      .modal-body li {
+        color: #d1d5db;
+        line-height: 1.7;
       }
 
-      @media (max-width: 992px) {
-        header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .logo-section {
-          width: 100%;
-          justify-content: center;
-          margin-bottom: 15px;
-        }
-
-        .titles {
-          text-align: center;
-          width: 100%;
-        }
-
-        .auth-section {
-          width: 100%;
-        }
+      .modal-body strong {
+        color: #e5e7eb;
+        font-weight: 600;
       }
 
-      @media (max-width: 768px) {
-        .logo {
-          max-width: 100px;
-        }
-
-        h1 {
-          font-size: 1.5rem;
-        }
-
-        .fund-info {
-          flex-direction: column;
-        }
-
-        .fund-info input,
-        .fund-info select {
-          width: 100%;
-        }
-
-        .btn-group {
-          flex-direction: column;
-        }
-
-        .report-item {
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .report-actions {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .tabs {
-          flex-direction: column;
-        }
-
-        .tab {
-          margin-bottom: 5px;
-          border-radius: 8px;
-          border: 1px solid var(--card-border);
-        }
-
-        .auth-buttons {
-          flex-direction: column;
-        }
+      .modal-body .report-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
       }
 
-      @media (max-width: 480px) {
-        .logo {
-          max-width: 80px;
-        }
-
-        h1 {
-          font-size: 1.3rem;
-        }
-
-        .app-description {
-          font-size: 0.85rem;
-        }
-
-        .container {
-          padding: 20px;
-        }
-      }
-
-      .observations {
-        margin-top: 15px;
-      }
-
-      .observations textarea {
-        background: rgba(0, 0, 0, 0.3);
+      .modal-body .grid-item {
+        background: var(--glass);
+        padding: 15px;
+        border-radius: 8px;
         border: 1px solid var(--card-border);
       }
 
-      .checkbox-item {
-        transition: all 0.2s ease;
+      .modal-body .grid-item strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--muted);
       }
 
-      .checkbox-item:hover {
-        background: rgba(96, 165, 250, 0.1);
-      }
-
-      .checkbox-item input[type="checkbox"]:checked,
-      .checkbox-item input[type="radio"]:checked {
-        accent-color: var(--accent);
+      .modal-footer {
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 1px solid var(--glass);
+        display: flex;
+        justify-content: flex-end;
       }
 
       .loading {
@@ -632,25 +531,6 @@
         }
       }
 
-      .error-message {
-        background-color: rgba(239, 68, 68, 0.2);
-        color: var(--danger);
-        padding: 10px;
-        border-radius: 8px;
-        margin: 10px 0;
-        border: 1px solid var(--danger);
-      }
-
-      .success-message {
-        background-color: rgba(16, 185, 129, 0.2);
-        color: var(--success);
-        padding: 10px;
-        border-radius: 8px;
-        margin: 10px 0;
-        border: 1px solid var(--success);
-      }
-
-      /* NOVOS ESTILOS PARA O BOTÃO FLUTUANTE */
       .floating-save-container {
         position: fixed;
         bottom: 30px;
@@ -711,51 +591,87 @@
         transition: width 0.5s ease;
       }
 
-      @media (max-width: 768px) {
-        .floating-save-container {
-          bottom: 20px;
-          right: 20px;
-        }
+      .btn-toggle-special {
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(90deg, var(--accent) 0%, #3b82f6 100%);
+        background-size: 200% 200%;
+        animation: gradient-animation 4s ease infinite;
+        border: none;
+        box-shadow: 0 4px 15px rgba(25, 196, 182, 0.2);
+        transition: all 0.3s ease;
+      }
 
-        .floating-save-btn {
-          padding: 14px 20px;
-          font-size: 0.9rem;
-        }
+      .btn-toggle-special:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(25, 196, 182, 0.4);
+      }
 
-        .progress-indicator {
-          padding: 10px 15px;
-          font-size: 0.8rem;
+      @keyframes gradient-animation {
+        0% {
+          background-position: 0% 50%;
         }
-
-        .progress-bar {
-          width: 80px;
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
         }
       }
 
-      @media (max-width: 480px) {
-        .floating-save-container {
-          bottom: 15px;
-          right: 15px;
-          left: 15px;
-          align-items: center;
-        }
+      .toggle-instruction {
+        color: var(--muted);
+        font-style: italic;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: var(--glass);
+        border-radius: 8px;
+        border-left: 3px solid var(--accent);
+      }
 
-        .floating-save-btn {
-          width: 100%;
-          justify-content: center;
-          border-radius: 12px;
-        }
+      .status-draft {
+        color: var(--warning);
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
 
-        .progress-indicator {
-          width: 100%;
-          justify-content: center;
+      @media print {
+        body > *:not(.modal-print-area) {
+          display: none;
+        }
+        .modal-print-area {
+          display: block !important;
+        }
+        .modal-container {
+          box-shadow: none;
+          border: none;
+          max-height: none;
+          color: black;
+          background: white;
+        }
+        .modal-body h3,
+        .modal-header h2 {
+          color: #333;
+          border-left-color: #333;
+        }
+        .modal-body p,
+        .modal-body li,
+        .modal-body strong {
+          color: #333;
+        }
+        .modal-footer,
+        .modal-close-btn {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <!-- HEADER EM LINHA ÚNICA -->
       <header>
         <div class="logo-section">
           <div class="logo">
@@ -800,348 +716,243 @@
       </div>
 
       <div class="tab-content active" id="form-tab">
-        <div class="fund-info">
-          <input type="text" id="fund-name" placeholder="Nome do Fundo" />
-          <input
-            type="text"
-            id="analysis-date"
-            placeholder="Mês/Ano de Referência (MM/AAAA)"
-          />
-          <input type="text" id="analyst-name" placeholder="Nome do Analista" />
-        </div>
-
-        <!-- Botão para mostrar/ocultar seção de fundos de papel-->
-        <button
-          type="button"
-          class="btn-save"
-          onclick="togglePaperSection(this)"
-        >
-          📄 Clique aqui para mostrar análise para Fundos de Papel
-        </button>
-
-        <!-- NOVA SEÇÃO: ANÁLISE DE FUNDOS DE PAPEL -->
-        <div id="paper-section" class="section" style="display: none">
-          <div class="section-title">
-            <span>📄</span>
-            <h2>Análise de Fundos de Papel</h2>
-          </div>
-
-          <div class="checklist-item">
-            <label>Alocação do Fundo</label>
-            <div style="display: flex; gap: 10px; margin-top: 8px">
-              <input
-                type="text"
-                id="allocation-cri-cra"
-                placeholder="% CRI/CRA"
-              />
-              <input
-                type="text"
-                id="allocation-fiis-paper"
-                placeholder="% FIIs"
-              />
-              <input
-                type="text"
-                id="allocation-cash-paper"
-                placeholder="% Caixa"
-              />
-            </div>
-          </div>
-
-          <div class="checklist-item">
-            <label for="credits-count">Quantidade de créditos</label>
-            <input
-              type="number"
-              id="credits-count"
-              placeholder="Número total de créditos"
-            />
-          </div>
-
-          <div class="checklist-item">
-            <label>Indexador do fundo</label>
-            <div style="display: flex; gap: 10px; margin-top: 8px">
-              <input type="text" id="indexer-cdi" placeholder="% CDI" />
-              <input type="text" id="indexer-ipca" placeholder="% IPCA" />
-            </div>
-          </div>
-
-          <div class="checklist-item">
-            <label>Taxa média dos créditos</label>
-            <div style="display: flex; gap: 10px; margin-top: 8px">
-              <input type="text" id="credit-rate-cdi" placeholder="CDI+X%" />
-              <input type="text" id="credit-rate-ipca" placeholder="IPCA+X%" />
-            </div>
-          </div>
-
-          <div class="checklist-item">
-            <label for="credit-duration"
-              >Duration da carteira de créditos (anos)</label
-            >
+        <form id="checklist-form">
+          <div class="fund-info">
+            <input type="text" id="fund-name" placeholder="Nome do Fundo" />
             <input
               type="text"
-              id="credit-duration"
-              placeholder="Duration média em anos"
+              id="analysis-date"
+              placeholder="Mês/Ano de Referência (MM/AAAA)"
+            />
+            <input
+              type="text"
+              id="analyst-name"
+              placeholder="Nome do Analista"
             />
           </div>
 
-          <div class="checklist-item">
-            <label>Garantias praticadas pelo fundo:</label>
-            <div class="checkbox-group">
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="warranty-fiduciary-alienation"
-                  name="warranty"
-                />
-                <label for="warranty-fiduciary-alienation"
-                  >Alienação fiduciária</label
-                >
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="warranty-fiduciary-cession"
-                  name="warranty"
-                />
-                <label for="warranty-fiduciary-cession"
-                  >Cessão fiduciária</label
-                >
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="warranty-mortgage" name="warranty" />
-                <label for="warranty-mortgage">Hipoteca</label>
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="warranty-reserves" name="warranty" />
-                <label for="warranty-reserves">Reservas</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="warranty-guarantors"
-                  name="warranty"
-                />
-                <label for="warranty-guarantors">Fiadores</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="checkbox"
-                  id="warranty-participation"
-                  name="warranty"
-                />
-                <label for="warranty-participation">Participação</label>
-              </div>
-              <div class="checkbox-item">
-                <input type="checkbox" id="warranty-rating" name="warranty" />
-                <label for="warranty-rating">Rating</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="checklist-item">
-            <label>Fundo possui créditos sem garantias?</label>
-            <div class="checkbox-group">
-              <div class="checkbox-item">
-                <input
-                  type="radio"
-                  id="unsecured-credits-yes"
-                  name="unsecured-credits"
-                  value="sim"
-                />
-                <label for="unsecured-credits-yes">Sim</label>
-              </div>
-              <div class="checkbox-item">
-                <input
-                  type="radio"
-                  id="unsecured-credits-no"
-                  name="unsecured-credits"
-                  value="nao"
-                />
-                <label for="unsecured-credits-no">Não</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="checklist-item">
-            <label for="average-ltv"
-              >LTV médio (razão entre o valor do crédito e o valor da
-              garantia)</label
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-bottom: 30px;
+            "
+          >
+            <p class="toggle-instruction">
+              Para FIIs de Papel ou Tijolo, comece clicando aqui para abrir os
+              campos específicos.
+            </p>
+            <button
+              type="button"
+              class="btn-toggle-special"
+              id="toggle-analysis-btn"
             >
-            <input type="text" id="average-ltv" placeholder="LTV médio em %" />
+              <i class="fas fa-exchange-alt"></i> Ver Análise Específica
+              (Papel/Tijolo)
+            </button>
           </div>
 
-          <div class="checklist-item">
-            <label for="debtor-segments"
-              >Segmentos de mercado dos devedores</label
-            >
-            <textarea
-              id="debtor-segments"
-              placeholder="Liste os segmentos de mercado dos devedores..."
-            ></textarea>
-          </div>
-
-          <div class="checklist-item">
-            <label for="debtor-concentration"
-              >Concentração da carteira em algum devedor? Qual devedor e
-              %</label
-            >
-            <textarea
-              id="debtor-concentration"
-              placeholder="Descreva a concentração em devedores..."
-            ></textarea>
-          </div>
-
-          <div class="checklist-item">
-            <label for="main-debtor-financials"
-              >Situação financeira do devedor com maior concentração</label
-            >
-            <textarea
-              id="main-debtor-financials"
-              placeholder="Descreva a situação financeira do principal devedor..."
-            ></textarea>
-          </div>
-
-          <div class="checklist-item">
-            <label>Observações:</label>
-            <textarea
-              class="observations"
-              placeholder="Anotações sobre fundos de papel..."
-            ></textarea>
-          </div>
-        </div>
-        <script>
-          function togglePaperSection(btn) {
-            const section = document.getElementById("paper-section");
-
-            if (section.style.display === "none") {
-              section.style.display = "block";
-              btn.textContent = "📄 Ocultar Análise para Fundos de Papel";
-            } else {
-              section.style.display = "none";
-              btn.textContent = "📄 Mostrar análise para Fundos de Papel";
-            }
-          }
-        </script>
-        <!-- FIM DA NOVA SEÇÃO -->
-
-        <form id="checklist-form">
-          <!-- ESTRUTURA DO FUNDO -->
-          <div class="section">
+          <div id="paper-section" class="section" style="display: none">
             <div class="section-title">
-              <span>🏦</span>
-              <h2>Estrutura do Fundo</h2>
+              <span>📄</span>
+              <h2>Análise de Fundos de Papel</h2>
             </div>
-
             <div class="checklist-item">
-              <label
-                >Qual a estratégia/objetivo do fundo? (renda, ganho de capital,
-                reciclagem de portfólio, etc.)</label
-              >
-              <textarea
-                id="strategy"
-                placeholder="Descreva a estratégia do fundo..."
-              ></textarea>
-            </div>
-
-            <div class="checklist-item">
-              <label
-                >Segmento principal do fundo? – ⚠️ Híbrido não é segmento</label
-              >
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input type="checkbox" id="logistics" name="segment" />
-                  <label for="logistics">📦 Logística</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="offices" name="segment" />
-                  <label for="offices">🏢 Lajes</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="shoppings" name="segment" />
-                  <label for="shoppings">🛍️ Shoppings</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="papel" name="segment" />
-                  <label for="papel">📄 Papel</label>
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="other-segment" name="segment" />
-                  <label for="other-segment">📍 Outros</label>
-                </div>
+              <label>Alocação do Fundo</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input
+                  type="text"
+                  id="allocation-cri-cra"
+                  placeholder="% CRI/CRA"
+                /><input
+                  type="text"
+                  id="allocation-fiis-paper"
+                  placeholder="% FIIs"
+                /><input
+                  type="text"
+                  id="allocation-cash-paper"
+                  placeholder="% Caixa"
+                />
               </div>
-              <input
-                type="text"
-                id="other-segment-text"
-                placeholder="Especifique outros segmentos"
-                style="margin-top: 10px; display: none"
+            </div>
+            <div class="checklist-item">
+              <label for="credits-count">Quantidade de créditos</label
+              ><input
+                type="number"
+                id="credits-count"
+                placeholder="Número total de créditos"
               />
             </div>
-
             <div class="checklist-item">
-              <label>Tipo de gestão:</label>
+              <label>Indexador do fundo</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input type="text" id="indexer-cdi" placeholder="% CDI" /><input
+                  type="text"
+                  id="indexer-ipca"
+                  placeholder="% IPCA"
+                />
+              </div>
+            </div>
+            <div class="checklist-item">
+              <label>Taxa média dos créditos</label>
+              <div style="display: flex; gap: 10px; margin-top: 8px">
+                <input
+                  type="text"
+                  id="credit-rate-cdi"
+                  placeholder="CDI+X%"
+                /><input
+                  type="text"
+                  id="credit-rate-ipca"
+                  placeholder="IPCA+X%"
+                />
+              </div>
+            </div>
+            <div class="checklist-item">
+              <label for="credit-duration"
+                >Duration da carteira de créditos (anos)</label
+              ><input
+                type="text"
+                id="credit-duration"
+                placeholder="Duration média em anos"
+              />
+            </div>
+            <div class="checklist-item">
+              <label>Garantias praticadas pelo fundo:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-fiduciary-alienation"
+                    name="warranty"
+                  /><label for="warranty-fiduciary-alienation"
+                    >Alienação fiduciária</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-fiduciary-cession"
+                    name="warranty"
+                  /><label for="warranty-fiduciary-cession"
+                    >Cessão fiduciária</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-mortgage"
+                    name="warranty"
+                  /><label for="warranty-mortgage">Hipoteca</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-reserves"
+                    name="warranty"
+                  /><label for="warranty-reserves">Reservas</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-guarantors"
+                    name="warranty"
+                  /><label for="warranty-guarantors">Fiadores</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-participation"
+                    name="warranty"
+                  /><label for="warranty-participation">Participação</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="warranty-rating"
+                    name="warranty"
+                  /><label for="warranty-rating">Rating</label>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <label>Fundo possui créditos sem garantias?</label>
               <div class="checkbox-group">
                 <div class="checkbox-item">
                   <input
                     type="radio"
-                    id="active-management"
-                    name="management-type"
-                    value="ativa"
-                  />
-                  <label for="active-management">Ativa</label>
+                    id="unsecured-credits-yes"
+                    name="unsecured-credits"
+                    value="sim"
+                  /><label for="unsecured-credits-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
                     type="radio"
-                    id="passive-management"
-                    name="management-type"
-                    value="passiva"
-                  />
-                  <label for="passive-management">Passiva</label>
+                    id="unsecured-credits-no"
+                    name="unsecured-credits"
+                    value="nao"
+                  /><label for="unsecured-credits-no">Não</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Comparação com IFIX:</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="above-ifix"
-                    name="ifix-comparison"
-                    value="acima"
-                  />
-                  <label for="above-ifix">📈 Acima</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="below-ifix"
-                    name="ifix-comparison"
-                    value="abaixo"
-                  />
-                  <label for="below-ifix">📉 Abaixo</label>
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="radio"
-                    id="with-ifix"
-                    name="ifix-comparison"
-                    value="junto"
-                  />
-                  <label for="with-ifix">➡️ Junto</label>
-                </div>
-              </div>
+              <label for="average-ltv"
+                >LTV médio (razão entre o valor do crédito e o valor da
+                garantia)</label
+              ><input
+                type="text"
+                id="average-ltv"
+                placeholder="LTV médio em %"
+              />
             </div>
-
             <div class="checklist-item">
-              <label for="property-count">Quantidade de imóveis</label>
-              <input
+              <label for="debtor-segments"
+                >Segmentos de mercado dos devedores</label
+              ><textarea
+                id="debtor-segments"
+                placeholder="Liste os segmentos de mercado dos devedores..."
+              ></textarea>
+            </div>
+            <div class="checklist-item">
+              <label for="debtor-concentration"
+                >Concentração da carteira em algum devedor? Qual devedor e
+                %</label
+              ><textarea
+                id="debtor-concentration"
+                placeholder="Descreva a concentração em devedores..."
+              ></textarea>
+            </div>
+            <div class="checklist-item">
+              <label for="main-debtor-financials"
+                >Situação financeira do devedor com maior concentração</label
+              ><textarea
+                id="main-debtor-financials"
+                placeholder="Descreva a situação financeira do principal devedor..."
+              ></textarea>
+            </div>
+            <div class="checklist-item">
+              <label>Observações:</label
+              ><textarea
+                class="observations"
+                placeholder="Anotações sobre fundos de papel..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div id="tijolo-section" class="section" style="display: none">
+            <div class="section-title">
+              <span>🧱</span>
+              <h2>Análise de FIIs de Tijolo</h2>
+            </div>
+            <div class="checklist-item">
+              <label for="property-count">Quantidade de imóveis</label
+              ><input
                 type="number"
                 id="property-count"
                 placeholder="Número de imóveis no portfólio"
               />
             </div>
-
             <div class="checklist-item">
               <label>Alocação do Fundo</label>
               <div style="display: flex; gap: 10px; margin-top: 8px">
@@ -1149,12 +960,17 @@
                   type="text"
                   id="allocation-properties"
                   placeholder="% Imóveis"
+                /><input
+                  type="text"
+                  id="allocation-fiis"
+                  placeholder="% FIIs"
+                /><input
+                  type="text"
+                  id="allocation-cash"
+                  placeholder="% Caixa"
                 />
-                <input type="text" id="allocation-fiis" placeholder="% FIIs" />
-                <input type="text" id="allocation-cash" placeholder="% Caixa" />
               </div>
             </div>
-
             <div class="checklist-item">
               <label>% de contratos</label>
               <div style="display: flex; gap: 10px; margin-top: 8px">
@@ -1162,126 +978,71 @@
                   type="text"
                   id="typical-contracts"
                   placeholder="% Típicos"
-                />
-                <input
+                /><input
                   type="text"
                   id="atypical-contracts"
                   placeholder="% Atípicos"
                 />
               </div>
             </div>
-
             <div class="checklist-item">
               <label for="average-contract-term"
                 >Tempo médio de vencimento dos contratos (meses)</label
-              >
-              <input
+              ><input
                 type="number"
                 id="average-contract-term"
                 placeholder="Tempo médio em meses"
               />
             </div>
-
-            <!-- NOVOS CAMPOS ADICIONADOS -->
-            <div class="checklist-item">
-              <label for="admin-fee">Taxa de administração (%)</label>
-              <input
-                type="text"
-                id="admin-fee"
-                placeholder="Taxa de administração em %"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label for="performance-fee">Taxa de performance (%)</label>
-              <input
-                type="text"
-                id="performance-fee"
-                placeholder="Taxa de performance em %"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label for="ffo-vs-dy">Valor do FFO vs DY</label>
-              <input
-                type="text"
-                id="ffo-vs-dy"
-                placeholder="Comparação entre FFO e DY"
-              />
-            </div>
-
-            <div class="checklist-item">
-              <label for="extraordinary-revenue"
-                >Se o FFO está abaixo do DY, fundo tem gerado receita
-                extraordinária? Tem bastante saldo acumulado?</label
-              >
-              <textarea
-                id="extraordinary-revenue"
-                placeholder="Descreva a situação da receita extraordinária e saldo acumulado..."
-              ></textarea>
-            </div>
-            <!-- FIM DOS NOVOS CAMPOS -->
-
             <div class="checklist-item">
               <label for="expiring-contracts"
                 >Há contratos próximos do vencimento? Qual % da receita?</label
-              >
-              <textarea
+              ><textarea
                 id="expiring-contracts"
                 placeholder="Descreva a situação dos contratos..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
-              <label for="active-tenants">Quantos inquilinos ativos</label>
-              <input
+              <label for="active-tenants">Quantos inquilinos ativos</label
+              ><input
                 type="number"
                 id="active-tenants"
                 placeholder="Número de inquilinos ativos"
               />
             </div>
-
             <div class="checklist-item">
               <label for="tenant-segments"
                 >Segmentos de mercado dos inquilinos</label
-              >
-              <textarea
+              ><textarea
                 id="tenant-segments"
                 placeholder="Liste os segmentos de mercado..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="largest-sector"
                 >% da carteira alocada no maior setor</label
-              >
-              <input
+              ><input
                 type="text"
                 id="largest-sector"
                 placeholder="Percentual do maior setor"
               />
             </div>
-
             <div class="checklist-item">
               <label for="tenant-concentration"
                 >Concentração em algum inquilino? Qual e qual %?</label
-              >
-              <textarea
+              ><textarea
                 id="tenant-concentration"
                 placeholder="Descreva a concentração..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="tenant-financials"
                 >Situação financeira do inquilino com maior concentração</label
-              >
-              <textarea
+              ><textarea
                 id="tenant-financials"
                 placeholder="Descreva a situação financeira..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label>Existe inquilino em período de carência?</label>
               <div class="checkbox-group">
@@ -1291,8 +1052,7 @@
                     id="grace-period-yes"
                     name="grace-period"
                     value="sim"
-                  />
-                  <label for="grace-period-yes">Sim</label>
+                  /><label for="grace-period-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1300,38 +1060,173 @@
                     id="grace-period-no"
                     name="grace-period"
                     value="nao"
-                  />
-                  <label for="grace-period-no">Não</label>
+                  /><label for="grace-period-no">Não</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre a estrutura do fundo..."
               ></textarea>
             </div>
           </div>
 
-          <!-- 🔎 GOVERNANÇA E GESTÃO -->
+          <div class="section">
+            <div class="section-title">
+              <span>🏦</span>
+              <h2>Estrutura do Fundo</h2>
+            </div>
+            <div class="checklist-item">
+              <label
+                >Qual a estratégia/objetivo do fundo? (renda, ganho de capital,
+                reciclagem de portfólio, etc.)</label
+              ><textarea
+                id="strategy"
+                placeholder="Descreva a estratégia do fundo..."
+              ></textarea>
+            </div>
+            <div class="checklist-item">
+              <label>Segmento principal do fundo?</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="logistics" name="segment" /><label
+                    for="logistics"
+                    >📦 Logística</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="offices" name="segment" /><label
+                    for="offices"
+                    >🏢 Lajes</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="shoppings" name="segment" /><label
+                    for="shoppings"
+                    >🛍️ Shoppings</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="papel" name="segment" /><label
+                    for="papel"
+                    >📄 Papel</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="other-segment"
+                    name="segment"
+                  /><label for="other-segment">📍 Outros</label>
+                </div>
+              </div>
+              <input
+                type="text"
+                id="other-segment-text"
+                placeholder="Especifique outros segmentos"
+                style="margin-top: 10px; display: none"
+              />
+            </div>
+            <div class="checklist-item">
+              <label>Tipo de gestão:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="active-management"
+                    name="management-type"
+                    value="ativa"
+                  /><label for="active-management">Ativa</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="passive-management"
+                    name="management-type"
+                    value="passiva"
+                  /><label for="passive-management">Passiva</label>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <label>Comparação com IFIX:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="above-ifix"
+                    name="ifix-comparison"
+                    value="acima"
+                  /><label for="above-ifix">📈 Acima</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="below-ifix"
+                    name="ifix-comparison"
+                    value="abaixo"
+                  /><label for="below-ifix">📉 Abaixo</label>
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="radio"
+                    id="with-ifix"
+                    name="ifix-comparison"
+                    value="junto"
+                  /><label for="with-ifix">➡️ Junto</label>
+                </div>
+              </div>
+            </div>
+            <div class="checklist-item">
+              <label for="admin-fee">Taxa de administração (%)</label
+              ><input
+                type="text"
+                id="admin-fee"
+                placeholder="Taxa de administração em %"
+              />
+            </div>
+            <div class="checklist-item">
+              <label for="performance-fee">Taxa de performance (%)</label
+              ><input
+                type="text"
+                id="performance-fee"
+                placeholder="Taxa de performance em %"
+              />
+            </div>
+            <div class="checklist-item">
+              <label for="ffo-vs-dy">Valor do FFO vs DY</label
+              ><input
+                type="text"
+                id="ffo-vs-dy"
+                placeholder="Comparação entre FFO e DY"
+              />
+            </div>
+            <div class="checklist-item">
+              <label for="extraordinary-revenue"
+                >Se o FFO está abaixo do DY, fundo tem gerado receita
+                extraordinária? Tem bastante saldo acumulado?</label
+              ><textarea
+                id="extraordinary-revenue"
+                placeholder="Descreva a situação da receita extraordinária e saldo acumulado..."
+              ></textarea>
+            </div>
+          </div>
+
           <div class="section">
             <div class="section-title">
               <span>🔎</span>
               <h2>Governança e Gestão</h2>
             </div>
-
             <div class="checklist-item">
               <label for="manager-history"
                 >Quem é o gestor e qual o histórico dela no mercado?</label
-              >
-              <textarea
+              ><textarea
                 id="manager-history"
                 placeholder="Descreva o gestor e seu histórico..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label>Existe troca de gestor ou equipe recente?</label>
               <div class="checkbox-group">
@@ -1341,8 +1236,7 @@
                     id="manager-change-yes"
                     name="manager-change"
                     value="sim"
-                  />
-                  <label for="manager-change-yes">Sim</label>
+                  /><label for="manager-change-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1350,22 +1244,18 @@
                     id="manager-change-no"
                     name="manager-change"
                     value="nao"
-                  />
-                  <label for="manager-change-no">Não</label>
+                  /><label for="manager-change-no">Não</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
               <label for="manager-change-details"
                 >Se houve troca, detalhe as circunstâncias:</label
-              >
-              <textarea
+              ><textarea
                 id="manager-change-details"
                 placeholder="Detalhe a troca de gestão..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label
                 >O fundo tem conflitos de interest (gestor/administrador ligados
@@ -1378,8 +1268,7 @@
                     id="conflicts-yes"
                     name="conflicts"
                     value="sim"
-                  />
-                  <label for="conflicts-yes">Sim</label>
+                  /><label for="conflicts-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1387,22 +1276,18 @@
                     id="conflicts-no"
                     name="conflicts"
                     value="nao"
-                  />
-                  <label for="conflicts-no">Não</label>
+                  /><label for="conflicts-no">Não</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
               <label for="conflicts-details"
                 >Se houver conflitos, detalhe:</label
-              >
-              <textarea
+              ><textarea
                 id="conflicts-details"
                 placeholder="Descreva os conflitos de interesse..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label>Grau de transparência dos relatórios:</label>
               <div class="checkbox-group">
@@ -1412,8 +1297,7 @@
                     id="transparency-high"
                     name="transparency"
                     value="alta"
-                  />
-                  <label for="transparency-high"
+                  /><label for="transparency-high"
                     >Alta (claros and detalhados)</label
                   >
                 </div>
@@ -1423,8 +1307,7 @@
                     id="transparency-medium"
                     name="transparency"
                     value="media"
-                  />
-                  <label for="transparency-medium">Média</label>
+                  /><label for="transparency-medium">Média</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1432,55 +1315,47 @@
                     id="transparency-low"
                     name="transparency"
                     value="baixa"
-                  />
-                  <label for="transparency-low">Baixa (superficiais)</label>
+                  /><label for="transparency-low">Baixa (superficiais)</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre governança e gestão..."
               ></textarea>
             </div>
           </div>
-
-          <!-- VACÂNCIA E RECEITA -->
           <div class="section">
             <div class="section-title">
               <span>📊</span>
               <h2>Vacância e Receita</h2>
             </div>
-
             <div class="checklist-item">
-              <label for="financial-vacancy">Vacância financeira (%)</label>
-              <input
+              <label for="financial-vacancy">Vacância financeira (%)</label
+              ><input
                 type="text"
                 id="financial-vacancy"
                 placeholder="Percentual de vacância financeira"
               />
             </div>
-
             <div class="checklist-item">
-              <label for="physical-vacancy">Vacância física (%)</label>
-              <input
+              <label for="physical-vacancy">Vacância física (%)</label
+              ><input
                 type="text"
                 id="physical-vacancy"
                 placeholder="Percentual de vacância física"
               />
             </div>
-
             <div class="checklist-item">
-              <label for="default-rate">Inadimplência (%)</label>
-              <input
+              <label for="default-rate">Inadimplência (%)</label
+              ><input
                 type="text"
                 id="default-rate"
                 placeholder="Percentual de inadimplência"
               />
             </div>
-
             <div class="checklist-item">
               <label>Resultado superior ou inferior ao mês anterior?</label>
               <div class="checkbox-group">
@@ -1490,8 +1365,7 @@
                     id="result-higher"
                     name="result-comparison"
                     value="superior"
-                  />
-                  <label for="result-higher">Superior</label>
+                  /><label for="result-higher">Superior</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1499,8 +1373,7 @@
                     id="result-lower"
                     name="result-comparison"
                     value="inferior"
-                  />
-                  <label for="result-lower">Inferior</label>
+                  /><label for="result-lower">Inferior</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1508,80 +1381,66 @@
                     id="result-same"
                     name="result-comparison"
                     value="igual"
-                  />
-                  <label for="result-same">Igual</label>
+                  /><label for="result-same">Igual</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label for="result-reason">Se diferente, qual o motivo?</label>
-              <textarea
+              <label for="result-reason">Se diferente, qual o motivo?</label
+              ><textarea
                 id="result-reason"
                 placeholder="Explique o motivo da variação..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre vacância and receita..."
               ></textarea>
             </div>
           </div>
-
-          <!-- 📈 DESEMPENHO COMPARATIVO -->
           <div class="section">
             <div class="section-title">
               <span>📈</span>
               <h2>Desempenho Comparativo</h2>
             </div>
-
             <div class="checklist-item">
               <label for="vpc-evolution"
                 >Evolução do valor patrimonial por cota (VPC) nos últimos 12
                 meses</label
-              >
-              <textarea
+              ><textarea
                 id="vpc-evolution"
                 placeholder="Descreva a evolução do VPC..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="current-vs-avg"
                 >Cotação atual vs média dos últimos 12 meses</label
-              >
-              <input
+              ><input
                 type="text"
                 id="current-vs-avg"
                 placeholder="Ex: 5% acima, 10% abaixo"
               />
             </div>
-
             <div class="checklist-item">
               <label for="yield-comparison"
                 >Rendimento atual vs média histórica (em %)</label
-              >
-              <input
+              ><input
                 type="text"
                 id="yield-comparison"
                 placeholder="Ex: 6.5% vs 7.2%"
               />
             </div>
-
             <div class="checklist-item">
               <label for="sector-comparison"
                 >DY vs média do setor (logística, lajes, shopping, etc.)</label
-              >
-              <input
+              ><input
                 type="text"
                 id="sector-comparison"
                 placeholder="Ex: 0.5% acima da média de shoppings"
               />
             </div>
-
             <div class="checklist-item">
               <label>Classificação do fundo:</label>
               <div class="checkbox-group">
@@ -1590,44 +1449,37 @@
                     type="checkbox"
                     id="risk-fund"
                     name="fund-classification"
-                  />
-                  <label for="risk-fund">⚠️ Risco</label>
+                  /><label for="risk-fund">⚠️ Risco</label>
                 </div>
                 <div class="checkbox-item">
                   <input
                     type="checkbox"
                     id="growth-fund"
                     name="fund-classification"
-                  />
-                  <label for="growth-fund">📈 Crescimento</label>
+                  /><label for="growth-fund">📈 Crescimento</label>
                 </div>
                 <div class="checkbox-item">
                   <input
                     type="checkbox"
                     id="anchor-fund"
                     name="fund-classification"
-                  />
-                  <label for="anchor-fund">⚓ Ancoragem</label>
+                  /><label for="anchor-fund">⚓ Ancoragem</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre desempenho comparativo..."
               ></textarea>
             </div>
           </div>
-
-          <!-- ALAVANCAGEM E ESTRUTURA DE CAPITAL -->
           <div class="section">
             <div class="section-title">
               <span>💰</span>
               <h2>Alavancagem e Estrutura de Capital</h2>
             </div>
-
             <div class="checklist-item">
               <label>Existe alavancagem?</label>
               <div class="checkbox-group">
@@ -1637,8 +1489,7 @@
                     id="leverage-yes"
                     name="leverage"
                     value="sim"
-                  />
-                  <label for="leverage-yes">Sim</label>
+                  /><label for="leverage-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1646,47 +1497,39 @@
                     id="leverage-no"
                     name="leverage"
                     value="nao"
-                  />
-                  <label for="leverage-no">Não</label>
+                  /><label for="leverage-no">Não</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label for="leverage-rate">Taxa média da alavancagem (%)</label>
-              <input
+              <label for="leverage-rate">Taxa média da alavancagem (%)</label
+              ><input
                 type="text"
                 id="leverage-rate"
                 placeholder="Taxa média de juros"
               />
             </div>
-
             <div class="checklist-item">
               <label for="amortization-plan"
                 >Plano de amortização detalhado</label
-              >
-              <textarea
+              ><textarea
                 id="amortization-plan"
                 placeholder="Descreva o plano de amortização..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre alavancagem..."
               ></textarea>
             </div>
           </div>
-
-          <!-- LIQUIDEZ E MERCADO -->
           <div class="section">
             <div class="section-title">
               <span>📈</span>
               <h2>Liquidez e Mercado</h2>
             </div>
-
             <div class="checklist-item">
               <label>Liquidez: estabilizada, crescente ou decrescente?</label>
               <div class="checkbox-group">
@@ -1696,8 +1539,7 @@
                     id="liquidity-stable"
                     name="liquidity"
                     value="estavel"
-                  />
-                  <label for="liquidity-stable">Estabilizada</label>
+                  /><label for="liquidity-stable">Estabilizada</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1705,8 +1547,7 @@
                     id="liquidity-increasing"
                     name="liquidity"
                     value="crescente"
-                  />
-                  <label for="liquidity-increasing">Crescente</label>
+                  /><label for="liquidity-increasing">Crescente</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1714,39 +1555,32 @@
                     id="liquidity-decreasing"
                     name="liquidity"
                     value="decrescente"
-                  />
-                  <label for="liquidity-decreasing">Decrescente</label>
+                  /><label for="liquidity-decreasing">Decrescente</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
               <label for="important-notices"
                 >Comunicados importantes no período (aquisições, vendas, novos
                 contratos, problemas com inquilinos)</label
-              >
-              <textarea
+              ><textarea
                 id="important-notices"
                 placeholder="Liste os comunicados importantes..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre liquidez e mercado..."
               ></textarea>
             </div>
           </div>
-
-          <!-- AVALIAÇÃO DE RISCO E OPORTUNIDADE -->
           <div class="section">
             <div class="section-title">
               <span>⚖️</span>
               <h2>Avaliação de Risco e Oportunidade</h2>
             </div>
-
             <div class="checklist-item">
               <label>Risco: baixo / médio / alto?</label>
               <div class="checkbox-group">
@@ -1756,8 +1590,7 @@
                     id="risk-low"
                     name="risk-level"
                     value="baixo"
-                  />
-                  <label for="risk-low">Baixo</label>
+                  /><label for="risk-low">Baixo</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1765,8 +1598,7 @@
                     id="risk-medium"
                     name="risk-level"
                     value="medio"
-                  />
-                  <label for="risk-medium">Médio</label>
+                  /><label for="risk-medium">Médio</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1774,34 +1606,28 @@
                     id="risk-high"
                     name="risk-level"
                     value="alto"
-                  />
-                  <label for="risk-high">Alto</label>
+                  /><label for="risk-high">Alto</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
               <label for="main-risks"
                 >Principais riscos elencados (ex.: concentração, vacância,
                 endividamento, setor específico)</label
-              >
-              <textarea
+              ><textarea
                 id="main-risks"
                 placeholder="Liste os principais riscos..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="opportunities"
                 >Existem oportunidades claras? (ex.: nova ancoragem, desconto de
                 mercado, potencial de crescimento)</label
-              >
-              <textarea
+              ><textarea
                 id="opportunities"
                 placeholder="Descreva as oportunidades..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label>O fundo apresenta ancoragem sólida?</label>
               <div class="checkbox-group">
@@ -1811,8 +1637,7 @@
                     id="anchor-yes"
                     name="anchor"
                     value="sim"
-                  />
-                  <label for="anchor-yes">Sim</label>
+                  /><label for="anchor-yes">Sim</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1820,8 +1645,7 @@
                     id="anchor-no"
                     name="anchor"
                     value="nao"
-                  />
-                  <label for="anchor-no">Não</label>
+                  /><label for="anchor-no">Não</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1829,77 +1653,64 @@
                     id="anchor-partial"
                     name="anchor"
                     value="parcial"
-                  />
-                  <label for="anchor-partial">Parcialmente</label>
+                  /><label for="anchor-partial">Parcialmente</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Observações:</label>
-              <textarea
+              <label>Observações:</label
+              ><textarea
                 class="observations"
                 placeholder="Anotações sobre risco e oportunidade..."
               ></textarea>
             </div>
           </div>
-
-          <!-- CONCLUSÃO -->
           <div class="section">
             <div class="section-title">
               <span>✅</span>
               <h2>Conclusão da Análise</h2>
             </div>
-
             <div class="checklist-item">
-              <label for="positive-points">Pontos positivos:</label>
-              <textarea
+              <label for="positive-points">Pontos positivos:</label
+              ><textarea
                 id="positive-points"
                 placeholder="Liste os pontos positivos..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
-              <label for="negative-points">Pontos negativos:</label>
-              <textarea
+              <label for="negative-points">Pontos negativos:</label
+              ><textarea
                 id="negative-points"
                 placeholder="Liste os pontos negativos..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="cash-burn"
                 >Fundo está queimando caixa? Se sim, por quê?</label
-              >
-              <textarea
+              ><textarea
                 id="cash-burn"
                 placeholder="Descreva a situação de caixa..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label for="balance-sustainability"
                 >O saldo acumulado sustentará a distribution por quanto
                 tempo?</label
-              >
-              <input
+              ><input
                 type="text"
                 id="balance-sustainability"
                 placeholder="Ex: 12 meses"
               />
             </div>
-
             <div class="checklist-item">
               <label for="discount"
                 >O fundo está descontado? Se sim, esse desconto é
                 justificável?</label
-              >
-              <textarea
+              ><textarea
                 id="discount"
                 placeholder="Analise o desconto..."
               ></textarea>
             </div>
-
             <div class="checklist-item">
               <label>Expectativa para próximos resultados:</label>
               <div class="checkbox-group">
@@ -1909,8 +1720,7 @@
                     id="expect-improve"
                     name="expectation"
                     value="melhora"
-                  />
-                  <label for="expect-improve">Melhora</label>
+                  /><label for="expect-improve">Melhora</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1918,8 +1728,7 @@
                     id="expect-stable"
                     name="expectation"
                     value="estabilidade"
-                  />
-                  <label for="expect-stable">Estabilidade</label>
+                  /><label for="expect-stable">Estabilidade</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1927,12 +1736,10 @@
                     id="expect-worse"
                     name="expectation"
                     value="piora"
-                  />
-                  <label for="expect-worse">Piora</label>
+                  /><label for="expect-worse">Piora</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
               <label>Recomendação:</label>
               <div class="checkbox-group">
@@ -1942,8 +1749,7 @@
                     id="recommend-follow"
                     name="recommendation"
                     value="acompanhar"
-                  />
-                  <label for="recommend-follow">✔️ Acompanhar</label>
+                  /><label for="recommend-follow">✔️ Acompanhar</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1951,8 +1757,7 @@
                     id="recommend-increase"
                     name="recommendation"
                     value="aumentar"
-                  />
-                  <label for="recommend-increase">✔️ Aumentar posição</label>
+                  /><label for="recommend-increase">✔️ Aumentar posição</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1960,8 +1765,7 @@
                     id="recommend-reduce"
                     name="recommendation"
                     value="reduzir"
-                  />
-                  <label for="recommend-reduce">✔️ Reduzir exposição</label>
+                  /><label for="recommend-reduce">✔️ Reduzir exposição</label>
                 </div>
                 <div class="checkbox-item">
                   <input
@@ -1969,15 +1773,13 @@
                     id="recommend-avoid"
                     name="recommendation"
                     value="evitar"
-                  />
-                  <label for="recommend-avoid">✔️ Evitar</label>
+                  /><label for="recommend-avoid">✔️ Evitar</label>
                 </div>
               </div>
             </div>
-
             <div class="checklist-item">
-              <label>Observações finais:</label>
-              <textarea
+              <label>Observações finais:</label
+              ><textarea
                 class="observations"
                 placeholder="Considerações finais..."
               ></textarea>
@@ -1986,13 +1788,13 @@
 
           <div class="btn-group">
             <button type="button" class="btn-save" id="save-btn">
-              <i class="fas fa-save"></i> Salvar Análise
+              <i class="fas fa-check-circle"></i> Salvar Análise Final
+            </button>
+            <button type="button" class="btn-warning" id="save-draft-btn">
+              <i class="fas fa-save"></i> Salvar Rascunho
             </button>
             <button type="reset" class="btn-reset">
               <i class="fas fa-trash"></i> Limpar Formulário
-            </button>
-            <button type="button" class="btn-print" id="print-btn">
-              <i class="fas fa-print"></i> Imprimir/Exportar
             </button>
           </div>
         </form>
@@ -2001,7 +1803,6 @@
       <div class="tab-content" id="reports-tab">
         <h2><i class="fas fa-file-alt"></i> Relatórios Salvos</h2>
         <p>Encontre e gerencie suas análises salvas</p>
-
         <div class="search-box">
           <input
             type="text"
@@ -2012,24 +1813,18 @@
             <i class="fas fa-search"></i> Pesquisar
           </button>
         </div>
-
         <div id="reports-message"></div>
-
         <div class="storage-info">
           <p>Relatórios salvos: <span id="reports-count">0</span></p>
           <button class="btn-reset" id="clear-all-btn">
             <i class="fas fa-trash"></i> Limpar Todos os Relatórios
           </button>
         </div>
-
-        <div class="reports-list" id="reports-list">
-          <!-- Os relatórios serão listados aqui via JavaScript -->
-        </div>
+        <div class="reports-list" id="reports-list"></div>
       </div>
 
       <div class="tab-content" id="help-tab">
         <h2><i class="fas fa-question-circle"></i> Ajuda e Informações</h2>
-
         <div class="section">
           <h3>Onde os relatórios são salvos?</h3>
           <p>
@@ -2041,7 +1836,6 @@
             dispositivo após fazer login.
           </p>
         </div>
-
         <div class="section">
           <h3>Como pesquisar relatórios?</h3>
           <p>
@@ -2053,19 +1847,17 @@
             individualmente usando os botões ao lado de cada relatório.
           </p>
         </div>
-
         <div class="section">
           <h3>Como imprimir ou exportar?</h3>
           <p>
-            Use o botão "Imprimir/Exportar" para gerar uma versão para impressão
-            da análise atual.
+            Use o botão "Imprimir/Exportar" na aba de Nova Análise para gerar
+            uma versão para impressão do formulário atual.
           </p>
           <p>
             Na visualização de impressão, você pode salvar como PDF usando a
             função "Salvar como PDF" do seu navegador.
           </p>
         </div>
-
         <div class="section">
           <h3>Os dados serão perdidos se eu limpar o navegador?</h3>
           <p>
@@ -2077,7 +1869,6 @@
       </div>
     </div>
 
-    <!-- Container do botão flutuante de salvar -->
     <div class="floating-save-container" id="floating-save-container">
       <div class="progress-indicator">
         <span>Preenchimento: </span>
@@ -2091,9 +1882,24 @@
       </button>
     </div>
 
+    <div id="report-modal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2 id="modal-title">Detalhes do Relatório</h2>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+          <button id="modal-print-btn" class="btn-print">
+            <i class="fas fa-print"></i> Imprimir Relatório
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Configuração do Firebase
+        // --- CONSTANTES ---
         const firebaseConfig = {
           apiKey: "AIzaSyDCplzRR5imGdGCpr6PnKEwo2rs5qPrV6c",
           authDomain: "rianalise.firebaseapp.com",
@@ -2104,28 +1910,21 @@
           measurementId: "G-ZQ2178VY8N",
         };
 
-        // Inicializar Firebase
         let db = null;
         let auth = null;
         let isFirebaseInitialized = false;
 
         try {
-          // Verificar se o Firebase já foi inicializado
           if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
           }
-
           db = firebase.firestore();
           auth = firebase.auth();
           isFirebaseInitialized = true;
-
-          // Atualizar status
           document.getElementById("firebase-status").textContent =
             "Banco de dados conectado";
           document.getElementById("firebase-status").className =
             "firebase-status status-connected";
-
-          console.log("Firebase inicializado com sucesso");
         } catch (error) {
           console.error("Erro ao inicializar Firebase:", error);
           document.getElementById("firebase-status").textContent =
@@ -2134,17 +1933,16 @@
             "firebase-status status-disconnected";
         }
 
-        // Elementos da interface
         const tabs = document.querySelectorAll(".tab");
         const tabContents = document.querySelectorAll(".tab-content");
         const otherSegmentCheckbox = document.getElementById("other-segment");
         const otherSegmentText = document.getElementById("other-segment-text");
         const saveBtn = document.getElementById("save-btn");
+        const saveDraftBtn = document.getElementById("save-draft-btn");
         const floatingSaveBtn = document.getElementById("floating-save-btn");
         const floatingSaveContainer = document.getElementById(
           "floating-save-container"
         );
-        const printBtn = document.getElementById("print-btn");
         const searchBtn = document.getElementById("search-btn");
         const searchInput = document.getElementById("search-input");
         const clearAllBtn = document.getElementById("clear-all-btn");
@@ -2160,11 +1958,56 @@
         const progressPercentage = document.getElementById(
           "progress-percentage"
         );
+        const reportModal = document.getElementById("report-modal");
+        const modalCloseBtn = document.querySelector(".modal-close-btn");
+        const modalPrintBtn = document.getElementById("modal-print-btn");
+        const toggleAnalysisBtn = document.getElementById(
+          "toggle-analysis-btn"
+        );
+        const paperSection = document.getElementById("paper-section");
+        const tijoloSection = document.getElementById("tijolo-section");
 
-        // Estado da aplicação
+        let currentAnalysisState = "none";
         let currentUser = null;
 
-        // Monitorar estado de autenticação se o Firebase foi inicializado
+        // --- LÓGICA DE EVENTOS ---
+
+        saveBtn.addEventListener("click", () => saveFormData("finalizado"));
+        floatingSaveBtn.addEventListener("click", () =>
+          saveFormData("finalizado")
+        );
+        saveDraftBtn.addEventListener("click", () => saveFormData("rascunho"));
+
+        toggleAnalysisBtn.addEventListener("click", () => {
+          if (
+            currentAnalysisState === "none" ||
+            currentAnalysisState === "tijolo"
+          ) {
+            paperSection.style.display = "block";
+            tijoloSection.style.display = "none";
+            toggleAnalysisBtn.innerHTML =
+              '<i class="fas fa-exchange-alt"></i> Alternar para Análise de Tijolo';
+            currentAnalysisState = "paper";
+          } else {
+            paperSection.style.display = "none";
+            tijoloSection.style.display = "block";
+            toggleAnalysisBtn.innerHTML =
+              '<i class="fas fa-exchange-alt"></i> Alternar para Análise de Papel';
+            currentAnalysisState = "tijolo";
+          }
+        });
+
+        document
+          .getElementById("checklist-form")
+          .addEventListener("reset", () => {
+            paperSection.style.display = "none";
+            tijoloSection.style.display = "none";
+            toggleAnalysisBtn.innerHTML =
+              '<i class="fas fa-exchange-alt"></i> Ver Análise Específica (Papel/Tijolo)';
+            currentAnalysisState = "none";
+            setTimeout(calculateFormProgress, 100);
+          });
+
         if (isFirebaseInitialized) {
           auth.onAuthStateChanged((user) => {
             if (user) {
@@ -2173,9 +2016,6 @@
               userInfo.style.display = "block";
               loginBtn.style.display = "none";
               logoutBtn.style.display = "block";
-              console.log("Usuário logado:", user.email);
-
-              // Atualizar lista de relatórios se estiver na aba correta
               if (
                 document
                   .querySelector(".tab.active")
@@ -2188,9 +2028,6 @@
               userInfo.style.display = "none";
               loginBtn.style.display = "block";
               logoutBtn.style.display = "none";
-              console.log("Usuário não logado");
-
-              // Limpar lista de relatórios se não estiver logado
               if (
                 document
                   .querySelector(".tab.active")
@@ -2201,13 +2038,8 @@
               }
             }
           });
-        } else {
-          firebaseStatus.textContent =
-            "Firebase não inicializado. Verifique a configuração.";
-          firebaseStatus.className = "firebase-status status-disconnected";
         }
 
-        // Login com Google
         loginBtn.addEventListener("click", () => {
           if (!isFirebaseInitialized) {
             alert(
@@ -2215,77 +2047,57 @@
             );
             return;
           }
-
           const provider = new firebase.auth.GoogleAuthProvider();
-          auth
-            .signInWithPopup(provider)
-            .then((result) => {
-              console.log("Login bem-sucedido:", result.user);
-            })
-            .catch((error) => {
-              console.error("Erro no login:", error);
-              if (error.code === "auth/unauthorized-domain") {
-                alert(
-                  "Erro: Domínio não autorizado. Você precisa configurar seu domínio no Console do Firebase. Veja as instruções na seção de configuração."
-                );
-              } else {
-                alert("Erro ao fazer login: " + error.message);
-              }
-            });
+          auth.signInWithPopup(provider).catch((error) => {
+            console.error("Erro no login:", error);
+            alert("Erro ao fazer login: " + error.message);
+          });
         });
 
-        // Logout
         logoutBtn.addEventListener("click", () => {
           if (isFirebaseInitialized) {
-            auth
-              .signOut()
-              .then(() => {
-                console.log("Logout bem-sucedido");
-              })
-              .catch((error) => {
-                console.error("Erro no logout:", error);
-              });
+            auth.signOut();
           }
         });
 
-        // Sistema de abas
         tabs.forEach((tab) => {
           tab.addEventListener("click", () => {
             const tabId = tab.getAttribute("data-tab");
-
-            // Ativar aba clicada
             tabs.forEach((t) => t.classList.remove("active"));
             tab.classList.add("active");
-
-            // Mostrar conteúdo correspondente
             tabContents.forEach((content) => {
               content.classList.remove("active");
               if (content.id === `${tabId}-tab`) {
                 content.classList.add("active");
               }
             });
-
-            // Mostrar/ocultar botão flutuante baseado na aba ativa
             if (tabId === "form") {
               floatingSaveContainer.style.display = "flex";
               calculateFormProgress();
             } else {
               floatingSaveContainer.style.display = "none";
             }
-
-            // Se for a aba de relatórios, atualizar a lista
             if (tabId === "reports") {
               updateReportsList();
             }
           });
         });
 
-        // Mostrar campo de texto para "Outros" segmentos quando selecionado
         otherSegmentCheckbox.addEventListener("change", function () {
           otherSegmentText.style.display = this.checked ? "block" : "none";
         });
 
-        // Preencher automaticamente a data atual no campo de data
+        modalCloseBtn.addEventListener("click", () => {
+          reportModal.style.display = "none";
+        });
+        modalPrintBtn.addEventListener("click", () => {
+          document.body.classList.add("modal-print-area");
+          reportModal.classList.add("modal-print-area");
+          window.print();
+          document.body.classList.remove("modal-print-area");
+          reportModal.classList.remove("modal-print-area");
+        });
+
         const today = new Date();
         const month = today.getMonth() + 1;
         const year = today.getFullYear();
@@ -2293,82 +2105,29 @@
           .toString()
           .padStart(2, "0")}/${year}`;
 
-        // Calcular progresso do formulário
-        function calculateFormProgress() {
-          const inputs = document.querySelectorAll("input, textarea, select");
-          let filledCount = 0;
-
-          inputs.forEach((input) => {
-            if (
-              input.value &&
-              input.type !== "radio" &&
-              input.type !== "checkbox"
-            ) {
-              filledCount++;
-            }
-          });
-
-          // Verificar radios e checkboxes
-          const radioGroups = {};
-          document
-            .querySelectorAll('input[type="radio"]:checked')
-            .forEach((radio) => {
-              radioGroups[radio.name] = true;
-            });
-          filledCount += Object.keys(radioGroups).length;
-
-          document
-            .querySelectorAll('input[type="checkbox"]:checked')
-            .forEach((checkbox) => {
-              filledCount++;
-            });
-
-          const progress = Math.min(
-            100,
-            Math.round((filledCount / inputs.length) * 100)
-          );
-          progressFill.style.width = `${progress}%`;
-          progressPercentage.textContent = `${progress}%`;
-        }
-
-        // Adicionar event listeners para campos do formulário
         document
-          .querySelectorAll("input, textarea, select")
+          .querySelectorAll(
+            "#checklist-form input, #checklist-form textarea, #checklist-form select"
+          )
           .forEach((input) => {
             input.addEventListener("input", calculateFormProgress);
             input.addEventListener("change", calculateFormProgress);
           });
-
-        // Calcular progresso inicial
         calculateFormProgress();
 
-        // Salvar dados no Firebase - Botão original
-        saveBtn.addEventListener("click", saveFormData);
+        // --- FUNÇÕES ---
 
-        // Salvar dados no Firebase - Botão flutuante
-        floatingSaveBtn.addEventListener("click", saveFormData);
-
-        // Função para salvar os dados do formulário
-        function saveFormData() {
-          if (!isFirebaseInitialized) {
-            alert(
-              "Firebase não está inicializado. Verifique sua conexão e tente novamente."
-            );
+        function saveFormData(status = "finalizado") {
+          if (!isFirebaseInitialized || !currentUser) {
+            alert("Faça login para salvar suas análises.");
             return;
           }
-
-          if (!currentUser) {
-            alert("Faça login para salvar suas análises na nuvem.");
-            return;
-          }
-
           const fundName = document.getElementById("fund-name").value;
           if (!fundName) {
             alert("Por favor, informe o nome do fundo antes de salvar.");
             return;
           }
 
-          // Coletar todos os dados do formulário (incluindo os novos campos)
           const formData = {
             fundName: fundName,
             analysisDate: document.getElementById("analysis-date").value,
@@ -2391,14 +2150,12 @@
             averageContractTerm: document.getElementById(
               "average-contract-term"
             ).value,
-            // Novos campos adicionados
             adminFee: document.getElementById("admin-fee").value,
             performanceFee: document.getElementById("performance-fee").value,
             ffoVsDy: document.getElementById("ffo-vs-dy").value,
             extraordinaryRevenue: document.getElementById(
               "extraordinary-revenue"
             ).value,
-            // Campos da nova seção de fundos de papel
             allocationCriCra:
               document.getElementById("allocation-cri-cra").value,
             allocationFiisPaper: document.getElementById(
@@ -2422,7 +2179,6 @@
             mainDebtorFinancials: document.getElementById(
               "main-debtor-financials"
             ).value,
-            // Fim dos novos campos
             expiringContracts:
               document.getElementById("expiring-contracts").value,
             activeTenants: document.getElementById("active-tenants").value,
@@ -2474,10 +2230,13 @@
             discount: document.getElementById("discount").value,
             expectation: getSelectedRadio("expectation"),
             recommendation: getSelectedRadio("recommendation"),
+            observations: Array.from(document.querySelectorAll(".observations"))
+              .map((t) => t.value)
+              .filter((v) => v),
+            status: status,
             timestamp: new Date().toISOString(),
           };
 
-          // Salvar no Firebase
           const firebaseData = {
             ...formData,
             userId: currentUser.uid,
@@ -2485,102 +2244,69 @@
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
           };
 
-          // Mostrar indicador de carregamento
-          const originalText = saveBtn.innerHTML;
+          const originalTextSave = saveBtn.innerHTML;
+          const originalTextDraft = saveDraftBtn.innerHTML;
           const floatingOriginalText = floatingSaveBtn.innerHTML;
+
           saveBtn.innerHTML = '<span class="loading"></span> Salvando...';
+          saveDraftBtn.innerHTML = '<span class="loading"></span> Salvando...';
           floatingSaveBtn.innerHTML =
             '<span class="loading"></span> Salvando...';
           saveBtn.disabled = true;
+          saveDraftBtn.disabled = true;
           floatingSaveBtn.disabled = true;
 
           db.collection("analises")
             .add(firebaseData)
             .then((docRef) => {
-              console.log("Análise salva no Firebase com ID: ", docRef.id);
-              saveBtn.innerHTML = originalText;
-              floatingSaveBtn.innerHTML = floatingOriginalText;
-              saveBtn.disabled = false;
-              floatingSaveBtn.disabled = false;
-              alert(`Análise de ${fundName} salva com sucesso na nuvem!`);
+              const message =
+                status === "rascunho"
+                  ? `Rascunho de ${fundName} salvo com sucesso!`
+                  : `Análise de ${fundName} salva com sucesso!`;
+              alert(message);
             })
             .catch((error) => {
-              console.error("Erro ao salvar no Firebase: ", error);
-              saveBtn.innerHTML = originalText;
+              console.error("Erro ao salvar: ", error);
+              alert(`Erro ao salvar: ${error.message}`);
+            })
+            .finally(() => {
+              saveBtn.innerHTML = originalTextSave;
+              saveDraftBtn.innerHTML = originalTextDraft;
               floatingSaveBtn.innerHTML = floatingOriginalText;
               saveBtn.disabled = false;
+              saveDraftBtn.disabled = false;
               floatingSaveBtn.disabled = false;
-              alert(`Erro ao salvar na nuvem: ${error.message}`);
             });
         }
 
-        // Imprimir/exportar formulário
-        printBtn.addEventListener("click", function () {
-          window.print();
-        });
-
-        // Pesquisar relatórios
-        searchBtn.addEventListener("click", function () {
-          updateReportsList(searchInput.value);
-        });
-
-        // Limpar todos os relatórios
-        clearAllBtn.addEventListener("click", function () {
-          if (
-            confirm(
-              "Tem certeza que deseja excluir TODOS os relatórios salvos? Esta ação não pode ser desfeita."
-            )
-          ) {
-            // Esta função precisaria ser implementada para deletar todos os documentos do usuário
-            alert(
-              "Funcionalidade de limpar todos os relatórios ainda não implementada."
-            );
-          }
-        });
-
-        // Função para atualizar a lista de relatórios do Firebase
         async function updateReportsList(searchTerm = "") {
           reportsList.innerHTML =
-            '<p><span class="loading"></span> Carregando relatórios...</p>';
-          reportsMessage.innerHTML = "";
+            '<p><span class="loading"></span> Carregando...</p>';
 
-          // Se não estiver logado, não buscar relatórios
           if (!currentUser) {
             reportsList.innerHTML =
-              "<p>Faça login para ver seus relatórios salvos na nuvem.</p>";
+              "<p>Faça login para ver seus relatórios.</p>";
             return;
           }
-
-          if (!isFirebaseInitialized) {
-            reportsList.innerHTML =
-              "<p>Firebase não inicializado. Não é possível carregar relatórios.</p>";
-            return;
-          }
-
-          let reports = [];
 
           try {
             let query = db
               .collection("analises")
               .where("userId", "==", currentUser.uid)
               .orderBy("lastUpdated", "desc");
-
             const querySnapshot = await query.get();
 
             if (querySnapshot.empty) {
-              reportsList.innerHTML =
-                "<p>Nenhum relatório encontrado na nuvem.</p>";
-              reportsMessage.innerHTML =
-                '<div class="success-message">Nenhum relatório salvo ainda. Crie uma análise na aba "Nova Análise" para começar.</div>';
+              reportsList.innerHTML = "<p>Nenhum relatório encontrado.</p>";
+              reportsCount.textContent = 0;
               return;
             }
 
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              reports.push({ ...data, id: doc.id });
-            });
+            let reports = [];
+            querySnapshot.forEach((doc) =>
+              reports.push({ ...doc.data(), id: doc.id })
+            );
 
-            // Filtrar por termo de pesquisa se fornecido
             if (searchTerm) {
               reports = reports.filter(
                 (report) =>
@@ -2593,296 +2319,455 @@
               );
             }
 
-            // Exibir os relatórios
             reportsList.innerHTML = "";
-
             if (reports.length === 0) {
               reportsList.innerHTML =
-                "<p>Nenhum relatório encontrado dengan os critérios de pesquisa.</p>";
+                "<p>Nenhum relatório encontrado com o termo pesquisado.</p>";
               return;
             }
 
             reportsCount.textContent = reports.length;
 
             reports.forEach((report) => {
+              const statusBadge =
+                report.status === "rascunho"
+                  ? '<span class="status-draft">[RASCUNHO]</span>'
+                  : "";
               const reportElement = document.createElement("div");
               reportElement.className = "report-item";
               reportElement.innerHTML = `
-                            <div class="report-info">
-                                <h3>${report.fundName}</h3>
-                                <p>Data: ${report.analysisDate} | Analista: ${
-                report.analystName || "Não informado"
-              }</p>
-                                <p>Salvo em: ${new Date(
-                                  report.timestamp
-                                ).toLocaleString()}</p>
-                            </div>
-                            <div class="report-actions">
-                                <button class="btn-save report-btn view-btn" data-id="${
-                                  report.id
-                                }">
-                                    <i class="fas fa-eye"></i> Ver
-                                </button>
-                                <button class="btn-print report-btn load-btn" data-id="${
-                                  report.id
-                                }">
-                                    <i class="fas fa-upload"></i> Carregar
-                                </button>
-                                <button class="btn-reset report-btn delete-btn" data-id="${
-                                  report.id
-                                }">
-                                    <i class="fas fa-trash"></i> Excluir
-                                </button>
-                            </div>
-                        `;
-
+                <div class="report-info">
+                    <h3>${report.fundName} ${statusBadge}</h3>
+                    <p>Data: ${report.analysisDate} | Salvo em: ${new Date(
+                report.timestamp
+              ).toLocaleString()}</p>
+                </div>
+                <div class="report-actions">
+                    <button class="btn-save report-btn view-btn" data-id="${
+                      report.id
+                    }"><i class="fas fa-eye"></i> Ver</button>
+                    <button class="btn-print report-btn load-btn" data-id="${
+                      report.id
+                    }"><i class="fas fa-upload"></i> Carregar</button>
+                    <button class="btn-reset report-btn delete-btn" data-id="${
+                      report.id
+                    }"><i class="fas fa-trash"></i> Excluir</button>
+                </div>
+              `;
               reportsList.appendChild(reportElement);
             });
 
-            // Adicionar event listeners aos botões
-            document.querySelectorAll(".view-btn").forEach((btn) => {
-              btn.addEventListener("click", function () {
-                const id = this.getAttribute("data-id");
-                viewReport(id);
-              });
-            });
-
-            document.querySelectorAll(".load-btn").forEach((btn) => {
-              btn.addEventListener("click", function () {
-                const id = this.getAttribute("data-id");
-                loadReport(id);
-              });
-            });
-
-            document.querySelectorAll(".delete-btn").forEach((btn) => {
-              btn.addEventListener("click", function () {
-                const id = this.getAttribute("data-id");
-                deleteReport(id);
-              });
-            });
+            reportsList
+              .querySelectorAll(".view-btn")
+              .forEach((btn) =>
+                btn.addEventListener("click", () => viewReport(btn.dataset.id))
+              );
+            reportsList
+              .querySelectorAll(".load-btn")
+              .forEach((btn) =>
+                btn.addEventListener("click", () => loadReport(btn.dataset.id))
+              );
+            reportsList
+              .querySelectorAll(".delete-btn")
+              .forEach((btn) =>
+                btn.addEventListener("click", () =>
+                  deleteReport(btn.dataset.id)
+                )
+              );
           } catch (error) {
-            console.error("Erro ao buscar relatórios do Firebase:", error);
-            reportsList.innerHTML =
-              "<p>Erro ao carregar relatórios do Firebase.</p>";
-            reportsMessage.innerHTML = `<div class="error-message">Erro ao carregar relatórios: ${error.message}. Verifique sua conexão com a internet e tente novamente.</div>`;
+            console.error("Erro ao buscar relatórios:", error);
+            reportsList.innerHTML = `<p class="error-message">Erro ao carregar relatórios: ${error.message}</p>`;
           }
         }
 
-        // Função para visualizar relatório
         async function viewReport(id) {
           try {
             const doc = await db.collection("analises").doc(id).get();
-            if (doc.exists) {
-              const report = doc.data();
-              let content = `
-                            <h2>Relatório: ${report.fundName}</h2>
-                            <p><strong>Data:</strong> ${report.analysisDate}</p>
-                            <p><strong>Analista:</strong> ${
-                              report.analystName || "Não informado"
-                            }</p>
-                            <p><strong>Salvo em:</strong> ${new Date(
-                              report.timestamp
-                            ).toLocaleString()}</p>
-                            <hr>
-                            <h3>Estratégia/Objetivo:</h3>
-                            <p>${report.strategy || "Não informado"}</p>
-                            <h3>Pontos Positivos:</h3>
-                            <p>${report.positivePoints || "Não informado"}</p>
-                            <h3>Pontos Negativos:</h3>
-                            <p>${report.negativePoints || "Não informado"}</p>
-                        `;
-
-              alert(content);
-            } else {
+            if (!doc.exists) {
               alert("Relatório não encontrado.");
+              return;
             }
+
+            const report = doc.data();
+            document.getElementById(
+              "modal-title"
+            ).textContent = `Relatório Completo: ${report.fundName}`;
+            const modalBody = document.getElementById("modal-body");
+
+            // Funções auxiliares
+            const createItem = (label, value) => {
+              if (
+                value === null ||
+                value === undefined ||
+                value === "" ||
+                (Array.isArray(value) && value.length === 0)
+              )
+                return "";
+              const displayValue = Array.isArray(value)
+                ? value.join(", ")
+                : value;
+              return `<div class="grid-item"><strong>${label}</strong><p>${displayValue}</p></div>`;
+            };
+
+            const createTextareaItem = (label, value) => {
+              if (!value) return "";
+              return `<div style="grid-column: 1 / -1;"><h3>${label}</h3><p style="white-space: pre-wrap; word-wrap: break-word;">${value}</p></div>`;
+            };
+
+            const friendlyValues = {
+              sim: "Sim",
+              nao: "Não",
+              parcial: "Parcialmente",
+              ativa: "Ativa",
+              passiva: "Passiva",
+              acima: "Acima do IFIX",
+              abaixo: "Abaixo do IFIX",
+              junto: "Junto ao IFIX",
+              alta: "Alta",
+              media: "Média",
+              baixa: "Baixa",
+              superior: "Superior",
+              inferior: "Inferior",
+              igual: "Igual",
+              estavel: "Estabilizada",
+              crescente: "Crescente",
+              decrescente: "Decrescente",
+              baixo: "Baixo",
+              medio: "Médio",
+              alto: "Alto",
+              melhora: "Melhora",
+              estabilidade: "Estabilidade",
+              piora: "Piora",
+              acompanhar: "Acompanhar",
+              aumentar: "Aumentar posição",
+              reduzir: "Reduzir exposição",
+              evitar: "Evitar",
+            };
+
+            // --- ESTRUTURA COMPLETA DO MODAL ---
+
+            // 1. SEÇÃO DE VEREDITO
+            const vereditoHtml = `
+                    <h3>✅ Veredito da Análise</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Recomendação",
+                          `<strong>${
+                            friendlyValues[report.recommendation] || "N/A"
+                          }</strong>`
+                        )}
+                        ${createItem(
+                          "Nível de Risco",
+                          friendlyValues[report.riskLevel]
+                        )}
+                        ${createItem(
+                          "Classificação do Fundo",
+                          report.fundClassification
+                        )}
+                        ${createItem(
+                          "Expectativa p/ Resultados",
+                          friendlyValues[report.expectation]
+                        )}
+                        ${createItem("Data da Análise", report.analysisDate)}
+                    </div>
+                    ${createTextareaItem(
+                      "Pontos Positivos",
+                      report.positivePoints
+                    )}
+                    ${createTextareaItem(
+                      "Pontos Negativos",
+                      report.negativePoints
+                    )}
+                    ${createTextareaItem(
+                      "Principais Riscos Elencados",
+                      report.mainRisks
+                    )}
+                    ${createTextareaItem(
+                      "Oportunidades Claras",
+                      report.opportunities
+                    )}
+                `;
+
+            // 2. PAINEL DE INDICADORES
+            const indicadoresHtml = `
+                    <h3>📊 Painel de Indicadores Chave</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Vacância Financeira",
+                          report.financialVacancy
+                        )}
+                        ${createItem("Vacância Física", report.physicalVacancy)}
+                        ${createItem("Inadimplência", report.defaultRate)}
+                        ${createItem(
+                          "Liquidez",
+                          friendlyValues[report.liquidity]
+                        )}
+                        ${createItem(
+                          "Comparação com IFIX",
+                          friendlyValues[report.ifixComparison]
+                        )}
+                        ${createItem("FFO vs DY", report.ffoVsDy)}
+                    </div>
+                `;
+
+            // 3. SEÇÃO DE DESEMPENHO & VALUATION
+            const desempenhoHtml = `
+                    <h3>📈 Desempenho & Valuation</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Cotação vs Média 12M",
+                          report.currentVsAvg
+                        )}
+                        ${createItem(
+                          "Rendimento vs Média Histórica",
+                          report.yieldComparison
+                        )}
+                        ${createItem(
+                          "DY vs Média do Setor",
+                          report.sectorComparison
+                        )}
+                    </div>
+                    ${createTextareaItem(
+                      "Evolução do VPC (últimos 12 meses)",
+                      report.vpcEvolution
+                    )}
+                    ${createTextareaItem(
+                      "Análise de Desconto/Justificativa",
+                      report.discount
+                    )}
+                `;
+
+            // 4. SEÇÃO CONDICIONAL DE TIJOLO
+            let tijoloHtml = "";
+            if (
+              report.propertyCount ||
+              report.activeTenants ||
+              report.tenantConcentration
+            ) {
+              tijoloHtml = `
+                    <h3>🧱 Portfólio: Ativos Físicos (Tijolo)</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Quantidade de Imóveis",
+                          report.propertyCount
+                        )}
+                        ${createItem("Inquilinos Ativos", report.activeTenants)}
+                        ${createItem(
+                          "% Contratos Típicos",
+                          report.typicalContracts
+                        )}
+                        ${createItem(
+                          "% Contratos Atípicos",
+                          report.atypicalContracts
+                        )}
+                        ${createItem(
+                          "Venc. Médio Contratos",
+                          report.averageContractTerm
+                            ? `${report.averageContractTerm} meses`
+                            : null
+                        )}
+                        ${createItem(
+                          "% Carteira no Maior Setor",
+                          report.largestSector
+                        )}
+                        ${createItem(
+                          "Inquilino em Carência?",
+                          friendlyValues[report.gracePeriod]
+                        )}
+                    </div>
+                    ${createTextareaItem(
+                      "Segmentos dos Inquilinos",
+                      report.tenantSegments
+                    )}
+                    ${createTextareaItem(
+                      "Concentração por Inquilino",
+                      report.tenantConcentration
+                    )}
+                    ${createTextareaItem(
+                      "Situação Financeira do Maior Inquilino",
+                      report.tenantFinancials
+                    )}
+                `;
+            }
+
+            // 5. SEÇÃO CONDICIONAL DE PAPEL
+            let papelHtml = "";
+            if (
+              report.creditsCount ||
+              report.averageLtv ||
+              report.debtorConcentration
+            ) {
+              papelHtml = `
+                    <h3>📄 Portfólio: Ativos Financeiros (Papel)</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Quantidade de Créditos",
+                          report.creditsCount
+                        )}
+                        ${createItem("% Indexado ao CDI", report.indexerCdi)}
+                        ${createItem("% Indexado ao IPCA", report.indexerIpca)}
+                        ${createItem("Taxa Média CDI+", report.creditRateCdi)}
+                        ${createItem("Taxa Média IPCA+", report.creditRateIpca)}
+                        ${createItem(
+                          "Duration da Carteira",
+                          report.creditDuration
+                            ? `${report.creditDuration} anos`
+                            : null
+                        )}
+                        ${createItem("LTV Médio", report.averageLtv)}
+                        ${createItem(
+                          "Créditos sem Garantia?",
+                          friendlyValues[report.unsecuredCredits]
+                        )}
+                    </div>
+                    ${createItem("Garantias Praticadas", report.warranties)}
+                    ${createTextareaItem(
+                      "Concentração por Devedor",
+                      report.debtorConcentration
+                    )}
+                    ${createTextareaItem(
+                      "Situação Financeira do Principal Devedor",
+                      report.mainDebtorFinancials
+                    )}
+                `;
+            }
+
+            // 6. SEÇÃO DE SAÚDE FINANCEIRA
+            const saudeFinanceiraHtml = `
+                    <h3>❤️ Saúde Financeira</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Possui Alavancagem?",
+                          friendlyValues[report.leverage]
+                        )}
+                        ${createItem(
+                          "Taxa Média da Alavancagem",
+                          report.leverageRate
+                        )}
+                        ${createItem(
+                          "Sustentabilidade do Saldo",
+                          report.balanceSustainability
+                        )}
+                    </div>
+                    ${createTextareaItem(
+                      "Plano de Amortização da Dívida",
+                      report.amortizationPlan
+                    )}
+                    ${createTextareaItem(
+                      "O Fundo está Queimando Caixa?",
+                      report.cashBurn
+                    )}
+                `;
+
+            // 7. SEÇÃO DE GOVERNANÇA
+            const governancaHtml = `
+                    <h3>🔎 Governança e Gestão</h3>
+                    <div class="report-grid">
+                        ${createItem(
+                          "Tipo de Gestão",
+                          friendlyValues[report.managementType]
+                        )}
+                        ${createItem(
+                          "Transparência",
+                          friendlyValues[report.transparency]
+                        )}
+                        ${createItem(
+                          "Conflitos de Interesse?",
+                          friendlyValues[report.conflicts]
+                        )}
+                    </div>
+                    ${createTextareaItem(
+                      "Sobre o Gestor e seu Histórico",
+                      report.managerHistory
+                    )}
+                    ${createTextareaItem(
+                      "Comunicados Importantes no Período",
+                      report.importantNotices
+                    )}
+                `;
+
+            // Monta o conteúdo final do modal na ordem de importância
+            const finalContent = `
+                    ${vereditoHtml}
+                    ${indicadoresHtml}
+                    ${desempenhoHtml}
+                    ${tijoloHtml}
+                    ${papelHtml}
+                    ${saudeFinanceiraHtml}
+                    ${governancaHtml}
+                `;
+
+            modalBody.innerHTML = finalContent;
+            reportModal.style.display = "flex";
           } catch (error) {
-            console.error("Erro ao buscar relatório:", error);
-            alert("Erro ao buscar relatório: " + error.message);
+            console.error("Erro ao visualizar relatório:", error);
+            alert("Erro ao visualizar relatório: " + error.message);
           }
         }
 
-        // Função para carregar relatório no formulário
         async function loadReport(id) {
           try {
             const doc = await db.collection("analises").doc(id).get();
-            if (doc.exists) {
-              const report = doc.data();
-
-              // Preencher campos do formulário (incluindo os novos campos)
-              document.getElementById("fund-name").value =
-                report.fundName || "";
-              document.getElementById("analysis-date").value =
-                report.analysisDate || "";
-              document.getElementById("analyst-name").value =
-                report.analystName || "";
-              document.getElementById("strategy").value = report.strategy || "";
-              document.getElementById("property-count").value =
-                report.propertyCount || "";
-              document.getElementById("allocation-properties").value =
-                report.allocationProperties || "";
-              document.getElementById("allocation-fiis").value =
-                report.allocationFiis || "";
-              document.getElementById("allocation-cash").value =
-                report.allocationCash || "";
-              document.getElementById("typical-contracts").value =
-                report.typicalContracts || "";
-              document.getElementById("atypical-contracts").value =
-                report.atypicalContracts || "";
-              document.getElementById("average-contract-term").value =
-                report.averageContractTerm || "";
-              // Novos campos adicionados
-              document.getElementById("admin-fee").value =
-                report.adminFee || "";
-              document.getElementById("performance-fee").value =
-                report.performanceFee || "";
-              document.getElementById("ffo-vs-dy").value = report.ffoVsDy || "";
-              document.getElementById("extraordinary-revenue").value =
-                report.extraordinaryRevenue || "";
-              // Campos da nova seção de fundos de papel
-              document.getElementById("allocation-cri-cra").value =
-                report.allocationCriCra || "";
-              document.getElementById("allocation-fiis-paper").value =
-                report.allocationFiisPaper || "";
-              document.getElementById("allocation-cash-paper").value =
-                report.allocationCashPaper || "";
-              document.getElementById("credits-count").value =
-                report.creditsCount || "";
-              document.getElementById("indexer-cdi").value =
-                report.indexerCdi || "";
-              document.getElementById("indexer-ipca").value =
-                report.indexerIpca || "";
-              document.getElementById("credit-rate-cdi").value =
-                report.creditRateCdi || "";
-              document.getElementById("credit-rate-ipca").value =
-                report.creditRateIpca || "";
-              document.getElementById("credit-duration").value =
-                report.creditDuration || "";
-              document.getElementById("average-ltv").value =
-                report.averageLtv || "";
-              document.getElementById("debtor-segments").value =
-                report.debtorSegments || "";
-              document.getElementById("debtor-concentration").value =
-                report.debtorConcentration || "";
-              document.getElementById("main-debtor-financials").value =
-                report.mainDebtorFinancials || "";
-              // Fim dos novos campos
-              document.getElementById("expiring-contracts").value =
-                report.expiringContracts || "";
-              document.getElementById("active-tenants").value =
-                report.activeTenants || "";
-              document.getElementById("tenant-segments").value =
-                report.tenantSegments || "";
-              document.getElementById("largest-sector").value =
-                report.largestSector || "";
-              document.getElementById("tenant-concentration").value =
-                report.tenantConcentration || "";
-              document.getElementById("tenant-financials").value =
-                report.tenantFinancials || "";
-              document.getElementById("manager-history").value =
-                report.managerHistory || "";
-              document.getElementById("manager-change-details").value =
-                report.managerChangeDetails || "";
-              document.getElementById("conflicts-details").value =
-                report.conflictsDetails || "";
-              document.getElementById("vpc-evolution").value =
-                report.vpcEvolution || "";
-              document.getElementById("current-vs-avg").value =
-                report.currentVsAvg || "";
-              document.getElementById("yield-comparison").value =
-                report.yieldComparison || "";
-              document.getElementById("sector-comparison").value =
-                report.sectorComparison || "";
-              document.getElementById("financial-vacancy").value =
-                report.financialVacancy || "";
-              document.getElementById("physical-vacancy").value =
-                report.physicalVacancy || "";
-              document.getElementById("default-rate").value =
-                report.defaultRate || "";
-              document.getElementById("result-reason").value =
-                report.resultReason || "";
-              document.getElementById("leverage-rate").value =
-                report.leverageRate || "";
-              document.getElementById("amortization-plan").value =
-                report.amortizationPlan || "";
-              document.getElementById("important-notices").value =
-                report.importantNotices || "";
-              document.getElementById("main-risks").value =
-                report.mainRisks || "";
-              document.getElementById("opportunities").value =
-                report.opportunities || "";
-              document.getElementById("positive-points").value =
-                report.positivePoints || "";
-              document.getElementById("negative-points").value =
-                report.negativePoints || "";
-              document.getElementById("cash-burn").value =
-                report.cashBurn || "";
-              document.getElementById("balance-sustainability").value =
-                report.balanceSustainability || "";
-              document.getElementById("discount").value = report.discount || "";
-
-              // Preencher checkboxes e radios
-              if (report.otherSegment) {
-                document.getElementById("other-segment").checked = true;
-                document.getElementById("other-segment-text").value =
-                  report.otherSegment;
-                document.getElementById("other-segment-text").style.display =
-                  "block";
-              }
-
-              // Selecionar opções de rádio
-              selectRadioOption("management-type", report.managementType);
-              selectRadioOption("ifix-comparison", report.ifixComparison);
-              selectRadioOption("grace-period", report.gracePeriod);
-              selectRadioOption("manager-change", report.managerChange);
-              selectRadioOption("conflicts", report.conflicts);
-              selectRadioOption("transparency", report.transparency);
-              selectRadioOption("result-comparison", report.resultComparison);
-              selectRadioOption("leverage", report.leverage);
-              selectRadioOption("liquidity", report.liquidity);
-              selectRadioOption("risk-level", report.riskLevel);
-              selectRadioOption("anchor", report.anchor);
-              selectRadioOption("expectation", report.expectation);
-              selectRadioOption("recommendation", report.recommendation);
-              selectRadioOption("unsecured-credits", report.unsecuredCredits);
-
-              // Selecionar classificações do fundo
-              if (report.fundClassification) {
-                document
-                  .querySelectorAll('input[name="fund-classification"]')
-                  .forEach((cb) => {
-                    cb.checked = report.fundClassification.includes(
-                      cb.nextElementSibling.textContent
-                    );
-                  });
-              }
-
-              // Selecionar garantias
-              if (report.warranties) {
-                document
-                  .querySelectorAll('input[name="warranty"]')
-                  .forEach((cb) => {
-                    cb.checked = report.warranties.includes(
-                      cb.nextElementSibling.textContent
-                    );
-                  });
-              }
-
-              // Atualizar progresso
-              calculateFormProgress();
-
-              // Mudar para a aba do formulário
-              tabs.forEach((t) => t.classList.remove("active"));
-              tabContents.forEach((c) => c.classList.remove("active"));
-              document
-                .querySelector('.tab[data-tab="form"]')
-                .classList.add("active");
-              document.getElementById("form-tab").classList.add("active");
-              floatingSaveContainer.style.display = "flex";
-
-              alert(`Relatório de ${report.fundName} carregado com sucesso!`);
-            } else {
+            if (!doc.exists) {
               alert("Relatório não encontrado.");
+              return;
+            }
+            const report = doc.data();
+
+            // Limpa o formulário antes de carregar
+            document.getElementById("checklist-form").reset();
+
+            Object.keys(report).forEach((key) => {
+              if (document.getElementById(key)) {
+                document.getElementById(key).value = report[key] || "";
+              }
+            });
+
+            const radioNames = new Set(
+              Array.from(
+                document.querySelectorAll('#checklist-form input[type="radio"]')
+              ).map((r) => r.name)
+            );
+            radioNames.forEach((name) => {
+              if (report[name]) selectRadioOption(name, report[name]);
+            });
+
+            const checkboxNames = new Set(
+              Array.from(
+                document.querySelectorAll(
+                  '#checklist-form input[type="checkbox"]'
+                )
+              ).map((c) => c.name)
+            );
+            checkboxNames.forEach((name) => {
+              if (report[name] && Array.isArray(report[name])) {
+                document
+                  .querySelectorAll(`input[name="${name}"]`)
+                  .forEach((cb) => {
+                    cb.checked = report[name].includes(cb.id);
+                  });
+              }
+            });
+
+            if (report.otherSegment) {
+              document.getElementById("other-segment").checked = true;
+              document.getElementById("other-segment-text").value =
+                report.otherSegment;
+              document.getElementById("other-segment-text").style.display =
+                "block";
+            }
+
+            calculateFormProgress();
+            document.querySelector('.tab[data-tab="form"]').click();
+
+            if (report.status === "rascunho") {
+              alert(
+                `Rascunho de ${report.fundName} carregado. Lembre-se de salvar a versão final quando terminar.`
+              );
+            } else {
+              alert(
+                `Relatório de ${report.fundName} carregado. Qualquer alteração criará uma nova análise.`
+              );
             }
           } catch (error) {
             console.error("Erro ao carregar relatório:", error);
@@ -2890,53 +2775,67 @@
           }
         }
 
-        // Função auxiliar para selecionar opção de rádio
-        function selectRadioOption(name, value) {
-          if (!value) return;
-          const radio = document.querySelector(
-            `input[name="${name}"][value="${value}"]`
-          );
-          if (radio) radio.checked = true;
-        }
-
-        // Função para excluir relatório
         async function deleteReport(id) {
+          if (!confirm("Tem certeza que deseja excluir este relatório?"))
+            return;
           try {
-            const doc = await db.collection("analises").doc(id).get();
-            if (doc.exists) {
-              const reportName = doc.data().fundName;
-
-              if (
-                confirm(
-                  `Tem certeza que deseja excluir o relatório de ${reportName}?`
-                )
-              ) {
-                await db.collection("analises").doc(id).delete();
-                alert("Relatório excluído com sucesso.");
-                updateReportsList();
-              }
-            } else {
-              alert("Relatório não encontrado.");
-            }
+            await db.collection("analises").doc(id).delete();
+            alert("Relatório excluído com sucesso.");
+            updateReportsList();
           } catch (error) {
             console.error("Erro ao excluir relatório:", error);
             alert("Erro ao excluir relatório: " + error.message);
           }
         }
 
-        // Funções auxiliares para obter valores de checkboxes e radios
+        function calculateFormProgress() {
+          const inputs = document.querySelectorAll(
+            "#checklist-form input, #checklist-form textarea, #checklist-form select"
+          );
+          let totalFields = 0;
+          let filledCount = 0;
+          const radioGroups = {};
+          inputs.forEach((input) => {
+            if (input.type === "radio") {
+              if (!radioGroups[input.name]) {
+                radioGroups[input.name] = true;
+                totalFields++;
+              }
+            } else if (input.id) {
+              totalFields++;
+            }
+          });
+          document
+            .querySelectorAll('#checklist-form input[type="radio"]:checked')
+            .forEach(() => filledCount++);
+          inputs.forEach((input) => {
+            if (input.type !== "radio" && input.value && input.id) {
+              filledCount++;
+            }
+          });
+          const progress =
+            totalFields > 0 ? Math.round((filledCount / totalFields) * 100) : 0;
+          progressFill.style.width = `${progress}%`;
+          progressPercentage.textContent = `${progress}%`;
+        }
+
         function getSelectedCheckboxes(name) {
-          const checkboxes = document.querySelectorAll(
-            `input[name="${name}"]:checked`
-          );
-          return Array.from(checkboxes).map(
-            (cb) => cb.nextElementSibling.textContent
-          );
+          return Array.from(
+            document.querySelectorAll(`input[name="${name}"]:checked`)
+          ).map((cb) => cb.id);
         }
 
         function getSelectedRadio(name) {
           const radio = document.querySelector(`input[name="${name}"]:checked`);
           return radio ? radio.value : null;
+        }
+
+        function selectRadioOption(name, value) {
+          if (!value) return;
+          const radio = document.querySelector(
+            `input[name="${name}"][value="${value}"]`
+          );
+          if (radio) radio.checked = true;
         }
       });
     </script>
