@@ -946,6 +946,42 @@
               <h2>Análise de FIIs de Tijolo</h2>
             </div>
             <div class="checklist-item">
+              <label>Segmento principal do fundo?</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="logistics" name="segment" /><label
+                    for="logistics"
+                    >📦 Logística</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="offices" name="segment" /><label
+                    for="offices"
+                    >🏢 Lajes</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="shoppings" name="segment" /><label
+                    for="shoppings"
+                    >🛍️ Shoppings</label
+                  >
+                </div>
+                <div class="checkbox-item">
+                  <input
+                    type="checkbox"
+                    id="other-segment"
+                    name="segment"
+                  /><label for="other-segment">📍 Outros</label>
+                </div>
+              </div>
+              <input
+                type="text"
+                id="other-segment-text"
+                placeholder="Especifique outros segmentos"
+                style="margin-top: 10px; display: none"
+              />
+            </div>
+            <div class="checklist-item">
               <label for="property-count">Quantidade de imóveis</label
               ><input
                 type="number"
@@ -1087,48 +1123,7 @@
                 placeholder="Descreva a estratégia do fundo..."
               ></textarea>
             </div>
-            <div class="checklist-item">
-              <label>Segmento principal do fundo?</label>
-              <div class="checkbox-group">
-                <div class="checkbox-item">
-                  <input type="checkbox" id="logistics" name="segment" /><label
-                    for="logistics"
-                    >📦 Logística</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="offices" name="segment" /><label
-                    for="offices"
-                    >🏢 Lajes</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="shoppings" name="segment" /><label
-                    for="shoppings"
-                    >🛍️ Shoppings</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input type="checkbox" id="papel" name="segment" /><label
-                    for="papel"
-                    >📄 Papel</label
-                  >
-                </div>
-                <div class="checkbox-item">
-                  <input
-                    type="checkbox"
-                    id="other-segment"
-                    name="segment"
-                  /><label for="other-segment">📍 Outros</label>
-                </div>
-              </div>
-              <input
-                type="text"
-                id="other-segment-text"
-                placeholder="Especifique outros segmentos"
-                style="margin-top: 10px; display: none"
-              />
-            </div>
+
             <div class="checklist-item">
               <label>Tipo de gestão:</label>
               <div class="checkbox-group">
@@ -2448,94 +2443,82 @@
 
             // 1. SEÇÃO DE VEREDITO
             const vereditoHtml = `
-                    <h3>✅ Veredito da Análise</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Recomendação",
-                          `<strong>${
-                            friendlyValues[report.recommendation] || "N/A"
-                          }</strong>`
-                        )}
-                        ${createItem(
-                          "Nível de Risco",
-                          friendlyValues[report.riskLevel]
-                        )}
-                        ${createItem(
-                          "Classificação do Fundo",
-                          report.fundClassification
-                        )}
-                        ${createItem(
-                          "Expectativa p/ Resultados",
-                          friendlyValues[report.expectation]
-                        )}
-                        ${createItem("Data da Análise", report.analysisDate)}
-                    </div>
-                    ${createTextareaItem(
-                      "Pontos Positivos",
-                      report.positivePoints
+                <h3>✅ Veredito da Análise</h3>
+                <div class="report-grid">
+                    ${createItem(
+                      "Recomendação",
+                      `<strong>${
+                        friendlyValues[report.recommendation] || "N/A"
+                      }</strong>`
                     )}
-                    ${createTextareaItem(
-                      "Pontos Negativos",
-                      report.negativePoints
+                    ${createItem(
+                      "Nível de Risco",
+                      friendlyValues[report.riskLevel]
                     )}
-                    ${createTextareaItem(
-                      "Principais Riscos Elencados",
-                      report.mainRisks
+                    ${createItem(
+                      "Classificação do Fundo",
+                      report.fundClassification
                     )}
-                    ${createTextareaItem(
-                      "Oportunidades Claras",
-                      report.opportunities
+                    ${createItem(
+                      "Expectativa p/ Resultados",
+                      friendlyValues[report.expectation]
                     )}
-                `;
+                    ${createItem("Data da Análise", report.analysisDate)}
+                </div>
+                ${createTextareaItem("Pontos Positivos", report.positivePoints)}
+                ${createTextareaItem("Pontos Negativos", report.negativePoints)}
+                ${createTextareaItem(
+                  "Principais Riscos Elencados",
+                  report.mainRisks
+                )}
+                ${createTextareaItem(
+                  "Oportunidades Claras",
+                  report.opportunities
+                )}
+            `;
 
             // 2. PAINEL DE INDICADORES
             const indicadoresHtml = `
-                    <h3>📊 Painel de Indicadores Chave</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Vacância Financeira",
-                          report.financialVacancy
-                        )}
-                        ${createItem("Vacância Física", report.physicalVacancy)}
-                        ${createItem("Inadimplência", report.defaultRate)}
-                        ${createItem(
-                          "Liquidez",
-                          friendlyValues[report.liquidity]
-                        )}
-                        ${createItem(
-                          "Comparação com IFIX",
-                          friendlyValues[report.ifixComparison]
-                        )}
-                        ${createItem("FFO vs DY", report.ffoVsDy)}
-                    </div>
-                `;
+                <h3>📊 Painel de Indicadores Chave</h3>
+                <div class="report-grid">
+                    ${createItem(
+                      "Vacância Financeira",
+                      report.financialVacancy
+                    )}
+                    ${createItem("Vacância Física", report.physicalVacancy)}
+                    ${createItem("Inadimplência", report.defaultRate)}
+                    ${createItem("Liquidez", friendlyValues[report.liquidity])}
+                    ${createItem(
+                      "Comparação com IFIX",
+                      friendlyValues[report.ifixComparison]
+                    )}
+                    ${createItem("FFO vs DY", report.ffoVsDy)}
+                </div>
+            `;
 
             // 3. SEÇÃO DE DESEMPENHO & VALUATION
             const desempenhoHtml = `
-                    <h3>📈 Desempenho & Valuation</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Cotação vs Média 12M",
-                          report.currentVsAvg
-                        )}
-                        ${createItem(
-                          "Rendimento vs Média Histórica",
-                          report.yieldComparison
-                        )}
-                        ${createItem(
-                          "DY vs Média do Setor",
-                          report.sectorComparison
-                        )}
-                    </div>
-                    ${createTextareaItem(
-                      "Evolução do VPC (últimos 12 meses)",
-                      report.vpcEvolution
-                    )}
-                    ${createTextareaItem(
-                      "Análise de Desconto/Justificativa",
-                      report.discount
-                    )}
-                `;
+                <h3>📈 Desempenho & Valuation</h3>
+                <div class="report-grid">
+                     ${createItem("Cotação vs Média 12M", report.currentVsAvg)}
+                     ${createItem(
+                       "Rendimento vs Média Histórica",
+                       report.yieldComparison
+                     )}
+                     ${createItem(
+                       "DY vs Média do Setor",
+                       report.sectorComparison
+                     )}
+                </div>
+                ${createTextareaItem(
+                  "Evolução do VPC (últimos 12 meses)",
+                  report.vpcEvolution
+                )}
+                ${createTextareaItem(
+                  "Análise de Desconto/Justificativa",
+                  report.discount
+                )}
+            `;
 
             // 4. SEÇÃO CONDICIONAL DE TIJOLO
             let tijoloHtml = "";
@@ -2545,49 +2528,47 @@
               report.tenantConcentration
             ) {
               tijoloHtml = `
-                    <h3>🧱 Portfólio: Ativos Físicos (Tijolo)</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Quantidade de Imóveis",
-                          report.propertyCount
-                        )}
-                        ${createItem("Inquilinos Ativos", report.activeTenants)}
-                        ${createItem(
-                          "% Contratos Típicos",
-                          report.typicalContracts
-                        )}
-                        ${createItem(
-                          "% Contratos Atípicos",
-                          report.atypicalContracts
-                        )}
-                        ${createItem(
-                          "Venc. Médio Contratos",
-                          report.averageContractTerm
-                            ? `${report.averageContractTerm} meses`
-                            : null
-                        )}
-                        ${createItem(
-                          "% Carteira no Maior Setor",
-                          report.largestSector
-                        )}
-                        ${createItem(
-                          "Inquilino em Carência?",
-                          friendlyValues[report.gracePeriod]
-                        )}
-                    </div>
-                    ${createTextareaItem(
-                      "Segmentos dos Inquilinos",
-                      report.tenantSegments
+                <h3>🧱 Portfólio: Ativos Físicos (Tijolo)</h3>
+                <div class="report-grid">
+                    ${createItem("Segmentos", report.segments)}
+                    ${createItem("Quantidade de Imóveis", report.propertyCount)}
+                    ${createItem("Inquilinos Ativos", report.activeTenants)}
+                    ${createItem(
+                      "% Contratos Típicos",
+                      report.typicalContracts
                     )}
-                    ${createTextareaItem(
-                      "Concentração por Inquilino",
-                      report.tenantConcentration
+                    ${createItem(
+                      "% Contratos Atípicos",
+                      report.atypicalContracts
                     )}
-                    ${createTextareaItem(
-                      "Situação Financeira do Maior Inquilino",
-                      report.tenantFinancials
+                    ${createItem(
+                      "Venc. Médio Contratos",
+                      report.averageContractTerm
+                        ? `${report.averageContractTerm} meses`
+                        : null
                     )}
-                `;
+                    ${createItem(
+                      "% Carteira no Maior Setor",
+                      report.largestSector
+                    )}
+                    ${createItem(
+                      "Inquilino em Carência?",
+                      friendlyValues[report.gracePeriod]
+                    )}
+                </div>
+                ${createTextareaItem(
+                  "Segmentos dos Inquilinos",
+                  report.tenantSegments
+                )}
+                ${createTextareaItem(
+                  "Concentração por Inquilino",
+                  report.tenantConcentration
+                )}
+                ${createTextareaItem(
+                  "Situação Financeira do Maior Inquilino",
+                  report.tenantFinancials
+                )}
+              `;
             }
 
             // 5. SEÇÃO CONDICIONAL DE PAPEL
@@ -2598,104 +2579,101 @@
               report.debtorConcentration
             ) {
               papelHtml = `
-                    <h3>📄 Portfólio: Ativos Financeiros (Papel)</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Quantidade de Créditos",
-                          report.creditsCount
-                        )}
-                        ${createItem("% Indexado ao CDI", report.indexerCdi)}
-                        ${createItem("% Indexado ao IPCA", report.indexerIpca)}
-                        ${createItem("Taxa Média CDI+", report.creditRateCdi)}
-                        ${createItem("Taxa Média IPCA+", report.creditRateIpca)}
-                        ${createItem(
-                          "Duration da Carteira",
-                          report.creditDuration
-                            ? `${report.creditDuration} anos`
-                            : null
-                        )}
-                        ${createItem("LTV Médio", report.averageLtv)}
-                        ${createItem(
-                          "Créditos sem Garantia?",
-                          friendlyValues[report.unsecuredCredits]
-                        )}
-                    </div>
-                    ${createItem("Garantias Praticadas", report.warranties)}
-                    ${createTextareaItem(
-                      "Concentração por Devedor",
-                      report.debtorConcentration
+                <h3>📄 Portfólio: Ativos Financeiros (Papel)</h3>
+                <div class="report-grid">
+                    ${createItem("Quantidade de Créditos", report.creditsCount)}
+                    ${createItem("% Indexado ao CDI", report.indexerCdi)}
+                    ${createItem("% Indexado ao IPCA", report.indexerIpca)}
+                    ${createItem("Taxa Média CDI+", report.creditRateCdi)}
+                    ${createItem("Taxa Média IPCA+", report.creditRateIpca)}
+                    ${createItem(
+                      "Duration da Carteira",
+                      report.creditDuration
+                        ? `${report.creditDuration} anos`
+                        : null
                     )}
-                    ${createTextareaItem(
-                      "Situação Financeira do Principal Devedor",
-                      report.mainDebtorFinancials
+                    ${createItem("LTV Médio", report.averageLtv)}
+                    ${createItem(
+                      "Créditos sem Garantia?",
+                      friendlyValues[report.unsecuredCredits]
                     )}
-                `;
+                </div>
+                ${createItem("Garantias Praticadas", report.warranties)}
+                ${createTextareaItem(
+                  "Concentração por Devedor",
+                  report.debtorConcentration
+                )}
+                ${createTextareaItem(
+                  "Situação Financeira do Principal Devedor",
+                  report.mainDebtorFinancials
+                )}
+              `;
             }
 
             // 6. SEÇÃO DE SAÚDE FINANCEIRA
             const saudeFinanceiraHtml = `
-                    <h3>❤️ Saúde Financeira</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Possui Alavancagem?",
-                          friendlyValues[report.leverage]
-                        )}
-                        ${createItem(
-                          "Taxa Média da Alavancagem",
-                          report.leverageRate
-                        )}
-                        ${createItem(
-                          "Sustentabilidade do Saldo",
-                          report.balanceSustainability
-                        )}
-                    </div>
-                    ${createTextareaItem(
-                      "Plano de Amortização da Dívida",
-                      report.amortizationPlan
+                 <h3>❤️ Saúde Financeira</h3>
+                 <div class="report-grid">
+                    ${createItem(
+                      "Possui Alavancagem?",
+                      friendlyValues[report.leverage]
                     )}
-                    ${createTextareaItem(
-                      "O Fundo está Queimando Caixa?",
-                      report.cashBurn
+                    ${createItem(
+                      "Taxa Média da Alavancagem",
+                      report.leverageRate
                     )}
-                `;
+                    ${createItem(
+                      "Sustentabilidade do Saldo",
+                      report.balanceSustainability
+                    )}
+                 </div>
+                 ${createTextareaItem(
+                   "Plano de Amortização da Dívida",
+                   report.amortizationPlan
+                 )}
+                 ${createTextareaItem(
+                   "O Fundo está Queimando Caixa?",
+                   report.cashBurn
+                 )}
+            `;
 
             // 7. SEÇÃO DE GOVERNANÇA
             const governancaHtml = `
-                    <h3>🔎 Governança e Gestão</h3>
-                    <div class="report-grid">
-                        ${createItem(
-                          "Tipo de Gestão",
-                          friendlyValues[report.managementType]
-                        )}
-                        ${createItem(
-                          "Transparência",
-                          friendlyValues[report.transparency]
-                        )}
-                        ${createItem(
-                          "Conflitos de Interesse?",
-                          friendlyValues[report.conflicts]
-                        )}
-                    </div>
-                    ${createTextareaItem(
-                      "Sobre o Gestor e seu Histórico",
-                      report.managerHistory
+                <h3>🔎 Governança e Gestão</h3>
+                <div class="report-grid">
+                    ${createItem(
+                      "Tipo de Gestão",
+                      friendlyValues[report.managementType]
                     )}
-                    ${createTextareaItem(
-                      "Comunicados Importantes no Período",
-                      report.importantNotices
+                    ${createItem(
+                      "Transparência",
+                      friendlyValues[report.transparency]
                     )}
-                `;
+                    ${createItem(
+                      "Conflitos de Interesse?",
+                      friendlyValues[report.conflicts]
+                    )}
+                </div>
+                ${createTextareaItem(
+                  "Sobre o Gestor e seu Histórico",
+                  report.managerHistory
+                )}
+                ${createTextareaItem(
+                  "Comunicados Importantes no Período",
+                  report.importantNotices
+                )}
+            `;
 
             // Monta o conteúdo final do modal na ordem de importância
             const finalContent = `
-                    ${vereditoHtml}
-                    ${indicadoresHtml}
-                    ${desempenhoHtml}
-                    ${tijoloHtml}
-                    ${papelHtml}
-                    ${saudeFinanceiraHtml}
-                    ${governancaHtml}
-                `;
+                ${vereditoHtml}
+                ${indicadoresHtml}
+                ${desempenhoHtml}
+                ${tijoloHtml}
+                ${papelHtml}
+                ${saudeFinanceiraHtml}
+                ${governancaHtml}
+            `;
 
             modalBody.innerHTML = finalContent;
             reportModal.style.display = "flex";
